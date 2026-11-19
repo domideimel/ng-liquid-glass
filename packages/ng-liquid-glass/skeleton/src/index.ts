@@ -1,0 +1,1 @@
+export { LgSkeleton } from './skeleton';
