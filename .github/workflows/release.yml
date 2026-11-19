@@ -25,7 +25,7 @@ jobs:
           # Deploy key with write access: the only actor allowed to bypass the main ruleset,
           # so `nx release` can push the changelog commit and tag.
           ssh-key: ${{ secrets.RELEASE_DEPLOY_KEY }}
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
       - uses: actions/setup-node@v5
         with:
           node-version: 24
