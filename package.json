@@ -47,7 +47,7 @@
     "@playwright/test": "^1.65.1",
     "@schematics/angular": "~22.2.0",
     "@swc-node/register": "1.11.1",
-    "@swc/core": "1.15.8",
+    "@swc/core": "1.16.22",
     "@swc/helpers": "0.5.18",
     "@tailwindcss/vite": "^4.3.5",
     "@testing-library/angular": "^19.6.0",
