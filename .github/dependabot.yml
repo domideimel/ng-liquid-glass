@@ -1,0 +1,25 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 10
+    groups:
+      angular:
+        patterns: ['@angular/*', '@angular-devkit/*', '@schematics/angular', 'angular-eslint']
+      nx:
+        patterns: ['nx', '@nx/*']
+      ng-doc:
+        patterns: ['@ng-doc/*']
+      testing:
+        patterns: ['vitest', '@vitest/*', '@testing-library/*', 'playwright', '@playwright/test', 'axe-core', '@axe-core/*']
+      tailwind:
+        patterns: ['tailwindcss', '@tailwindcss/*']
+    ignore:
+      # Pinned until Nx supports @angular-devkit/architect >= 0.2203 (see pnpm-workspace.yaml).
+      - dependency-name: '@angular-devkit/architect'
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly

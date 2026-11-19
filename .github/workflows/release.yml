@@ -1,0 +1,39 @@
+name: Release
+
+# Bumps the version from Conventional Commits, writes CHANGELOG.md, tags, creates a GitHub
+# release and publishes @domideimel/ng-liquid-glass to GitHub Packages.
+on:
+  workflow_dispatch:
+    inputs:
+      dry-run:
+        description: Preview the release without changing anything
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: pnpm
+          registry-url: https://npm.pkg.github.com
+          scope: '@domideimel'
+      - run: pnpm install --frozen-lockfile
+      - run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      - run: pnpm nx release --yes ${{ inputs.dry-run && '--dry-run' || '' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
