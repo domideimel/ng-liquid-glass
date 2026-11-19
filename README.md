@@ -56,7 +56,7 @@ Dependabot keeps npm packages and actions up to date, grouped by ecosystem.
 - changes only through pull requests, merged by squash or rebase (linear history), with all review threads resolved;
 - required checks, which must pass on an up-to-date branch: _Lint, typecheck, test, build_, the e2e suite in Chromium, Firefox and WebKit, and CodeQL;
 - no force pushes, no deletion;
-- only GitHub Actions may bypass it, so the release workflow can commit the changelog and tag.
+- only deploy keys may bypass it. The release workflow pushes the changelog commit and tag with the `RELEASE_DEPLOY_KEY` deploy key, because on a personal repository GitHub Actions itself can't be a bypass actor.
 
 Apply or update it with:
 
