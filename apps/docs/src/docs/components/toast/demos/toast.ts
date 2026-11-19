@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { LgButton } from '@domideimel/ng-liquid-glass/button';
 import { LgCluster } from '@domideimel/ng-liquid-glass/layout';
 import { LgToaster } from '@domideimel/ng-liquid-glass/toast';
@@ -6,7 +6,6 @@ import { LgToaster } from '@domideimel/ng-liquid-glass/toast';
 @Component({
   selector: 'docs-toast-demo',
   imports: [LgButton, LgCluster],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div lgCluster gap="md">
       <button lgButton type="button" (click)="saved()">Save</button>

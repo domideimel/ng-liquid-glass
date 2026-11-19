@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { LgCombobox } from '@domideimel/ng-liquid-glass/combobox';
 import { LgFormField, LgHint, LgLabel } from '@domideimel/ng-liquid-glass/forms';
 
@@ -37,7 +37,6 @@ const CITIES = [
 @Component({
   selector: 'docs-combobox-search-demo',
   imports: [LgCombobox, LgFormField, LgHint, LgLabel],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <lg-form-field class="max-w-sm">
       <label lgLabel>City</label>

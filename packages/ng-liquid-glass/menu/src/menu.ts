@@ -1,14 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  contentChildren,
-  Directive,
-  ElementRef,
-  forwardRef,
-  inject,
-  input,
-  signal,
-} from '@angular/core';
+import { Component, contentChildren, Directive, ElementRef, forwardRef, inject, input, signal } from '@angular/core';
 import { lgUniqueId } from '@domideimel/ng-liquid-glass';
 
 /** An item of an `lg-menu`. Use a native `<button>` so Enter and Space activate it. */
@@ -38,7 +28,6 @@ export class LgMenuItem {
  */
 @Component({
   selector: 'lg-menu',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     role: 'menu',
     popover: 'auto',

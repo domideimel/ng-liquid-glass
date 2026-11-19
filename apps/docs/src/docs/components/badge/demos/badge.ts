@@ -1,11 +1,10 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { LgBadge } from '@domideimel/ng-liquid-glass/badge';
 import { LgCluster } from '@domideimel/ng-liquid-glass/layout';
 
 @Component({
   selector: 'docs-badge-demo',
   imports: [LgBadge, LgCluster],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div lgCluster>
       <span lgBadge>Draft</span>

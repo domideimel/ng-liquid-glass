@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input, model, numberAttribute } from '@angular/core';
+import { Component, computed, inject, input, model, numberAttribute } from '@angular/core';
 import { LG_I18N } from '@domideimel/ng-liquid-glass';
 
 /** The page numbers to show: first, last and a window around the current page, with gaps as `null`. */
@@ -14,7 +14,6 @@ export function lgPageWindow(page: number, pageCount: number, siblings = 1): (nu
 /** Page navigation with previous/next buttons; the current page is marked with `aria-current`. */
 @Component({
   selector: 'lg-pagination',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'block' },
   template: `
     <nav [attr.aria-label]="label() || i18n.pagination">

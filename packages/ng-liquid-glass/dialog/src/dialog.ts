@@ -1,15 +1,4 @@
-import {
-  afterRenderEffect,
-  booleanAttribute,
-  ChangeDetectionStrategy,
-  Component,
-  Directive,
-  type ElementRef,
-  inject,
-  input,
-  model,
-  viewChild,
-} from '@angular/core';
+import { afterRenderEffect, booleanAttribute, Component, Directive, type ElementRef, inject, input, model, viewChild } from '@angular/core';
 import { lgUniqueId } from '@domideimel/ng-liquid-glass';
 
 /**
@@ -24,7 +13,6 @@ import { lgUniqueId } from '@domideimel/ng-liquid-glass';
  */
 @Component({
   selector: 'lg-dialog',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <dialog
       #dialog

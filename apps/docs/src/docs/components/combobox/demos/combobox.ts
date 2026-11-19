@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { LgCombobox } from '@domideimel/ng-liquid-glass/combobox';
 import { LgFormField, LgLabel } from '@domideimel/ng-liquid-glass/forms';
 
@@ -10,7 +10,6 @@ interface Language {
 @Component({
   selector: 'docs-combobox-demo',
   imports: [LgCombobox, LgFormField, LgLabel],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <lg-form-field class="max-w-sm">
       <label lgLabel>Language</label>

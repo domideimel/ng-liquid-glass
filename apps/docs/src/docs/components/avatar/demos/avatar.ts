@@ -1,11 +1,10 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { LgAvatar } from '@domideimel/ng-liquid-glass/avatar';
 import { LgCluster } from '@domideimel/ng-liquid-glass/layout';
 
 @Component({
   selector: 'docs-avatar-demo',
   imports: [LgAvatar, LgCluster],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div lgCluster gap="md">
       <lg-avatar name="Ada Lovelace" size="sm" />

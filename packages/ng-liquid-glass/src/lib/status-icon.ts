@@ -1,11 +1,10 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { Component, input } from '@angular/core';
 
 export type LgStatus = 'info' | 'success' | 'warning' | 'danger';
 
 /** Decorative status icon. Status is always conveyed in text too (WCAG 1.4.1 Use of Color). */
 @Component({
   selector: 'lg-status-icon',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'inline-flex shrink-0', 'aria-hidden': 'true' },
   template: `
     <svg

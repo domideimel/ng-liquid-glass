@@ -1,11 +1,10 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { LgAlert } from '@domideimel/ng-liquid-glass/alert';
 import { LgStack } from '@domideimel/ng-liquid-glass/layout';
 
 @Component({
   selector: 'docs-alert-demo',
   imports: [LgAlert, LgStack],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div lgStack>
       <lg-alert heading="Scheduled maintenance">The service is unavailable on Sunday from 2:00 to 4:00 CET.</lg-alert>

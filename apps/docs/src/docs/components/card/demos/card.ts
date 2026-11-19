@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { LgButton } from '@domideimel/ng-liquid-glass/button';
 import { LgCard } from '@domideimel/ng-liquid-glass/card';
 import { LgCol, LgGrid } from '@domideimel/ng-liquid-glass/layout';
@@ -6,7 +6,6 @@ import { LgCol, LgGrid } from '@domideimel/ng-liquid-glass/layout';
 @Component({
   selector: 'docs-card-demo',
   imports: [LgButton, LgCard, LgCol, LgGrid],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div lgGrid gap="lg" class="rounded-lg-surface bg-[linear-gradient(135deg,#a5b4fc,#fbcfe8)] p-6">
       <article lgCard lgCol [span]="{ base: 12, md: 6 }">

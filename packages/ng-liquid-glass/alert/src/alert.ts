@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 import { LgStatusIcon, type LgStatus } from '@domideimel/ng-liquid-glass';
 
 const STATUS_CLASSES: Record<LgStatus, string> = {
@@ -17,7 +17,6 @@ const STATUS_CLASSES: Record<LgStatus, string> = {
  */
 @Component({
   selector: 'lg-alert',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LgStatusIcon],
   host: { class: 'flex gap-3 rounded-lg-surface border-l-4 p-4 text-lg-fg', '[class]': 'statusClass()' },
   template: `

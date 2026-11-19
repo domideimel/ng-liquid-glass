@@ -1,11 +1,10 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { LgButton } from '@domideimel/ng-liquid-glass/button';
 import { LgCluster } from '@domideimel/ng-liquid-glass/layout';
 
 @Component({
   selector: 'docs-button-demo',
   imports: [LgButton, LgCluster],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div lgCluster gap="md">
       <button lgButton variant="primary" type="button">Primary</button>
