@@ -1,0 +1,1 @@
+export { LgCard } from './card';
