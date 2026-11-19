@@ -54,7 +54,7 @@ Dependabot keeps npm packages and actions up to date, grouped by ecosystem.
 `main` is protected by the ruleset in [`.github/rulesets/protect-main.json`](.github/rulesets/protect-main.json):
 
 - changes only through pull requests, merged by squash or rebase (linear history), with all review threads resolved;
-- required checks, which must pass on an up-to-date branch: *Lint, typecheck, test, build*, the e2e suite in Chromium, Firefox and WebKit, and CodeQL;
+- required checks, which must pass on an up-to-date branch: _Lint, typecheck, test, build_, the e2e suite in Chromium, Firefox and WebKit, and CodeQL;
 - no force pushes, no deletion;
 - only GitHub Actions may bypass it, so the release workflow can commit the changelog and tag.
 
@@ -64,7 +64,7 @@ Apply or update it with:
 gh api -X POST repos/domideimel/ng-liquid-glass/rulesets --input .github/rulesets/protect-main.json
 ```
 
-or in the UI: *Settings → Rules → Rulesets → New ruleset → Import a ruleset*.
+or in the UI: _Settings → Rules → Rulesets → New ruleset → Import a ruleset_.
 
 ## Known constraint
 
