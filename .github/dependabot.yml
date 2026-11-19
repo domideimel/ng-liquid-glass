@@ -16,10 +16,20 @@ updates:
         patterns: ['vitest', '@vitest/*', '@testing-library/*', 'playwright', '@playwright/test', 'axe-core', '@axe-core/*']
       tailwind:
         patterns: ['tailwindcss', '@tailwindcss/*']
+      lint:
+        patterns: ['eslint', '@eslint/*', 'eslint-*', 'typescript-eslint', '@typescript-eslint/*', 'jsonc-eslint-parser', 'prettier']
+      build-tooling:
+        patterns: ['vite', '@swc/*', '@swc-node/*', 'jiti', 'tsx', 'ng-packagr', 'autoprefixer']
     ignore:
       # Pinned until Nx supports @angular-devkit/architect >= 0.2203 (see pnpm-workspace.yaml).
       - dependency-name: '@angular-devkit/architect'
+      # Types must match the Node major we run on (engines + CI: Node 24).
+      - dependency-name: '@types/node'
+        update-types: ['version-update:semver-major']
   - package-ecosystem: github-actions
     directory: /
     schedule:
       interval: weekly
+    groups:
+      actions:
+        patterns: ['*']
