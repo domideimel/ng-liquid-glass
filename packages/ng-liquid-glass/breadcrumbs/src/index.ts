@@ -1,0 +1,1 @@
+export { LgBreadcrumbs } from './breadcrumbs';
