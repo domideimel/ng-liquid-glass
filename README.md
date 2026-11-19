@@ -49,6 +49,23 @@ Browser tests use Playwright's Chromium (`pnpm exec playwright install chromium`
 
 Dependabot keeps npm packages and actions up to date, grouped by ecosystem.
 
+### Branch protection
+
+`main` is protected by the ruleset in [`.github/rulesets/protect-main.json`](.github/rulesets/protect-main.json):
+
+- changes only through pull requests, merged by squash or rebase (linear history), with all review threads resolved;
+- required checks, which must pass on an up-to-date branch: *Lint, typecheck, test, build*, the e2e suite in Chromium, Firefox and WebKit, and CodeQL;
+- no force pushes, no deletion;
+- only GitHub Actions may bypass it, so the release workflow can commit the changelog and tag.
+
+Apply or update it with:
+
+```bash
+gh api -X POST repos/domideimel/ng-liquid-glass/rulesets --input .github/rulesets/protect-main.json
+```
+
+or in the UI: *Settings → Rules → Rulesets → New ruleset → Import a ruleset*.
+
 ## Known constraint
 
 `pnpm-workspace.yaml` pins `@angular-devkit/architect` to `0.2202.8`, because Nx 24.0 cannot load the `exports` map added in 0.2203 (Angular 22.3). That is also why the workspace uses Angular 22.2. Remove the override and upgrade once Nx supports it.
