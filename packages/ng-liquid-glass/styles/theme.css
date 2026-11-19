@@ -1,0 +1,116 @@
+/*
+ * ng-liquid-glass theme for Tailwind CSS v4.
+ *
+ * Usage, in your global stylesheet:
+ *   @import 'tailwindcss';
+ *   @import '@domideimel/ng-liquid-glass/theme.css';
+ *
+ * Every text/background pair below meets WCAG 2.2 AAA (≥ 7:1) in light and dark mode.
+ * Dark mode follows the OS setting; force a mode with data-theme="light|dark" on <html>.
+ */
+
+/* Let Tailwind find the classes used by the library's components (source in the monorepo, fesm2022 when installed). */
+@source '../';
+
+:root {
+  color-scheme: light dark;
+  --lg-bg: light-dark(#ffffff, #09090b);
+  --lg-surface: light-dark(#ffffff, #18181b);
+  --lg-surface-muted: light-dark(#f4f4f5, #27272a);
+  --lg-fg: light-dark(#09090b, #fafafa);
+  --lg-fg-muted: light-dark(#3f3f46, #d4d4d8);
+  --lg-border: light-dark(#e4e4e7, #3f3f46);
+  --lg-control-border: light-dark(#71717a, #a1a1aa);
+  --lg-primary: light-dark(#18181b, #fafafa);
+  --lg-on-primary: light-dark(#ffffff, #18181b);
+  --lg-primary-hover: light-dark(#3f3f46, #d4d4d8);
+  --lg-focus: light-dark(#09090b, #fafafa);
+  --lg-danger: light-dark(#991b1b, #fca5a5);
+  --lg-danger-surface: light-dark(#fef2f2, #450a0a);
+  --lg-on-danger: light-dark(#ffffff, #450a0a);
+  --lg-success: light-dark(#14532d, #86efac);
+  --lg-success-surface: light-dark(#f0fdf4, #052e16);
+  --lg-warning: light-dark(#713f12, #fde047);
+  --lg-warning-surface: light-dark(#fefce8, #422006);
+  --lg-info: light-dark(#1e3a8a, #93c5fd);
+  --lg-info-surface: light-dark(#eff6ff, #172554);
+  --lg-glass: light-dark(rgb(255 255 255 / 0.92), rgb(24 24 27 / 0.92));
+  --lg-glass-border: light-dark(rgb(9 9 11 / 0.1), rgb(250 250 250 / 0.12));
+  --lg-overlay: light-dark(rgb(9 9 11 / 0.6), rgb(0 0 0 / 0.7));
+}
+
+[data-theme='light'] {
+  color-scheme: light;
+}
+
+[data-theme='dark'] {
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-lg-bg: var(--lg-bg);
+  --color-lg-surface: var(--lg-surface);
+  --color-lg-surface-muted: var(--lg-surface-muted);
+  --color-lg-fg: var(--lg-fg);
+  --color-lg-fg-muted: var(--lg-fg-muted);
+  --color-lg-border: var(--lg-border);
+  --color-lg-control-border: var(--lg-control-border);
+  --color-lg-primary: var(--lg-primary);
+  --color-lg-on-primary: var(--lg-on-primary);
+  --color-lg-primary-hover: var(--lg-primary-hover);
+  --color-lg-focus: var(--lg-focus);
+  --color-lg-danger: var(--lg-danger);
+  --color-lg-danger-surface: var(--lg-danger-surface);
+  --color-lg-on-danger: var(--lg-on-danger);
+  --color-lg-success: var(--lg-success);
+  --color-lg-success-surface: var(--lg-success-surface);
+  --color-lg-warning: var(--lg-warning);
+  --color-lg-warning-surface: var(--lg-warning-surface);
+  --color-lg-info: var(--lg-info);
+  --color-lg-info-surface: var(--lg-info-surface);
+  --color-lg-glass-border: var(--lg-glass-border);
+  --color-lg-overlay: var(--lg-overlay);
+  --radius-lg-control: 0.75rem;
+  --radius-lg-surface: 1rem;
+  /* Container-query breakpoints of lgGrid: @lg-sm, @lg-md, @lg-lg, @lg-xl */
+  --container-lg-sm: 30rem;
+  --container-lg-md: 48rem;
+  --container-lg-lg: 64rem;
+  --container-lg-xl: 80rem;
+}
+
+/* Focus indicator meeting WCAG 2.4.13 Focus Appearance (AAA): 3px solid, ≥ 3:1 against the unfocused state. */
+@utility lg-focus-ring {
+  &:focus-visible {
+    outline: 3px solid var(--lg-focus);
+    outline-offset: 2px;
+  }
+}
+
+/* Frosted "liquid glass" material for floating surfaces; opaque enough to keep AAA contrast. */
+@utility lg-glass {
+  background-color: var(--lg-glass);
+  backdrop-filter: blur(16px) saturate(160%);
+  border: 1px solid var(--lg-glass-border);
+  @media (prefers-reduced-transparency: reduce) {
+    background-color: var(--lg-surface);
+    backdrop-filter: none;
+  }
+}
+
+@layer base {
+  html {
+    background-color: var(--lg-bg);
+    color: var(--lg-fg);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
