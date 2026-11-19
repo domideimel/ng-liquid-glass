@@ -4,7 +4,7 @@ An accessible Angular component library (`@domideimel/ng-liquid-glass`) targetin
 
 ## Stack
 
-Nx 24 · Angular 22.2 (standalone, zoneless, signals, Signal Forms, `OnPush`) · Tailwind CSS 4 · NgDoc 22 · Vitest 5 in real Chromium · Playwright · pnpm 12 · Node 24.
+Nx 24 · Angular 22.2 (standalone, zoneless, signals, Signal Forms, OnPush by default) · Tailwind CSS 4 · NgDoc 22 · Vitest 5 in real Chromium · Playwright · pnpm 12 · Node 24.
 
 ## Skills
 
@@ -22,7 +22,7 @@ The Angular skill assumes a plain Angular CLI project. Here, Nx wins:
 - Native elements first; otherwise follow the matching WAI-ARIA APG pattern.
 - Only `lg-*` theme tokens from `packages/ng-liquid-glass/styles`; text contrast ≥ 7:1, targets ≥ 44 × 44 px, `lg-focus-ring` on everything focusable.
 - Tailwind class names as complete string literals, never built from pieces.
-- Signal inputs/outputs/queries, `ChangeDetectionStrategy.OnPush`, no `zone.js`, no NgModules.
+- Signal inputs/outputs/queries, no `zone.js`, no NgModules. Never set `changeDetection`: OnPush is the default since Angular 22 and lint rejects both explicit `OnPush` and `Eager`.
 - Specs use Testing Library and cover ARIA states, keyboard behaviour and `expectNoA11yViolations()`. Coverage gates: ≥ 95 % statements/functions/lines, ≥ 90 % branches.
 - Every component has a docs demo in `apps/docs` and an entry in `apps/docs-e2e/src/pages.ts`.
 - The library must stay under a 40 KB gzipped budget (`pnpm size`).

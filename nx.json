@@ -69,12 +69,10 @@
     "@nx/angular:library": {
       "linter": "eslint",
       "unitTestRunner": "vitest-angular",
-      "changeDetection": "OnPush",
       "style": "css"
     },
     "@nx/angular:component": {
-      "style": "css",
-      "changeDetection": "OnPush"
+      "style": "css"
     }
   },
   "analytics": false,

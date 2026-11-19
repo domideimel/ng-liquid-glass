@@ -1,10 +1,9 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { LgCol, LgGrid } from '@domideimel/ng-liquid-glass/layout';
 
 @Component({
   selector: 'docs-grid-demo',
   imports: [LgCol, LgGrid],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div lgGrid>
       <div lgCol class="rounded-lg-control bg-lg-surface-muted p-4">Header — full width</div>

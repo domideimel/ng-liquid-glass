@@ -1,11 +1,10 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { LgButton } from '@domideimel/ng-liquid-glass/button';
 import { LgDialog, LgDialogClose, LgDialogTitle } from '@domideimel/ng-liquid-glass/dialog';
 
 @Component({
   selector: 'docs-dialog-demo',
   imports: [LgButton, LgDialog, LgDialogClose, LgDialogTitle],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <button lgButton variant="danger" type="button" (click)="open.set(true)">Delete project</button>
     <lg-dialog [(open)]="open">

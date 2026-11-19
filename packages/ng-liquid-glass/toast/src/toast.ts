@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, Injectable, input, signal } from '@angular/core';
+import { Component, computed, inject, Injectable, input, signal } from '@angular/core';
 import { LG_I18N, LgStatusIcon, type LgStatus } from '@domideimel/ng-liquid-glass';
 
 export interface LgToastAction {
@@ -57,7 +57,6 @@ export class LgToaster {
 /** One toast. Rendered by `lg-toaster`. */
 @Component({
   selector: 'lg-toast',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LgStatusIcon],
   host: {
     class:
@@ -125,7 +124,6 @@ const ICON_CLASS: Record<LgStatus, string> = {
  */
 @Component({
   selector: 'lg-toaster',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LgToastItem],
   host: {
     class: 'pointer-events-none fixed inset-x-0 bottom-0 z-50 flex flex-col items-center gap-2 p-4',

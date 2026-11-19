@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { LgButton } from '@domideimel/ng-liquid-glass/button';
 import { LgCluster } from '@domideimel/ng-liquid-glass/layout';
 import { LgTooltip } from '@domideimel/ng-liquid-glass/tooltip';
@@ -6,7 +6,6 @@ import { LgTooltip } from '@domideimel/ng-liquid-glass/tooltip';
 @Component({
   selector: 'docs-tooltip-demo',
   imports: [LgButton, LgCluster, LgTooltip],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div lgCluster gap="md" class="pt-12">
       <button lgButton type="button" aria-label="Copy link" lgTooltip="Copies the link to your clipboard">

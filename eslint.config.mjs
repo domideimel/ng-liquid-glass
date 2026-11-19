@@ -74,7 +74,8 @@ export const angularStrict = [
   {
     files: ['**/*.ts'],
     rules: {
-      '@angular-eslint/prefer-on-push-component-change-detection': 'error',
+      // OnPush is the default since Angular 22: forbid opting out (Eager) and the now-redundant explicit OnPush.
+      '@angular-eslint/prefer-on-push-component-change-detection': ['error', { allowExplicitOnPush: false }],
       '@angular-eslint/prefer-signals': 'error',
       '@angular-eslint/prefer-output-readonly': 'error',
       '@angular-eslint/no-async-lifecycle-method': 'error',

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, input, linkedSignal } from '@angular/core';
+import { Component, computed, input, linkedSignal } from '@angular/core';
 
 export type LgAvatarSize = 'sm' | 'md' | 'lg';
 
@@ -7,7 +7,6 @@ const SIZES: Record<LgAvatarSize, string> = { sm: 'size-8 text-xs', md: 'size-11
 /** A person's picture, falling back to their initials when there is no image or it fails to load. */
 @Component({
   selector: 'lg-avatar',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full bg-lg-surface-muted font-semibold text-lg-fg',
     '[class]': 'sizeClass()',

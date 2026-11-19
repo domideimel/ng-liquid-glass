@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { form, FormField, maxLength, required } from '@angular/forms/signals';
 import { LgFormField, LgHint, LgInput, LgLabel } from '@domideimel/ng-liquid-glass/forms';
 import { LgStack } from '@domideimel/ng-liquid-glass/layout';
@@ -6,7 +6,6 @@ import { LgStack } from '@domideimel/ng-liquid-glass/layout';
 @Component({
   selector: 'docs-text-fields-demo',
   imports: [FormField, LgFormField, LgHint, LgInput, LgLabel, LgStack],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div lgStack gap="lg" class="max-w-md">
       <lg-form-field>
