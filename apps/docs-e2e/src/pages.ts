@@ -1,0 +1,22 @@
+/** Every documentation page with demos. */
+export const DEMO_PAGES = [
+  'guides/forms',
+  'components/accordion',
+  'components/alert',
+  'components/avatar',
+  'components/badge',
+  'components/breadcrumbs',
+  'components/button',
+  'components/card',
+  'components/combobox',
+  'components/dialog',
+  'components/form-controls',
+  'components/layout',
+  'components/menu',
+  'components/pagination',
+  'components/progress',
+  'components/skeleton',
+  'components/tabs',
+  'components/toast',
+  'components/tooltip',
+] as const;
