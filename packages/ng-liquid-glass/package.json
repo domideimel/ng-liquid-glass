@@ -1,0 +1,38 @@
+{
+  "name": "@domideimel/ng-liquid-glass",
+  "version": "0.0.1",
+  "description": "Accessible (WCAG 2.2 AAA), native-first Angular components styled with Tailwind CSS v4.",
+  "license": "MIT",
+  "keywords": [
+    "angular",
+    "components",
+    "accessibility",
+    "wcag",
+    "tailwindcss",
+    "signal-forms"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/domideimel/ng-liquid-glass.git",
+    "directory": "packages/ng-liquid-glass"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "peerDependencies": {
+    "@angular/core": "^22.2.0",
+    "@angular/forms": "^22.2.0",
+    "tailwindcss": "^4.1.0"
+  },
+  "peerDependenciesMeta": {
+    "@angular/forms": {
+      "optional": true
+    }
+  },
+  "exports": {
+    "./theme.css": "./styles/theme.css"
+  },
+  "sideEffects": [
+    "*.css"
+  ]
+}
