@@ -1,0 +1,1 @@
+export { LgTooltip } from './tooltip';
