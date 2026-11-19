@@ -1,10 +1,9 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { LgAccordionItem } from '@domideimel/ng-liquid-glass/accordion';
 
 @Component({
   selector: 'docs-accordion-demo',
   imports: [LgAccordionItem],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="max-w-xl">
       <details lgAccordionItem name="faq" open>

@@ -1,10 +1,9 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { LgTab, LgTabPanel, LgTabs } from '@domideimel/ng-liquid-glass/tabs';
 
 @Component({
   selector: 'docs-tabs-demo',
   imports: [LgTab, LgTabPanel, LgTabs],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <lg-tabs label="Account settings" [(value)]="tab">
       <button lgTab type="button" value="profile">Profile</button>

@@ -1,11 +1,10 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { LgBreadcrumbs } from '@domideimel/ng-liquid-glass/breadcrumbs';
 
 @Component({
   selector: 'docs-breadcrumbs-demo',
   imports: [LgBreadcrumbs, RouterLink],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <nav lgBreadcrumbs>
       <ol>

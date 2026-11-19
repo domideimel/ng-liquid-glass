@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { form, FormField, max, min } from '@angular/forms/signals';
 import { LgCheckbox, LgChoice, LgFieldset, LgRadio, LgSlider, LgSwitch } from '@domideimel/ng-liquid-glass/forms';
 import { LgStack } from '@domideimel/ng-liquid-glass/layout';
@@ -6,7 +6,6 @@ import { LgStack } from '@domideimel/ng-liquid-glass/layout';
 @Component({
   selector: 'docs-choices-demo',
   imports: [FormField, LgCheckbox, LgChoice, LgFieldset, LgRadio, LgSlider, LgSwitch, LgStack],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div lgStack gap="lg" class="max-w-md">
       <label lgChoice><input type="checkbox" lgSwitch [formField]="settings.notifications" /> Email notifications</label>

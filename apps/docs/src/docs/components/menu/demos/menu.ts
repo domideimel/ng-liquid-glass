@@ -1,11 +1,10 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { LgButton } from '@domideimel/ng-liquid-glass/button';
 import { LgMenu, LgMenuItem, LgMenuTrigger } from '@domideimel/ng-liquid-glass/menu';
 
 @Component({
   selector: 'docs-menu-demo',
   imports: [LgButton, LgMenu, LgMenuItem, LgMenuTrigger],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <button lgButton type="button" [lgMenuTrigger]="menu">Actions</button>
     <lg-menu #menu>

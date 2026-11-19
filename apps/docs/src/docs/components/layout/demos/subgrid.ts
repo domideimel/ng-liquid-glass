@@ -1,11 +1,10 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { LgCard } from '@domideimel/ng-liquid-glass/card';
 import { LgCol, LgGrid } from '@domideimel/ng-liquid-glass/layout';
 
 @Component({
   selector: 'docs-subgrid-demo',
   imports: [LgCard, LgCol, LgGrid],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div lgGrid gap="lg">
       @for (plan of plans; track plan.name) {

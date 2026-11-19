@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Directive, inject, input } from '@angular/core';
+import { Component, Directive, inject, input } from '@angular/core';
 import { LG_I18N } from '@domideimel/ng-liquid-glass';
 
 /** Styles a native `<progress>`. Omit `value` for an indeterminate state; label it with `aria-label` or a `<label>`. */
@@ -24,7 +24,6 @@ export class LgMeter {}
 /** An indeterminate loading indicator announced as a status. Prefer `lgProgress` when progress is known. */
 @Component({
   selector: 'lg-spinner',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: { role: 'status', class: 'inline-flex items-center gap-2 text-lg-fg' },
   template: `
     <svg aria-hidden="true" class="size-6 animate-spin motion-reduce:animate-none" viewBox="0 0 24 24" fill="none">

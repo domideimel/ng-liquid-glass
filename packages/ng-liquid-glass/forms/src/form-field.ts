@@ -1,14 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  DestroyRef,
-  forwardRef,
-  inject,
-  InjectionToken,
-  signal,
-  type Signal,
-} from '@angular/core';
+import { Component, computed, DestroyRef, forwardRef, inject, InjectionToken, signal, type Signal } from '@angular/core';
 import { lgUniqueId, LgStatusIcon } from '@domideimel/ng-liquid-glass';
 
 /** What a control exposes to its surrounding `lg-form-field`. */
@@ -36,7 +26,6 @@ export const LG_FORM_FIELD = new InjectionToken<LgFormField>('LG_FORM_FIELD');
  */
 @Component({
   selector: 'lg-form-field',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LgStatusIcon],
   providers: [{ provide: LG_FORM_FIELD, useExisting: forwardRef(() => LgFormField) }],
   host: { class: 'flex flex-col gap-1.5' },
@@ -73,7 +62,6 @@ export class LgFormField {
 @Component({
   // eslint-disable-next-line @angular-eslint/component-selector -- enhances the native <label> element
   selector: 'label[lgLabel]',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'font-medium text-lg-fg', '[attr.for]': 'field.control()?.id' },
   template: `<ng-content />
     @if (field.control()?.isRequired()) {
@@ -87,7 +75,6 @@ export class LgLabel {
 /** Help text for a form field, referenced by the control via `aria-describedby`. */
 @Component({
   selector: 'lg-hint',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'block text-sm text-lg-fg-muted', '[id]': 'field.hintId' },
   template: '<ng-content />',
 })
@@ -105,7 +92,6 @@ export class LgHint {
 /** Custom error content, shown while the field is invalid and touched. */
 @Component({
   selector: 'lg-error',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'flex items-start gap-1.5' },
   template: '<ng-content />',
 })

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { email, form, FormField, minLength, required, submit } from '@angular/forms/signals';
 import { LgButton } from '@domideimel/ng-liquid-glass/button';
 import { LgCombobox } from '@domideimel/ng-liquid-glass/combobox';
@@ -8,7 +8,6 @@ import { LgToaster } from '@domideimel/ng-liquid-glass/toast';
 @Component({
   selector: 'docs-sign-up-form',
   imports: [FormField, LgButton, LgCheckbox, LgChoice, LgCombobox, LgFormField, LgHint, LgInput, LgLabel],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <form class="flex max-w-md flex-col gap-5" novalidate (submit)="onSubmit($event)">
       <lg-form-field>

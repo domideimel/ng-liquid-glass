@@ -1,15 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  contentChildren,
-  Directive,
-  ElementRef,
-  forwardRef,
-  inject,
-  input,
-  model,
-} from '@angular/core';
+import { Component, computed, contentChildren, Directive, ElementRef, forwardRef, inject, input, model } from '@angular/core';
 import { lgUniqueId } from '@domideimel/ng-liquid-glass';
 
 /** A tab button. Its `value` links it to the `lgTabPanel` with the same value. */
@@ -63,7 +52,6 @@ export class LgTabPanel {
  */
 @Component({
   selector: 'lg-tabs',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'block' },
   template: `
     <!-- eslint-disable-next-line @angular-eslint/template/interactive-supports-focus -- roving tabindex: the tabs inside are focusable, the tablist is not -->

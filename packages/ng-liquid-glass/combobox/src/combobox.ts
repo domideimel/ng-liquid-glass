@@ -1,7 +1,6 @@
 import {
   afterRenderEffect,
   booleanAttribute,
-  ChangeDetectionStrategy,
   Component,
   computed,
   DestroyRef,
@@ -33,7 +32,6 @@ export function lgContains(text: string, query: string): boolean {
  */
 @Component({
   selector: 'lg-combobox',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'relative block' },
   template: `
     <input
