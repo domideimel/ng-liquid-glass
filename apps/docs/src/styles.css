@@ -4,9 +4,8 @@
 @import 'tailwindcss/utilities.css' layer(utilities);
 @import '../../../packages/ng-liquid-glass/styles/theme.css';
 
-/* Demos are rendered on the library's surface colours. */
-.ng-doc-demo-container,
-.docs-demo {
+/* Demos inherit the library's text colour, not NgDoc's muted page text. */
+.ng-doc-demo-frame {
   color: var(--lg-fg);
 }
 
