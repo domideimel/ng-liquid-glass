@@ -27,7 +27,7 @@ jobs:
           node-version: 24
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - uses: nrwl/nx-set-shas@v4
+      - uses: nrwl/nx-set-shas@v5
       - name: Install Chromium for browser tests
         run: pnpm exec playwright install --with-deps chromium
 
