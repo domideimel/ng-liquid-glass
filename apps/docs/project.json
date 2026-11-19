@@ -114,6 +114,18 @@
         "staticFilePath": "dist/apps/docs/browser",
         "spa": true
       }
+    },
+    "generate": {
+      "command": "ng-doc generate --project docs --docs-root apps/docs/src --tsconfig apps/docs/tsconfig.app.json --output-root ng-doc/docs --cache-root .cache/ng-doc/docs --progress off",
+      "cache": true,
+      "inputs": ["{projectRoot}/src/**/*", "{workspaceRoot}/packages/ng-liquid-glass/**/*.ts"],
+      "outputs": ["{workspaceRoot}/ng-doc/docs"]
+    },
+    "lint": {
+      "dependsOn": ["generate"]
+    },
+    "typecheck": {
+      "dependsOn": ["generate"]
     }
   }
 }
