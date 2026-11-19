@@ -6,6 +6,7 @@ on:
   pull_request:
 
 permissions:
+  actions: read # nx-set-shas reads previous workflow runs
   contents: read
 
 concurrency:
