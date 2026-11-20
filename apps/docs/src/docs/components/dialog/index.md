@@ -10,6 +10,12 @@
 - `dismissible` also closes it on a backdrop click (`closedby="any"`).
 - The browser focuses the first focusable element, so put the least destructive action first.
 
+## Drawer and sheet
+
+`placement="start"` and `placement="end"` slide the dialog in from a side; they follow the reading direction. `placement="bottom"` makes it a sheet. Focus handling and closing behave like the centred dialog.
+
+{{ NgDocActions.demo("DrawerDemo") }}
+
 ## Keyboard
 
 | Key               | Action                                  |

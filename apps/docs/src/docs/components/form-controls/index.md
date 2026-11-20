@@ -2,6 +2,8 @@ Native inputs styled and connected to `lg-form-field`. All of them bind to Signa
 
 {{ NgDocActions.demo("TextFieldsDemo") }}
 
+Dates, times and numbers use the native inputs (`type="date"`, `time`, `number`): the browser provides an accessible, localised picker and keyboard entry.
+
 ## Checkbox, radio, switch and slider
 
 Wrap checkboxes, radios and switches with their text in `<label lgChoice>`, so the whole row is a 44 px target. Group radios in `<fieldset lgFieldset>` with a `<legend>`.
