@@ -13,8 +13,9 @@ export default [
         'error',
         {
           ignoredFiles: ['{projectRoot}/eslint.config.{js,cjs,mjs,ts,cts,mts}', '{projectRoot}/**/*.spec.ts', '{projectRoot}/test/**/*'],
-          // Tailwind is consumed through styles/theme.css, not imported from TypeScript.
-          ignoredDependencies: ['tailwindcss'],
+          // Tailwind is consumed through styles/theme.css, not imported from TypeScript. The ng-add schematic runs
+          // inside the consumer's Angular CLI, which provides the schematics packages (as with Angular Material).
+          ignoredDependencies: ['tailwindcss', '@angular-devkit/schematics', '@schematics/angular'],
         },
       ],
     },

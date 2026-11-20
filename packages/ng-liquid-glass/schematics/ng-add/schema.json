@@ -1,0 +1,29 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "LgNgAddSchema",
+  "title": "ng-liquid-glass ng-add",
+  "type": "object",
+  "properties": {
+    "project": {
+      "type": "string",
+      "description": "The application to set up. Defaults to the only application of the workspace.",
+      "$default": { "$source": "projectName" }
+    },
+    "locale": {
+      "type": "string",
+      "description": "Built-in translation of the component texts to provide.",
+      "enum": ["en", "de", "fr", "es"],
+      "default": "en",
+      "x-prompt": {
+        "message": "Which language should the built-in component texts use?",
+        "type": "list",
+        "items": [
+          { "value": "en", "label": "English" },
+          { "value": "de", "label": "German" },
+          { "value": "fr", "label": "French" },
+          { "value": "es", "label": "Spanish" }
+        ]
+      }
+    }
+  }
+}
