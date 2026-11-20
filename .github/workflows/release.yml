@@ -10,6 +10,10 @@ on:
         description: Preview the release without changing anything
         type: boolean
         default: true
+      version:
+        description: Version or bump (e.g. 0.1.0, minor). Empty = derived from Conventional Commits
+        type: string
+        default: ''
 
 permissions:
   contents: write
@@ -39,8 +43,9 @@ jobs:
       - run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-      - run: pnpm nx release --yes ${{ inputs.dry-run && '--dry-run' || '' }}
+      - run: pnpm nx release $VERSION --yes ${{ inputs.dry-run && '--dry-run' || '' }}
         env:
+          VERSION: ${{ inputs.version }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

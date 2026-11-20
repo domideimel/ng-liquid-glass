@@ -35,7 +35,7 @@ pnpm lint && pnpm test && pnpm build && pnpm e2e
 ## Releasing
 
 1. Open a PR from `develop` into `main` and merge it with a merge commit. `develop` is fast-forwarded automatically.
-2. Run the _Release_ workflow on `main`: first as a dry run (the default) to check the version and changelog, then for real.
+2. Run the _Release_ workflow on `main`: first as a dry run (the default) to check the version and changelog, then for real. The version comes from the Conventional Commits since the last tag; set the _version_ input (`0.1.0`, `minor`) to override it, e.g. for the first release.
 
 Publishing to npmjs.com (in addition to GitHub Packages) is off until it is set up:
 
@@ -43,3 +43,17 @@ Publishing to npmjs.com (in addition to GitHub Packages) is off until it is set 
 2. First publish: add an npm automation token as the repository secret `NPM_TOKEN`. Trusted publishing can only be configured for a package that already exists.
 3. Set the repository variable `NPM_PUBLISH` to `true` (_Settings → Secrets and variables → Actions → Variables_).
 4. After the first publish, configure trusted publishing on npmjs.com (package settings: repository `domideimel/ng-liquid-glass`, workflow `release.yml`), then delete the `NPM_TOKEN` secret. Releases then authenticate with OIDC and carry provenance.
+
+## Versioning and 1.0
+
+Until 1.0, minor versions may contain breaking changes. Every breaking change is a `feat!:`/`fix!:` commit, or has a `BREAKING CHANGE:` footer, and its commit body says how to migrate. The changelog carries that text, so it is the migration guide.
+
+1.0 ships when all of these hold:
+
+- [ ] Every component in TODO.md's "Missing components" list that is planned for 1.0 is released.
+- [ ] Every public API has been reviewed for naming and consistency (inputs, outputs, selectors, CSS tokens), and the API reference is complete.
+- [ ] Each component has been checked with NVDA + Firefox and VoiceOver + Safari.
+- [ ] The package is on npmjs.com with provenance.
+- [ ] No open bug with the `bug` label.
+
+From 1.0 on, the library follows semantic versioning: breaking changes only in major versions, with a migration section in the release notes.
