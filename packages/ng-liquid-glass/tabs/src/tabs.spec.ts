@@ -56,6 +56,21 @@ describe('LgTabs', () => {
     expect(screen.getByText('Team panel')).toBeVisible();
   });
 
+  it('reverses the arrow keys in a right-to-left layout', async () => {
+    const { tab, value } = await setup('profile');
+    document.documentElement.dir = 'rtl';
+    try {
+      tab('Profile').focus();
+      await userEvent.keyboard('{ArrowLeft}');
+      expect(tab('Security')).toHaveFocus();
+      expect(value()).toBe('security');
+      await userEvent.keyboard('{ArrowRight}');
+      expect(tab('Profile')).toHaveFocus();
+    } finally {
+      document.documentElement.dir = '';
+    }
+  });
+
   it('selects on click', async () => {
     const { tab, value } = await setup();
     await userEvent.click(tab('Security'));

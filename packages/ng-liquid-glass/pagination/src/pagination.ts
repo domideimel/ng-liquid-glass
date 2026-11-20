@@ -93,9 +93,9 @@ export class LgPagination {
 
   protected readonly pages = computed(() => lgPageWindow(this.page(), this.pageCount()));
   protected readonly buttonClass =
-    'lg-focus-ring inline-flex min-h-11 min-w-11 cursor-pointer border-0 bg-transparent font-[inherit] text-base items-center justify-center rounded-lg-control px-3 font-medium text-lg-fg hover:bg-lg-surface-muted disabled:cursor-not-allowed disabled:opacity-60';
+    'lg-focus-ring inline-flex min-h-11 min-w-11 cursor-pointer border border-transparent bg-transparent font-[inherit] text-base items-center justify-center rounded-lg-control px-3 font-medium text-lg-fg hover:bg-lg-surface-muted disabled:cursor-not-allowed disabled:opacity-60';
   protected readonly activeClass =
-    'lg-focus-ring inline-flex min-h-11 min-w-11 cursor-pointer border-0 bg-lg-primary font-[inherit] text-base items-center justify-center rounded-lg-control px-3 font-medium text-lg-on-primary disabled:cursor-not-allowed disabled:opacity-60';
+    'lg-focus-ring inline-flex min-h-11 min-w-11 cursor-pointer border border-transparent bg-lg-primary lg-forced-selected font-[inherit] text-base items-center justify-center rounded-lg-control px-3 font-medium text-lg-on-primary disabled:cursor-not-allowed disabled:opacity-60';
 
   protected go(page: number): void {
     this.page.set(Math.min(Math.max(page, 1), this.pageCount()));

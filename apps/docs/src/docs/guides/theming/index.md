@@ -37,6 +37,15 @@ Override any token after importing the theme. Keep the 7:1 ratio if you need AAA
 
 `lg-glass` is a utility for floating surfaces (menus, dialogs, toasts, tooltips): a 92 % opaque background with blur. It is opaque enough to keep AAA contrast over any content, and becomes solid under `prefers-reduced-transparency: reduce`.
 
+## High contrast and forced colors
+
+- **`prefers-contrast: more`:** muted text becomes full-strength text, borders use the control border colour, and the glass material turns opaque. Nothing to configure.
+- **Forced colors (Windows High Contrast):** the system palette replaces the theme. Selected states (tab, page, combobox option) switch to the system `Highlight` colours, progress bars and meters render natively, and buttons keep a visible border.
+
+## Right-to-left
+
+The components use logical properties (`ps-*`, `border-s-*`, `start-*`), so they mirror under `dir="rtl"` on `<html>` or any ancestor. Arrow keys in tabs follow the reading direction.
+
 ## Focus
 
 `lg-focus-ring` draws a 3 px solid outline with a 2 px offset in `--lg-focus`, meeting WCAG 2.4.13 Focus Appearance (AAA). Use it on your own interactive elements too.

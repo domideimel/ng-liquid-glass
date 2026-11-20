@@ -80,3 +80,13 @@ test('skip link: is the first focusable element and becomes visible', async ({ p
   await expect(skip).toBeFocused();
   await expect(skip).toBeVisible();
 });
+
+test('tabs: only the selected panel is shown', async ({ page }) => {
+  await page.goto('components/tabs');
+  const panels = page.locator('.ng-doc-demo-frame [role=tabpanel]');
+  await expect(panels.first()).toBeVisible();
+  await expect(panels.filter({ visible: true })).toHaveCount(1);
+  await page.getByRole('tab', { name: 'Security' }).click();
+  await expect(panels.filter({ visible: true })).toHaveCount(1);
+  await expect(page.getByText('Passkeys, two-factor authentication and sessions.')).toBeVisible();
+});

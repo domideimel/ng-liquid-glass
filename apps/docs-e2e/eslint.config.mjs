@@ -6,7 +6,9 @@ export default [
   ...baseConfig,
   {
     files: ['**/*.ts', '**/*.js'],
-    // Override or add rules here
-    rules: {},
+    rules: {
+      // Helpers that wrap expect() count as assertions.
+      'playwright/expect-expect': ['warn', { assertFunctionNames: ['expectHighlighted'] }],
+    },
   },
 ];

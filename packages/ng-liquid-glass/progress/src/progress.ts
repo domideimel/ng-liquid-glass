@@ -6,7 +6,7 @@ import { LG_I18N } from '@domideimel/ng-liquid-glass';
   selector: 'progress[lgProgress]',
   host: {
     class:
-      'block h-2 w-full appearance-none overflow-hidden rounded-full bg-lg-surface-muted text-lg-primary [&::-moz-progress-bar]:bg-lg-primary [&::-webkit-progress-bar]:bg-lg-surface-muted [&::-webkit-progress-value]:bg-lg-primary',
+      'block h-2 w-full appearance-none overflow-hidden rounded-full bg-lg-surface-muted text-lg-primary forced-colors:appearance-auto [&::-moz-progress-bar]:bg-lg-primary [&::-webkit-progress-bar]:bg-lg-surface-muted [&::-webkit-progress-value]:bg-lg-primary',
   },
 })
 export class LgProgress {}
@@ -16,7 +16,7 @@ export class LgProgress {}
   selector: 'meter[lgMeter]',
   host: {
     class:
-      'block h-2 w-full appearance-none overflow-hidden rounded-full bg-lg-surface-muted [&::-moz-meter-bar]:bg-lg-primary [&::-webkit-meter-bar]:h-2 [&::-webkit-meter-bar]:rounded-full [&::-webkit-meter-bar]:border-0 [&::-webkit-meter-bar]:bg-lg-surface-muted [&::-webkit-meter-even-less-good-value]:bg-lg-danger [&::-webkit-meter-optimum-value]:bg-lg-primary [&::-webkit-meter-suboptimum-value]:bg-lg-warning',
+      'block h-2 w-full appearance-none overflow-hidden rounded-full bg-lg-surface-muted forced-colors:appearance-auto [&::-moz-meter-bar]:bg-lg-primary [&::-webkit-meter-bar]:h-2 [&::-webkit-meter-bar]:rounded-full [&::-webkit-meter-bar]:border-0 [&::-webkit-meter-bar]:bg-lg-surface-muted [&::-webkit-meter-even-less-good-value]:bg-lg-danger [&::-webkit-meter-optimum-value]:bg-lg-primary [&::-webkit-meter-suboptimum-value]:bg-lg-warning',
   },
 })
 export class LgMeter {}

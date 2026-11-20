@@ -25,7 +25,7 @@ Nice to have:
 - [x] Cache Playwright browsers between runs.
 - [x] Comment bundle size and coverage deltas against `main` on each PR.
 - [x] `actions/dependency-review-action` on PRs; OpenSSF Scorecard; pin actions to commit SHAs (Dependabot keeps them current).
-- [ ] Visual regression screenshots (light, dark, forced colors) with Playwright.
+- [x] Visual regression screenshots (light, dark, forced colors) with Playwright.
 - [x] Docs previews per PR: the `docs-preview` artifact.
 - [x] Nx Cloud remote cache: decided against (local cache is enough; the Nx Cloud skills stay, Nx regenerates them).
 - [x] `SECURITY.md`, issue templates (bug, component request).
@@ -38,9 +38,9 @@ Nice to have:
 
 ## Existing components
 
-- [ ] RTL: the switch thumb uses `translate-x-5` and moves the wrong way under `dir="rtl"`. Audit for physical properties (`left`, `ml-`, `translate-x`), then add an RTL e2e pass.
-- [ ] Forced colors (Windows High Contrast): only the switch handles it. Audit every component and add an e2e run with `forcedColors: 'active'`.
-- [ ] `prefers-contrast: more`: stronger borders and glass opacity.
+- [x] RTL: the switch thumb uses `translate-x-5` and moves the wrong way under `dir="rtl"`. Audit for physical properties (`left`, `ml-`, `translate-x`), then add an RTL e2e pass.
+- [x] Forced colors (Windows High Contrast): only the switch handles it. Audit every component and add an e2e run with `forcedColors: 'active'`.
+- [x] `prefers-contrast: more`: stronger borders and glass opacity.
 - [ ] SSR and hydration smoke test (render every demo on the server, hydrate, run axe).
 - [ ] Component test harnesses for consumers (a `testing` entry point per component, CDK-harness style).
 - [ ] Theming: document token overrides and support an accent colour besides the neutral primary.
