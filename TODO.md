@@ -41,10 +41,11 @@ Nice to have:
 - [ ] RTL: the switch thumb uses `translate-x-5` and moves the wrong way under `dir="rtl"`. Audit for physical properties (`left`, `ml-`, `translate-x`), then add an RTL e2e pass.
 - [ ] Forced colors (Windows High Contrast): only the switch handles it. Audit every component and add an e2e run with `forcedColors: 'active'`.
 - [ ] `prefers-contrast: more`: stronger borders and glass opacity.
-- [ ] SSR and hydration smoke test (render every demo on the server, hydrate, run axe).
-- [ ] Component test harnesses for consumers (a `testing` entry point per component, CDK-harness style).
-- [ ] Theming: document token overrides and support an accent colour besides the neutral primary.
-- [ ] i18n: ship ready-made `provideLgI18n` texts for a few languages and document them.
+- [x] SSR smoke test: `tools/ssr-smoke.mjs` renders every component of the built package with `@angular/platform-server` in CI and checks the markup and hydration annotations.
+- [ ] Client-side hydration in a real browser (needs an SSR build of the docs, or a small SSR test app).
+- [x] Component test harnesses for consumers: `@domideimel/ng-liquid-glass/testing` (one entry point, 12 harnesses, CDK style).
+- [x] Theming: document token overrides and support an accent colour besides the neutral primary (`--lg-accent*`, `variant="accent"`).
+- [x] i18n: ship ready-made `provideLgI18n` texts for a few languages and document them (`LG_I18N_DE`, `_FR`, `_ES`).
 
 ## Missing components
 

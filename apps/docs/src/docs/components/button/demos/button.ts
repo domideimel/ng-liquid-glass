@@ -8,6 +8,7 @@ import { LgCluster } from '@domideimel/ng-liquid-glass/layout';
   template: `
     <div lgCluster gap="md">
       <button lgButton variant="primary" type="button">Primary</button>
+      <button lgButton variant="accent" type="button">Accent</button>
       <button lgButton type="button">Secondary</button>
       <button lgButton variant="ghost" type="button">Ghost</button>
       <button lgButton variant="danger" type="button">Delete</button>
