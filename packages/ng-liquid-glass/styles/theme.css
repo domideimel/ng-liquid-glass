@@ -39,6 +39,17 @@
   --lg-overlay: light-dark(rgb(9 9 11 / 0.6), rgb(0 0 0 / 0.7));
 }
 
+/* prefers-contrast: more: stronger borders and muted text, opaque glass. */
+@media (prefers-contrast: more) {
+  :root {
+    --lg-fg-muted: var(--lg-fg);
+    --lg-border: var(--lg-control-border);
+    --lg-control-border: light-dark(#3f3f46, #d4d4d8);
+    --lg-glass: var(--lg-surface);
+    --lg-glass-border: var(--lg-control-border);
+  }
+}
+
 [data-theme='light'] {
   color-scheme: light;
 }
@@ -84,6 +95,19 @@
   &:focus-visible {
     outline: 3px solid var(--lg-focus);
     outline-offset: 2px;
+  }
+}
+
+/*
+ * Selected state for Windows High Contrast / forced colors, where backgrounds are replaced by the system palette:
+ * use the system highlight colours so the selected tab, page or option stays visible.
+ */
+@utility lg-forced-selected {
+  @media (forced-colors: active) {
+    /* !important: must win over the component's own background utility, which forced colors would otherwise keep. */
+    forced-color-adjust: none !important;
+    background-color: Highlight !important;
+    color: HighlightText !important;
   }
 }
 

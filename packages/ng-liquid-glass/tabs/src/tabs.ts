@@ -8,7 +8,7 @@ import { lgUniqueId } from '@domideimel/ng-liquid-glass';
     type: 'button',
     role: 'tab',
     class:
-      'lg-focus-ring min-h-11 cursor-pointer rounded-lg-control border-0 bg-transparent font-[inherit] text-base px-4 font-medium text-lg-fg-muted hover:text-lg-fg aria-selected:bg-lg-surface aria-selected:text-lg-fg aria-selected:shadow-sm',
+      'lg-focus-ring min-h-11 cursor-pointer rounded-lg-control border border-transparent bg-transparent font-[inherit] text-base px-4 font-medium text-lg-fg-muted hover:text-lg-fg aria-selected:bg-lg-surface aria-selected:text-lg-fg aria-selected:shadow-sm aria-selected:lg-forced-selected',
     '[id]': 'tabs.tabId(value())',
     '[attr.aria-selected]': 'selected()',
     '[attr.aria-controls]': 'tabs.panelId(value())',
@@ -42,7 +42,7 @@ export class LgTabPanel {
 
 /**
  * Tabs (WAI-ARIA tabs pattern with automatic activation): Arrow keys, Home and End move between
- * tabs, Tab moves into the panel.
+ * tabs, Tab moves into the panel. Arrow keys follow the reading direction (`dir="rtl"`).
  *
  * @example
  * <lg-tabs [(value)]="tab" label="Settings">
@@ -88,9 +88,13 @@ export class LgTabs {
   protected onKeydown(event: KeyboardEvent): void {
     const tabs = this.tabs().filter((tab) => !tab.element.disabled);
     const current = tabs.findIndex((tab) => tab.value() === this.selectedValue());
+    const following = (current + 1) % tabs.length;
+    const preceding = current <= 0 ? tabs.length - 1 : current - 1;
+    // In a right-to-left layout the following tab sits to the left.
+    const rtl = getComputedStyle(event.currentTarget as Element).direction === 'rtl';
     const next = {
-      ArrowRight: (current + 1) % tabs.length,
-      ArrowLeft: current <= 0 ? tabs.length - 1 : current - 1,
+      ArrowRight: rtl ? preceding : following,
+      ArrowLeft: rtl ? following : preceding,
       Home: 0,
       End: tabs.length - 1,
     }[event.key];

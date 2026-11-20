@@ -2,21 +2,23 @@ The library targets **WCAG 2.2 level AAA** for everything a component controls. 
 
 ## What the components guarantee
 
-| Criterion                                               | Level    | How                                                                                                   |
-| ------------------------------------------------------- | -------- | ----------------------------------------------------------------------------------------------------- |
-| 1.4.6 Contrast (Enhanced)                               | AAA      | All text tokens ≥ 7:1 in light and dark mode, verified in CI with axe `color-contrast-enhanced`       |
-| 1.4.11 Non-text Contrast                                | AA       | Control borders and focus ring ≥ 3:1                                                                  |
-| 2.1.1 / 2.1.3 Keyboard (No Exception)                   | AAA      | Every component is fully keyboard operable, following the WAI-ARIA Authoring Practices                |
-| 2.2.3 No Timing                                         | AAA      | Toasts stay until dismissed by default; timed toasts pause on hover and focus                         |
-| 2.3.3 Animation from Interactions                       | AAA      | All transitions and animations are disabled under `prefers-reduced-motion`                            |
-| 2.4.1 Bypass Blocks                                     | A        | `LgSkipLink`                                                                                          |
-| 2.4.7 / 2.4.13 Focus Visible / Appearance               | AA / AAA | 3 px, high-contrast focus ring with offset                                                            |
-| 2.5.5 Target Size (Enhanced)                            | AAA      | Interactive targets are at least 44 × 44 px; checkboxes and radios through their `lgChoice` label row |
-| 1.3.1 / 4.1.2 Info and Relationships, Name, Role, Value | A        | Native elements first; ARIA only where HTML has no element (combobox, menu, tabs)                     |
-| 1.4.1 Use of Color                                      | A        | Status is always given in text; icons are decorative                                                  |
-| 1.4.13 Content on Hover or Focus                        | AA       | Tooltips are hoverable, dismissible with Escape, and persistent                                       |
-| 3.3.1 / 3.3.3 Error Identification / Suggestion         | A / AA   | `lg-form-field` shows validator messages and links them with `aria-describedby`                       |
-| 4.1.3 Status Messages                                   | AA       | Toasts, combobox result counts and form errors use live regions                                       |
+| Criterion                                               | Level    | How                                                                                                    |
+| ------------------------------------------------------- | -------- | ------------------------------------------------------------------------------------------------------ |
+| 1.4.6 Contrast (Enhanced)                               | AAA      | All text tokens ≥ 7:1 in light and dark mode, verified in CI with axe `color-contrast-enhanced`        |
+| 1.4.11 Non-text Contrast                                | AA       | Control borders and focus ring ≥ 3:1                                                                   |
+| 2.1.1 / 2.1.3 Keyboard (No Exception)                   | AAA      | Every component is fully keyboard operable, following the WAI-ARIA Authoring Practices                 |
+| 2.2.3 No Timing                                         | AAA      | Toasts stay until dismissed by default; timed toasts pause on hover and focus                          |
+| 2.3.3 Animation from Interactions                       | AAA      | All transitions and animations are disabled under `prefers-reduced-motion`                             |
+| 2.4.1 Bypass Blocks                                     | A        | `LgSkipLink`                                                                                           |
+| 2.4.7 / 2.4.13 Focus Visible / Appearance               | AA / AAA | 3 px, high-contrast focus ring with offset                                                             |
+| 2.5.5 Target Size (Enhanced)                            | AAA      | Interactive targets are at least 44 × 44 px; checkboxes and radios through their `lgChoice` label row  |
+| 1.3.1 / 4.1.2 Info and Relationships, Name, Role, Value | A        | Native elements first; ARIA only where HTML has no element (combobox, menu, tabs)                      |
+| 1.4.1 Use of Color                                      | A        | Status is always given in text; icons are decorative                                                   |
+| 1.4.13 Content on Hover or Focus                        | AA       | Tooltips are hoverable, dismissible with Escape, and persistent                                        |
+| 3.3.1 / 3.3.3 Error Identification / Suggestion         | A / AA   | `lg-form-field` shows validator messages and links them with `aria-describedby`                        |
+| 4.1.3 Status Messages                                   | AA       | Toasts, combobox result counts and form errors use live regions                                        |
+| 1.4.11 Non-text Contrast in forced colors               | AA       | In Windows High Contrast, selected tabs, the current page and the active option use system `Highlight` |
+| 1.3.2 Meaningful Sequence (right-to-left)               | A        | Logical CSS properties only; arrow keys in tabs follow the reading direction under `dir="rtl"`         |
 
 ## What your application must do
 
@@ -28,5 +30,6 @@ The library targets **WCAG 2.2 level AAA** for everything a component controls. 
 ## How it is tested
 
 1. **Unit tests** run in a real Chromium with Vitest. Each component's rendered DOM is checked with axe-core (WCAG 2.x A/AA and best-practice rules), along with keyboard behaviour and ARIA states.
-2. **End-to-end tests** with Playwright load every documentation page in light and dark mode. They run axe including the AAA rules (`color-contrast-enhanced`, `target-size`) against the real styles.
-3. **Manual testing** with screen readers (NVDA + Firefox, VoiceOver + Safari) is still required before a release; automated tools find only part of all issues.
+2. **End-to-end tests** with Playwright load every documentation page of the production build in light and dark mode, in Chromium, Firefox and WebKit. They run axe including the AAA rules (`color-contrast-enhanced`, `target-size`) against the real styles, repeat it right-to-left, and check that selected states stay visible in forced colors.
+3. **Visual regression:** every demo is compared against screenshots in light, dark, right-to-left and forced colors.
+4. **Manual testing** with screen readers (NVDA + Firefox, VoiceOver + Safari) is still required before a release; automated tools find only part of all issues.

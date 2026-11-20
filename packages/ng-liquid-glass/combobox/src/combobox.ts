@@ -70,7 +70,7 @@ export function lgContains(text: string, query: string): boolean {
           <li
             role="option"
             class="flex min-h-11 cursor-pointer items-center rounded-lg-control px-3 text-lg-fg"
-            [class]="i === active() ? 'bg-lg-primary text-lg-on-primary' : 'hover:bg-lg-surface-muted'"
+            [class]="i === active() ? 'bg-lg-primary text-lg-on-primary lg-forced-selected' : 'hover:bg-lg-surface-muted'"
             [id]="optionId(i)"
             [attr.aria-selected]="i === active()"
             (pointerdown)="$event.preventDefault()"
