@@ -29,7 +29,7 @@ The Angular skill assumes a plain Angular CLI project. Here, Nx wins:
 
 ## Workflow
 
-- `main` is protected: work on a branch and open a PR. The required checks are lint/typecheck/test/build, e2e in Chromium, Firefox and WebKit, and CodeQL.
+- Branch off `develop` and open PRs against `develop` (squash-merged; the PR title must be a Conventional Commit). `main` only takes release merges from `develop`. Both are protected; the required checks are lint/typecheck/test/build, the docs build, e2e in Chromium, Firefox and WebKit, CodeQL, the PR title and dependency review.
 - Conventional Commits with entry-point scopes (`feat(combobox): …`); the changelog and version come from them.
 - Before pushing: `pnpm nx format:write`, then `pnpm lint && pnpm test && pnpm build && pnpm e2e`.
 

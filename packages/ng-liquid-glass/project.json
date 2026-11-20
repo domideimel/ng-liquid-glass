@@ -40,7 +40,7 @@
         "browsers": ["chromiumHeadless"],
         "setupFiles": ["packages/ng-liquid-glass/test/process-shim.ts", "packages/ng-liquid-glass/test/setup.ts"],
         "coverage": true,
-        "coverageReporters": ["text-summary", "lcov", "html"],
+        "coverageReporters": ["text-summary", "json-summary", "lcov", "html"],
         "coverageExclude": ["**/test/**", "**/*.spec.ts", "**/index.ts"],
         "coverageThresholds": {
           "statements": 95,

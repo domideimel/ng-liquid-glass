@@ -2,12 +2,26 @@
   "name": "Protect main",
   "target": "branch",
   "enforcement": "active",
-  "conditions": { "ref_name": { "include": ["~DEFAULT_BRANCH"], "exclude": [] } },
-  "bypass_actors": [{ "actor_id": null, "actor_type": "DeployKey", "bypass_mode": "always" }],
+  "conditions": {
+    "ref_name": {
+      "include": ["~DEFAULT_BRANCH"],
+      "exclude": []
+    }
+  },
+  "bypass_actors": [
+    {
+      "actor_id": null,
+      "actor_type": "DeployKey",
+      "bypass_mode": "always"
+    }
+  ],
   "rules": [
-    { "type": "deletion" },
-    { "type": "non_fast_forward" },
-    { "type": "required_linear_history" },
+    {
+      "type": "deletion"
+    },
+    {
+      "type": "non_fast_forward"
+    },
     {
       "type": "pull_request",
       "parameters": {
@@ -16,7 +30,7 @@
         "require_code_owner_review": false,
         "require_last_push_approval": false,
         "required_review_thread_resolution": true,
-        "allowed_merge_methods": ["squash", "rebase"]
+        "allowed_merge_methods": ["merge", "squash"]
       }
     },
     {
@@ -25,11 +39,38 @@
         "strict_required_status_checks_policy": true,
         "do_not_enforce_on_create": false,
         "required_status_checks": [
-          { "context": "Lint, typecheck, test, build", "integration_id": 15368 },
-          { "context": "Accessibility e2e (chromium)", "integration_id": 15368 },
-          { "context": "Accessibility e2e (firefox)", "integration_id": 15368 },
-          { "context": "Accessibility e2e (webkit)", "integration_id": 15368 },
-          { "context": "analyze", "integration_id": 15368 }
+          {
+            "context": "Lint, typecheck, test, build",
+            "integration_id": 15368
+          },
+          {
+            "context": "Build docs",
+            "integration_id": 15368
+          },
+          {
+            "context": "Accessibility e2e (chromium)",
+            "integration_id": 15368
+          },
+          {
+            "context": "Accessibility e2e (firefox)",
+            "integration_id": 15368
+          },
+          {
+            "context": "Accessibility e2e (webkit)",
+            "integration_id": 15368
+          },
+          {
+            "context": "analyze",
+            "integration_id": 15368
+          },
+          {
+            "context": "Conventional PR title",
+            "integration_id": 15368
+          },
+          {
+            "context": "Dependency review",
+            "integration_id": 15368
+          }
         ]
       }
     }

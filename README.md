@@ -40,31 +40,35 @@ Browser tests use Playwright's Chromium (`pnpm exec playwright install chromium`
 
 ## CI/CD
 
-| Workflow      | Trigger             | Does                                                                                                                                  |
-| ------------- | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| `ci.yml`      | push to `main`, PRs | format check, lint, typecheck, unit tests, build, size budget; e2e in Chromium, Firefox and WebKit                                    |
-| `docs.yml`    | push to `main`      | deploys the docs to GitHub Pages (enable _Pages → Source: GitHub Actions_ once)                                                       |
-| `release.yml` | manual              | `nx release`: version from Conventional Commits, `CHANGELOG.md`, tag, GitHub release, publish to GitHub Packages (dry run by default) |
-| `codeql.yml`  | push, PRs, weekly   | security analysis                                                                                                                     |
+| Workflow           | Trigger                       | Does                                                                                                                                                     |
+| ------------------ | ----------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ci.yml`           | push to `main`/`develop`, PRs | format check, lint, typecheck, unit tests, library build, size budget; one production docs build, shared by the e2e jobs in Chromium, Firefox and WebKit |
+| `pr.yml`           | PRs                           | Conventional Commits PR title (it becomes the squash commit and changelog entry); dependency review                                                      |
+| `docs.yml`         | push to `main`                | deploys the docs to GitHub Pages                                                                                                                         |
+| `sync-develop.yml` | push to `main`                | fast-forwards `develop` to `main` (after a release merge or the release commit)                                                                          |
+| `release.yml`      | manual                        | `nx release`: version, `CHANGELOG.md`, tag, GitHub release, publish to GitHub Packages and, once enabled, npmjs.com with provenance (dry run by default) |
+| `codeql.yml`       | push, PRs, weekly             | security analysis                                                                                                                                        |
+| `scorecard.yml`    | push to `main`, weekly        | OpenSSF Scorecard                                                                                                                                        |
 
-Dependabot keeps npm packages and actions up to date, grouped by ecosystem.
+On every PR:
 
-### Branch protection
+- a comment with the bundle size and coverage, and their change against the base branch;
+- the built docs as the `docs-preview` artifact (download it, then `npx vite preview --outDir <folder>`).
 
-`main` is protected by the ruleset in [`.github/rulesets/protect-main.json`](.github/rulesets/protect-main.json):
+Actions are pinned to commit SHAs. Dependabot keeps npm packages and actions up to date, in a few grouped PRs.
 
-- changes only through pull requests, merged by squash or rebase (linear history), with all review threads resolved;
-- required checks, which must pass on an up-to-date branch: _Lint, typecheck, test, build_, the e2e suite in Chromium, Firefox and WebKit, and CodeQL;
+### Branches and protection
+
+Work happens on feature branches off `develop`, squash-merged into `develop`. A release is a PR from `develop` into `main`, merged with a merge commit. `sync-develop.yml` then fast-forwards `develop` to `main`, so the two never drift apart.
+
+Both branches are protected by the rulesets in [`.github/rulesets`](.github/rulesets):
+
+- changes only through pull requests, with all review threads resolved. `develop` takes squash merges only and keeps a linear history; `main` takes merge commits (from `develop`) and squash merges (hotfixes);
+- required checks, which must pass on an up-to-date branch: lint/typecheck/test/build, the docs build, e2e in Chromium, Firefox and WebKit, CodeQL, the PR title and dependency review;
 - no force pushes, no deletion;
-- only deploy keys may bypass it. The release workflow pushes the changelog commit and tag with the `RELEASE_DEPLOY_KEY` deploy key, because on a personal repository GitHub Actions itself can't be a bypass actor.
+- only deploy keys may bypass them. The release and sync workflows push with the `RELEASE_DEPLOY_KEY` deploy key, because on a personal repository GitHub Actions itself can't be a bypass actor.
 
-Apply or update it with:
-
-```bash
-gh api -X POST repos/domideimel/ng-liquid-glass/rulesets --input .github/rulesets/protect-main.json
-```
-
-or in the UI: _Settings → Rules → Rulesets → New ruleset → Import a ruleset_.
+Apply a changed ruleset with `gh api -X PUT repos/domideimel/ng-liquid-glass/rulesets/<id> --input .github/rulesets/<file>.json` (`gh api repos/domideimel/ng-liquid-glass/rulesets` lists the ids), or create one with `-X POST …/rulesets`.
 
 ## Known constraint
 
