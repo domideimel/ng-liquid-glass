@@ -25,11 +25,15 @@ import { LgStack } from '@domideimel/ng-liquid-glass/layout';
           <option value="public">Public</option>
         </select>
       </lg-form-field>
+      <lg-form-field>
+        <label lgLabel>Launch date</label>
+        <input lgInput type="date" [formField]="project.launch" />
+      </lg-form-field>
     </div>
   `,
 })
 export class TextFieldsDemo {
-  protected readonly project = form(signal({ name: '', description: '', visibility: 'private' }), (path) => {
+  protected readonly project = form(signal({ name: '', description: '', visibility: 'private', launch: '' }), (path) => {
     required(path.name, { message: 'Give your project a name' });
     maxLength(path.description, 200, { message: 'Keep it under 200 characters' });
   });

@@ -1,6 +1,6 @@
 `@domideimel/ng-liquid-glass` is a small set of accessible Angular components. They are built on native HTML elements wherever one exists, styled with Tailwind CSS v4, and meant to meet WCAG 2.2 AAA.
 
-- **Small:** every component is its own entry point and the package has no runtime dependencies. The whole library is about 32 KB gzipped, and you only ship what you import.
+- **Small:** every component is its own entry point and the package has no runtime dependencies. Each entry point is under 5 KB gzipped, and you only ship what you import.
 - **Native first:** `<button>`, `<input>`, `<select>`, `<dialog>`, `<details>`, `<progress>`, `<meter>` and the Popover API do the heavy lifting.
 - **Modern Angular:** standalone, signal inputs/models, OnPush by default, zoneless-ready, Signal Forms.
 
@@ -74,15 +74,25 @@ export class App {}
 | `…/button`                    | `LgButton`                                                                                                                          |
 | `…/card`                      | `LgCard`                                                                                                                            |
 | `…/combobox`                  | `LgCombobox` (typeahead)                                                                                                            |
-| `…/dialog`                    | `LgDialog`, `LgDialogTitle`, `LgDialogClose`                                                                                        |
+| `…/dialog`                    | `LgDialog` (also drawers and sheets), `LgDialogTitle`, `LgDialogClose`                                                              |
 | `…/forms`                     | `LgFormField`, `LgLabel`, `LgHint`, `LgError`, `LgInput`, `LgCheckbox`, `LgRadio`, `LgSwitch`, `LgSlider`, `LgChoice`, `LgFieldset` |
+| `…/kbd`                       | `LgKbd`                                                                                                                             |
 | `…/layout`                    | `LgGrid`, `LgCol`, `LgContainer`, `LgStack`, `LgCluster`                                                                            |
+| `…/link`                      | `LgLink`                                                                                                                            |
 | `…/menu`                      | `LgMenu`, `LgMenuItem`, `LgMenuTrigger`                                                                                             |
 | `…/pagination`                | `LgPagination`                                                                                                                      |
+| `…/popover`                   | `LgPopover`, `LgPopoverTrigger`                                                                                                     |
 | `…/progress`                  | `LgProgress`, `LgMeter`, `LgSpinner`                                                                                                |
+| `…/segmented`                 | `LgSegmented`, `LgSegment`, `LgToggle`                                                                                              |
+| `…/separator`                 | `LgSeparator`                                                                                                                       |
 | `…/skeleton`                  | `LgSkeleton`                                                                                                                        |
+| `…/stepper`                   | `LgStepper`                                                                                                                         |
+| `…/table`                     | `LgTable`, `LgSortHeader`, `LgTableScroll`, `lgSortRows`                                                                            |
 | `…/tabs`                      | `LgTabs`, `LgTab`, `LgTabPanel`                                                                                                     |
+| `…/tag`                       | `LgTag`, `LgTagInput`                                                                                                               |
+| `…/theme`                     | `LgTheme`, `LgThemeSwitcher`                                                                                                        |
 | `…/toast`                     | `LgToaster`, `LgToasterRegion`                                                                                                      |
+| `…/toolbar`                   | `LgToolbar`, `LgToolbarItem`                                                                                                        |
 | `…/tooltip`                   | `LgTooltip`                                                                                                                         |
 | `…/testing`                   | Component test harnesses (needs `@angular/cdk`), see [Testing](guides/testing)                                                      |
 

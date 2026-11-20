@@ -11,7 +11,7 @@ An accessible, native-first Angular component library styled with Tailwind CSS v
 | `packages/ng-liquid-glass` | `ng-liquid-glass` | The publishable library: one secondary entry point per component, `styles/theme.css` |
 | `apps/docs`                | `docs`            | NgDoc documentation site with a demo for every component                             |
 | `apps/docs-e2e`            | `docs-e2e`        | Playwright: axe (WCAG A–AAA) and 44 px target checks on every demo, keyboard flows   |
-| `tools`                    | —                 | `size-report.mjs`, the bundle-size budget used in CI                                 |
+| `tools`                    | —                 | `size-report.mjs`, the per-entry bundle-size budget used in CI                       |
 
 Stack: Nx 24 · Angular 22.2 (zoneless, signals, Signal Forms) · Tailwind CSS 4 · NgDoc 22 · Vitest 5 in real Chromium · Playwright · pnpm 12.
 
@@ -36,7 +36,7 @@ Browser tests use Playwright's Chromium (`pnpm exec playwright install chromium`
 - **ESLint:** `typescript-eslint` `strictTypeChecked` + `stylisticTypeChecked`, angular-eslint template accessibility rules, and Nx module boundaries.
 - **Unit tests:** every component is checked with axe-core. Coverage must stay ≥ 95 % statements, functions and lines, and ≥ 90 % branches.
 - **E2E:** every demo in light and dark mode is checked with axe, including the AAA rules, plus a 44 × 44 px target-size check.
-- **Bundle size:** the library must stay under a 40 KB gzipped budget.
+- **Bundle size:** every entry point must stay under 5 KB gzipped; apps only ship the entry points they import.
 
 ## CI/CD
 

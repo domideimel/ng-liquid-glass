@@ -25,7 +25,7 @@ The Angular skill assumes a plain Angular CLI project. Here, Nx wins:
 - Signal inputs/outputs/queries, no `zone.js`, no NgModules. Never set `changeDetection`: OnPush is the default since Angular 22 and lint rejects both explicit `OnPush` and `Eager`.
 - Specs use Testing Library and cover ARIA states, keyboard behaviour and `expectNoA11yViolations()`. Coverage gates: ≥ 95 % statements/functions/lines, ≥ 90 % branches.
 - Every component has a docs demo in `apps/docs` and an entry in `apps/docs-e2e/src/pages.ts`.
-- The library must stay under a 40 KB gzipped budget (`pnpm size`).
+- Every entry point must stay under 5 KB gzipped (`pnpm size`); apps pay only for what they import.
 
 ## Workflow
 
