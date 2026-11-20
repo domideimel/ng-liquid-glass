@@ -2,7 +2,7 @@
 
 - **Small:** every component is its own entry point and the package has no runtime dependencies. The whole library is about 32 KB gzipped, and you only ship what you import.
 - **Native first:** `<button>`, `<input>`, `<select>`, `<dialog>`, `<details>`, `<progress>`, `<meter>` and the Popover API do the heavy lifting.
-- **Modern Angular:** standalone, signal inputs/models, `OnPush`, zoneless-ready, Signal Forms.
+- **Modern Angular:** standalone, signal inputs/models, OnPush by default, zoneless-ready, Signal Forms.
 
 ## Installation
 
@@ -25,6 +25,16 @@ Angular CLI builds pick Tailwind up through PostCSS; add a `.postcssrc.json` nex
 ```json
 { "plugins": { "@tailwindcss/postcss": {} } }
 ```
+
+## Set up with ng add
+
+Once the registry is configured, `ng add` installs the package and adds the theme to your global stylesheet. It also adds `@import 'tailwindcss'` if that is missing, and says what else Tailwind needs. Pick a language for the built-in texts at the prompt, or pass it:
+
+```bash
+ng add @domideimel/ng-liquid-glass --locale=de
+```
+
+In an Nx workspace: `nx g @domideimel/ng-liquid-glass:ng-add --project=my-app`. Or set it up by hand:
 
 ## Styles
 
