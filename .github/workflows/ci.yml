@@ -2,11 +2,11 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, develop]
   pull_request:
 
 permissions:
-  actions: read # nx-set-shas reads previous workflow runs
+  actions: read # nx-set-shas and the PR report read previous workflow runs
   contents: read
 
 concurrency:
@@ -17,55 +17,138 @@ jobs:
   check:
     name: Lint, typecheck, test, build
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0
-      - uses: pnpm/action-setup@v6
-      - uses: actions/setup-node@v7
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
         with:
           node-version: 24
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - uses: nrwl/nx-set-shas@v5
+      - uses: nrwl/nx-set-shas@e602fada7ad5987b0f7b1905e7a99ea1c661514c # v5
       - name: Install Chromium for browser tests
-        run: pnpm exec playwright install --with-deps chromium
+        uses: ./.github/actions/playwright-browser
+        with:
+          browser: chromium
 
       - run: pnpm nx format:check
       - run: pnpm nx affected -t lint typecheck
-      - run: pnpm nx affected -t test --configuration=ci
-      - run: pnpm nx run-many -t build
+      # All tests, every time: ~20 s, and the coverage report is always complete for the PR report.
+      - run: pnpm nx run-many -t test --configuration=ci
+      - run: pnpm nx run-many -t build --exclude docs
       - name: Bundle size budget
         run: node tools/size-report.mjs
 
+      - name: Collect reports
+        if: always()
+        run: |
+          mkdir -p dist/reports
+          cp coverage/ng-liquid-glass/coverage-summary.json dist/reports/ 2>/dev/null || true
+      - name: Upload reports
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        with:
+          name: reports
+          path: dist/reports/
+          if-no-files-found: ignore
       - name: Upload coverage
         if: always()
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: coverage
           path: coverage/
           if-no-files-found: ignore
 
+  docs:
+    name: Build docs
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm nx build docs
+      # Shared with the e2e jobs, and the docs preview for reviewers: download, then `npx vite preview --outDir <dir>`.
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        with:
+          name: docs-preview
+          path: dist/apps/docs/browser/
+          retention-days: 14
+
   e2e:
     name: Accessibility e2e (${{ matrix.browser }})
+    needs: docs
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     strategy:
       fail-fast: false
       matrix:
         browser: [chromium, firefox, webkit]
     steps:
-      - uses: actions/checkout@v7
-      - uses: pnpm/action-setup@v6
-      - uses: actions/setup-node@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
         with:
           node-version: 24
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm exec playwright install --with-deps ${{ matrix.browser }}
-      - run: pnpm nx e2e docs-e2e -- --project=${{ matrix.browser }}
+      - uses: ./.github/actions/playwright-browser
+        with:
+          browser: ${{ matrix.browser }}
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
+        with:
+          name: docs-preview
+          path: dist/apps/docs/browser/
+      - name: Run e2e against the production docs build
+        run: pnpm nx e2e docs-e2e --excludeTaskDependencies -- --project=${{ matrix.browser }}
+        env:
+          DOCS_STATIC: 'true'
       - name: Upload Playwright report
         if: failure()
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: playwright-${{ matrix.browser }}
           path: dist/.playwright/
+
+  report:
+    name: PR report
+    if: github.event_name == 'pull_request' && always()
+    needs: check
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      actions: read
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
+        with:
+          name: reports
+          path: current/
+        continue-on-error: true
+      - name: Download the base branch's reports
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BASE: ${{ github.base_ref }}
+        run: |
+          run_id=$(gh run list --workflow CI --branch "$BASE" --event push --status success --limit 1 --json databaseId --jq '.[0].databaseId')
+          if [ -n "$run_id" ]; then gh run download "$run_id" --name reports --dir base/ || true; fi
+      - name: Write the report
+        run: |
+          node tools/pr-report.mjs current base > report.md
+          cat report.md >> "$GITHUB_STEP_SUMMARY"
+      - name: Comment on the PR
+        # Read-only token for Dependabot and fork PRs; the job summary still has the report.
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+        run: gh pr comment "$PR" --body-file report.md --edit-last --create-if-none

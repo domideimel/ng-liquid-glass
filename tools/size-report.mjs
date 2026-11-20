@@ -1,5 +1,5 @@
 // Reports the gzipped size of every entry point of the built library and fails above the budget.
-import { readdirSync, readFileSync, appendFileSync } from 'node:fs';
+import { appendFileSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { gzipSync } from 'node:zlib';
 
@@ -24,6 +24,8 @@ const table = [
 ].join('\n');
 
 console.log(table);
+mkdirSync('dist/reports', { recursive: true });
+writeFileSync('dist/reports/size-report.json', `${JSON.stringify({ budget: BUDGET_BYTES, total, rows }, null, 2)}\n`);
 if (process.env.GITHUB_STEP_SUMMARY) appendFileSync(process.env.GITHUB_STEP_SUMMARY, `${table}\n`);
 if (total > BUDGET_BYTES) {
   console.error(`Bundle size ${kb(total)} exceeds the budget of ${kb(BUDGET_BYTES)}.`);
