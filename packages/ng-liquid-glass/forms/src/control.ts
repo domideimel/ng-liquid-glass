@@ -70,7 +70,7 @@ export class LgRadio extends LgNativeControl {}
   host: {
     role: 'switch',
     class:
-      "lg-focus-ring relative h-7 w-12 shrink-0 cursor-pointer appearance-none rounded-full border-2 border-lg-control-border bg-lg-surface-muted transition-colors before:absolute before:top-0.5 before:start-0.5 before:size-5 before:rounded-full before:bg-lg-fg before:transition-transform before:content-[''] checked:border-lg-primary checked:bg-lg-primary checked:before:translate-x-5 rtl:checked:before:-translate-x-5 checked:before:bg-lg-on-primary disabled:cursor-not-allowed disabled:opacity-60 forced-colors:appearance-auto",
+      "lg-focus-ring relative h-7 w-12 shrink-0 cursor-pointer appearance-none rounded-full border-2 border-lg-control-border bg-lg-surface-muted transition-colors before:absolute before:top-0.5 before:start-0.5 before:size-5 before:rounded-full before:bg-lg-fg before:transition-transform before:content-[''] checked:border-lg-primary checked:bg-lg-primary checked:before:translate-x-5 rtl:checked:before:-translate-x-5 checked:before:bg-lg-on-primary disabled:cursor-not-allowed disabled:opacity-60 forced-colors:appearance-auto forced-colors:before:hidden",
   },
 })
 export class LgSwitch extends LgNativeControl {}
