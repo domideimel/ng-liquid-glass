@@ -3,6 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { render, screen } from '@testing-library/angular';
 import { expectNoA11yViolations } from '../../test/a11y';
 import { LG_I18N, LG_I18N_DEFAULTS, provideLgI18n } from './i18n';
+import { LG_I18N_DE, LG_I18N_ES, LG_I18N_FR } from './i18n-locales';
 import { lgUniqueId } from './id';
 import { LgSkipLink } from './skip-link';
 import { LgVisuallyHidden } from './visually-hidden';
@@ -25,6 +26,19 @@ describe('core', () => {
     const texts = TestBed.inject(LG_I18N);
     expect(texts.close).toBe('Schließen');
     expect(texts.dismiss).toBe('Dismiss');
+  });
+
+  it('ships complete German, French and Spanish texts', () => {
+    for (const locale of [LG_I18N_DE, LG_I18N_FR, LG_I18N_ES]) {
+      expect(Object.keys(locale).sort()).toEqual(Object.keys(LG_I18N_DEFAULTS).sort());
+      expect(locale.resultsCount(1)).toMatch(/^1 /);
+      expect(locale.resultsCount(3)).toMatch(/^3 /);
+      expect(locale.page(4)).toContain('4');
+    }
+    TestBed.configureTestingModule({ providers: [provideLgI18n(LG_I18N_DE)] });
+    expect(TestBed.inject(LG_I18N).nextPage).toBe('Nächste Seite');
+    expect(LG_I18N_FR.resultsCount(2)).toBe('2 résultats disponibles');
+    expect(LG_I18N_ES.resultsCount(1)).toBe('1 resultado disponible');
   });
 
   it('renders an accessible skip link and visually hidden text', async () => {

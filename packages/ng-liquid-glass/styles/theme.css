@@ -24,6 +24,9 @@
   --lg-primary: light-dark(#18181b, #fafafa);
   --lg-on-primary: light-dark(#ffffff, #18181b);
   --lg-primary-hover: light-dark(#3f3f46, #d4d4d8);
+  --lg-accent: light-dark(#1e40af, #93c5fd);
+  --lg-on-accent: light-dark(#ffffff, #172554);
+  --lg-accent-hover: light-dark(#1e3a8a, #bfdbfe);
   --lg-focus: light-dark(#09090b, #fafafa);
   --lg-danger: light-dark(#991b1b, #fca5a5);
   --lg-danger-surface: light-dark(#fef2f2, #450a0a);
@@ -58,6 +61,9 @@
   --color-lg-primary: var(--lg-primary);
   --color-lg-on-primary: var(--lg-on-primary);
   --color-lg-primary-hover: var(--lg-primary-hover);
+  --color-lg-accent: var(--lg-accent);
+  --color-lg-on-accent: var(--lg-on-accent);
+  --color-lg-accent-hover: var(--lg-accent-hover);
   --color-lg-focus: var(--lg-focus);
   --color-lg-danger: var(--lg-danger);
   --color-lg-danger-surface: var(--lg-danger-surface);

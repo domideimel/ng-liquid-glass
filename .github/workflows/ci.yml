@@ -41,6 +41,8 @@ jobs:
       - run: pnpm nx run-many -t build --exclude docs
       - name: Bundle size budget
         run: node tools/size-report.mjs
+      - name: Server-side rendering smoke test
+        run: node tools/ssr-smoke.mjs
 
       - name: Collect reports
         if: always()
