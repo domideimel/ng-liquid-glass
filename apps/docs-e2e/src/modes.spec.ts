@@ -12,14 +12,16 @@ async function openDemoPage(
   const theme = options.theme ?? 'light';
   await page.emulateMedia({ colorScheme: theme, reducedMotion: 'reduce', forcedColors: options.forcedColors ? 'active' : 'none' });
   await page.goto(path);
-  await page.evaluate(
-    ({ mode, rtl }) => {
-      document.documentElement.setAttribute('data-theme', mode);
-      if (rtl) document.documentElement.dir = 'rtl';
-    },
-    { mode: theme, rtl: options.rtl ?? false },
-  );
+  await page.evaluate((mode) => {
+    document.documentElement.setAttribute('data-theme', mode);
+  }, theme);
   await expect(page.locator('ng-doc-demo').first()).toBeVisible();
+  // Mirror the demos only: the docs site around them isn't built for right-to-left.
+  if (options.rtl) {
+    await page.locator('.ng-doc-demo-frame').evaluateAll((frames) => {
+      for (const frame of frames) frame.setAttribute('dir', 'rtl');
+    });
+  }
 }
 
 test.describe('right-to-left', () => {

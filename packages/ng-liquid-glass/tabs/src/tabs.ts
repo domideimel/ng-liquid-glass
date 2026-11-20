@@ -29,7 +29,8 @@ export class LgTab {
   host: {
     role: 'tabpanel',
     tabindex: '0',
-    class: 'lg-focus-ring block rounded-lg-control pt-4',
+    // No display utility: it would override [hidden] in apps without Tailwind's Preflight.
+    class: 'lg-focus-ring rounded-lg-control pt-4',
     '[id]': 'tabs.panelId(value())',
     '[attr.aria-labelledby]': 'tabs.tabId(value())',
     '[hidden]': 'tabs.selectedValue() !== value()',
