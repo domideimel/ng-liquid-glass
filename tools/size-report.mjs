@@ -7,6 +7,8 @@ const BUDGET_BYTES = 40 * 1024;
 const dir = 'dist/packages/ng-liquid-glass/fesm2022';
 const rows = readdirSync(dir)
   .filter((file) => file.endsWith('.mjs'))
+  // Test harnesses only run in consumers' tests, never in their apps.
+  .filter((file) => !file.endsWith('-testing.mjs'))
   .map((file) => {
     const source = readFileSync(join(dir, file));
     const subpath = file.replace('domideimel-ng-liquid-glass', '').replace('.mjs', '').replace(/^-/, '/');

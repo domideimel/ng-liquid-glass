@@ -29,6 +29,7 @@
       "@domideimel/ng-liquid-glass/progress": ["./packages/ng-liquid-glass/progress/src/index.ts"],
       "@domideimel/ng-liquid-glass/skeleton": ["./packages/ng-liquid-glass/skeleton/src/index.ts"],
       "@domideimel/ng-liquid-glass/tabs": ["./packages/ng-liquid-glass/tabs/src/index.ts"],
+      "@domideimel/ng-liquid-glass/testing": ["./packages/ng-liquid-glass/testing/src/index.ts"],
       "@domideimel/ng-liquid-glass/toast": ["./packages/ng-liquid-glass/toast/src/index.ts"],
       "@domideimel/ng-liquid-glass/tooltip": ["./packages/ng-liquid-glass/tooltip/src/index.ts"],
       "@ng-doc/generated": ["./ng-doc/docs/index.ts"],

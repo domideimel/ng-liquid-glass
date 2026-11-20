@@ -28,6 +28,7 @@ export function lgPageWindow(page: number, pageCount: number, siblings = 1): (nu
           >
             <svg
               aria-hidden="true"
+              class="rtl:-scale-x-100"
               viewBox="0 0 24 24"
               width="20"
               height="20"
@@ -67,6 +68,7 @@ export function lgPageWindow(page: number, pageCount: number, siblings = 1): (nu
           >
             <svg
               aria-hidden="true"
+              class="rtl:-scale-x-100"
               viewBox="0 0 24 24"
               width="20"
               height="20"
