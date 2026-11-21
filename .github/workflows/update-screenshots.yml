@@ -1,0 +1,50 @@
+name: Update screenshots
+
+# Add the label "update-screenshots" to a PR after an intended visual change: this re-renders every visual
+# regression baseline in CI's Linux Chromium and commits them to the PR branch. The label is removed again.
+on:
+  pull_request:
+    types: [labeled]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  update:
+    if: github.event.label.name == 'update-screenshots' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          # The deploy key's push starts CI again, so the PR's checks run on the new screenshots.
+          ssh-key: ${{ secrets.RELEASE_DEPLOY_KEY }}
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - uses: ./.github/actions/playwright-browser
+        with:
+          browser: chromium
+      - run: pnpm nx build docs
+      - name: Re-render the baselines
+        run: pnpm nx e2e docs-e2e --excludeTaskDependencies -- --project=chromium --grep "visual regression" --update-snapshots=all
+        env:
+          DOCS_STATIC: 'true'
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add apps/docs-e2e/src/modes.spec.ts-snapshots
+          if git diff --cached --quiet; then echo "Screenshots unchanged."; exit 0; fi
+          git commit -m "test(e2e): update visual regression screenshots"
+          git push
+      - name: Remove the label
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh pr edit ${{ github.event.pull_request.number }} --repo ${{ github.repository }} --remove-label update-screenshots

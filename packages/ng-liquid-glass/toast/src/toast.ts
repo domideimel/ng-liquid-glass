@@ -60,7 +60,7 @@ export class LgToaster {
   imports: [LgStatusIcon],
   host: {
     class:
-      'lg-glass pointer-events-auto flex w-full max-w-md items-center gap-3 rounded-lg-surface py-1.5 pr-1.5 pl-4 text-lg-fg shadow-xl',
+      'lg-glass pointer-events-auto flex w-full max-w-md items-center gap-3 rounded-lg-surface py-1.5 pe-1.5 ps-4 text-lg-fg shadow-xl',
   },
   template: `
     <lg-status-icon [status]="toast().status" [class]="iconClass()" />
@@ -68,7 +68,7 @@ export class LgToaster {
     @if (toast().action; as action) {
       <button
         type="button"
-        class="lg-focus-ring min-h-11 cursor-pointer rounded-lg-control border-0 bg-transparent font-[inherit] text-base text-lg-fg px-3 font-medium underline underline-offset-4"
+        class="lg-focus-ring min-h-11 cursor-pointer rounded-lg-control border border-transparent bg-transparent font-[inherit] text-base text-lg-fg px-3 font-medium underline underline-offset-4"
         (click)="runAction(action)"
       >
         {{ action.label }}
@@ -76,7 +76,7 @@ export class LgToaster {
     }
     <button
       type="button"
-      class="lg-focus-ring inline-flex size-11 cursor-pointer border-0 bg-transparent text-lg-fg items-center justify-center rounded-lg-control hover:bg-lg-surface-muted"
+      class="lg-focus-ring inline-flex size-11 cursor-pointer border border-transparent bg-transparent text-lg-fg items-center justify-center rounded-lg-control hover:bg-lg-surface-muted"
       [attr.aria-label]="i18n.dismiss"
       (click)="dismiss()"
     >
