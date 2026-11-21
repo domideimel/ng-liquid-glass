@@ -1,0 +1,1 @@
+export { LgKbd } from './kbd';

@@ -14,6 +14,23 @@ export interface LgI18n {
   nextPage: string;
   page: (page: number) => string;
   notifications: string;
+  /** Read after links that open in a new tab. */
+  opensInNewTab: string;
+  /** Accessible name of a tag's remove button, followed by the tag's text. */
+  remove: string;
+  /** Announced when `lg-tag-input` adds or removes a tag. */
+  tagAdded: (label: string) => string;
+  tagRemoved: (label: string) => string;
+  theme: string;
+  themeLight: string;
+  themeDark: string;
+  themeSystem: string;
+  /** Read after a completed step of `lg-stepper`. */
+  completed: string;
+  /** `lg-file-input` texts. */
+  chooseFiles: string;
+  dropFiles: string;
+  filesSelected: (count: number) => string;
 }
 
 export const LG_I18N_DEFAULTS: LgI18n = {
@@ -28,6 +45,18 @@ export const LG_I18N_DEFAULTS: LgI18n = {
   nextPage: 'Next page',
   page: (page) => `Page ${String(page)}`,
   notifications: 'Notifications',
+  opensInNewTab: 'opens in a new tab',
+  remove: 'Remove',
+  tagAdded: (label) => `${label} added`,
+  tagRemoved: (label) => `${label} removed`,
+  theme: 'Theme',
+  themeLight: 'Light',
+  themeDark: 'Dark',
+  themeSystem: 'System',
+  completed: 'completed',
+  chooseFiles: 'Choose files',
+  dropFiles: 'or drop them here',
+  filesSelected: (count) => (count === 1 ? '1 file selected' : `${String(count)} files selected`),
 };
 
 export const LG_I18N = new InjectionToken<LgI18n>('LG_I18N', {

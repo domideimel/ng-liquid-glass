@@ -25,6 +25,8 @@ const baseURL = process.env['BASE_URL'] ?? getReadyUrl('http://localhost:4200');
  */
 export default defineConfig({
   ...nxE2EPreset(import.meta.dirname, { testDir: './src' }),
+  // Visual baselines live next to the spec (modes.spec.ts-snapshots/); a missing one is written, never a changed one.
+  updateSnapshots: 'missing',
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     baseURL,
@@ -32,7 +34,13 @@ export default defineConfig({
     trace: 'on-first-retry',
   },
   webServer: {
-    command: isCI ? 'pnpm nx run docs:serve-static' : 'pnpm nx run docs:serve',
+    // DOCS_STATIC: serve an already built production docs bundle (CI builds it once and shares it with every
+    // browser job; run e2e with --excludeTaskDependencies so Nx doesn't start the dev server as well).
+    command: process.env['DOCS_STATIC']
+      ? 'pnpm exec vite preview --outDir dist/apps/docs/browser --port 4200 --strictPort'
+      : isCI
+        ? 'pnpm nx run docs:serve-static'
+        : 'pnpm nx run docs:serve',
     url: getReadyUrl('http://localhost:4200'),
     reuseExistingServer: true,
     cwd: workspaceRoot,

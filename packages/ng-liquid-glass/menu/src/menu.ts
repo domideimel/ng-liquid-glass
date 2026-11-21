@@ -9,7 +9,7 @@ import { lgUniqueId } from '@domideimel/ng-liquid-glass';
     role: 'menuitem',
     tabindex: '-1',
     class:
-      'lg-focus-ring flex min-h-11 w-full cursor-pointer border-0 bg-transparent font-[inherit] text-base items-center gap-2 rounded-lg-control px-3 text-left text-lg-fg hover:bg-lg-surface-muted focus-visible:bg-lg-surface-muted disabled:cursor-not-allowed disabled:opacity-60',
+      'lg-focus-ring flex min-h-11 w-full cursor-pointer border border-transparent bg-transparent font-[inherit] text-base items-center gap-2 rounded-lg-control px-3 text-start text-lg-fg hover:bg-lg-surface-muted focus-visible:bg-lg-surface-muted disabled:cursor-not-allowed disabled:opacity-60',
     '(click)': 'menu.close()',
   },
 })

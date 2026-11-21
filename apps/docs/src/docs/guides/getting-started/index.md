@@ -1,8 +1,8 @@
 `@domideimel/ng-liquid-glass` is a small set of accessible Angular components. They are built on native HTML elements wherever one exists, styled with Tailwind CSS v4, and meant to meet WCAG 2.2 AAA.
 
-- **Small:** every component is its own entry point and the package has no runtime dependencies. The whole library is about 32 KB gzipped, and you only ship what you import.
+- **Small:** every component is its own entry point and the package has no runtime dependencies. Each entry point is under 5 KB gzipped, and you only ship what you import.
 - **Native first:** `<button>`, `<input>`, `<select>`, `<dialog>`, `<details>`, `<progress>`, `<meter>` and the Popover API do the heavy lifting.
-- **Modern Angular:** standalone, signal inputs/models, `OnPush`, zoneless-ready, Signal Forms.
+- **Modern Angular:** standalone, signal inputs/models, OnPush by default, zoneless-ready, Signal Forms.
 
 ## Installation
 
@@ -25,6 +25,16 @@ Angular CLI builds pick Tailwind up through PostCSS; add a `.postcssrc.json` nex
 ```json
 { "plugins": { "@tailwindcss/postcss": {} } }
 ```
+
+## Set up with ng add
+
+Once the registry is configured, `ng add` installs the package and adds the theme to your global stylesheet. It also adds `@import 'tailwindcss'` if that is missing, and says what else Tailwind needs. Pick a language for the built-in texts at the prompt, or pass it:
+
+```bash
+ng add @domideimel/ng-liquid-glass --locale=de
+```
+
+In an Nx workspace: `nx g @domideimel/ng-liquid-glass:ng-add --project=my-app`. Or set it up by hand:
 
 ## Styles
 
@@ -55,7 +65,7 @@ export class App {}
 
 | Import from                   | Contents                                                                                                                            |
 | ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| `@domideimel/ng-liquid-glass` | `LgSkipLink`, `LgVisuallyHidden`, `provideLgI18n`, `LgStatusIcon`                                                                   |
+| `@domideimel/ng-liquid-glass` | `LgSkipLink`, `LgVisuallyHidden`, `provideLgI18n`, `LG_I18N_DE`/`_FR`/`_ES`, `LgStatusIcon`                                         |
 | `…/accordion`                 | `LgAccordionItem`                                                                                                                   |
 | `…/alert`                     | `LgAlert`                                                                                                                           |
 | `…/avatar`                    | `LgAvatar`                                                                                                                          |
@@ -64,25 +74,52 @@ export class App {}
 | `…/button`                    | `LgButton`                                                                                                                          |
 | `…/card`                      | `LgCard`                                                                                                                            |
 | `…/combobox`                  | `LgCombobox` (typeahead)                                                                                                            |
-| `…/dialog`                    | `LgDialog`, `LgDialogTitle`, `LgDialogClose`                                                                                        |
+| `…/dialog`                    | `LgDialog` (also drawers and sheets), `LgDialogTitle`, `LgDialogClose`                                                              |
+| `…/file-input`                | `LgFileInput`                                                                                                                       |
 | `…/forms`                     | `LgFormField`, `LgLabel`, `LgHint`, `LgError`, `LgInput`, `LgCheckbox`, `LgRadio`, `LgSwitch`, `LgSlider`, `LgChoice`, `LgFieldset` |
+| `…/kbd`                       | `LgKbd`                                                                                                                             |
 | `…/layout`                    | `LgGrid`, `LgCol`, `LgContainer`, `LgStack`, `LgCluster`                                                                            |
+| `…/link`                      | `LgLink`                                                                                                                            |
 | `…/menu`                      | `LgMenu`, `LgMenuItem`, `LgMenuTrigger`                                                                                             |
+| `…/navigation`                | `LgNav`, `LgNavLink`, `LgNavGroup`                                                                                                  |
 | `…/pagination`                | `LgPagination`                                                                                                                      |
+| `…/popover`                   | `LgPopover`, `LgPopoverTrigger`                                                                                                     |
 | `…/progress`                  | `LgProgress`, `LgMeter`, `LgSpinner`                                                                                                |
+| `…/segmented`                 | `LgSegmented`, `LgSegment`, `LgToggle`                                                                                              |
+| `…/select`                    | `LgSelect`                                                                                                                          |
+| `…/separator`                 | `LgSeparator`                                                                                                                       |
 | `…/skeleton`                  | `LgSkeleton`                                                                                                                        |
+| `…/stepper`                   | `LgStepper`                                                                                                                         |
+| `…/table`                     | `LgTable`, `LgSortHeader`, `LgTableScroll`, `lgSortRows`                                                                            |
 | `…/tabs`                      | `LgTabs`, `LgTab`, `LgTabPanel`                                                                                                     |
+| `…/tag`                       | `LgTag`, `LgTagInput`                                                                                                               |
+| `…/testing`                   | Component test harnesses (needs `@angular/cdk`), see [Testing](guides/testing)                                                      |
+| `…/theme`                     | `LgTheme`, `LgThemeSwitcher`                                                                                                        |
 | `…/toast`                     | `LgToaster`, `LgToasterRegion`                                                                                                      |
+| `…/toolbar`                   | `LgToolbar`, `LgToolbarItem`                                                                                                        |
 | `…/tooltip`                   | `LgTooltip`                                                                                                                         |
+| `…/tree`                      | `LgTree`                                                                                                                            |
 
 ## Translations
 
-Every text the components render themselves can be replaced:
+German, French and Spanish are built in. Provide one at bootstrap:
 
 ```typescript
-import { provideLgI18n } from '@domideimel/ng-liquid-glass';
+import { LG_I18N_DE, provideLgI18n } from '@domideimel/ng-liquid-glass';
 
-bootstrapApplication(App, {
-  providers: [provideLgI18n({ close: 'Schließen', noResults: 'Keine Treffer', resultsCount: (n) => `${n} Treffer` })],
-});
+bootstrapApplication(App, { providers: [provideLgI18n(LG_I18N_DE)] });
+```
+
+| Locale  | Constant      |
+| ------- | ------------- |
+| English | (the default) |
+| German  | `LG_I18N_DE`  |
+| French  | `LG_I18N_FR`  |
+| Spanish | `LG_I18N_ES`  |
+
+For another language, or to change single texts, pass your own; missing texts fall back to English:
+
+```typescript
+provideLgI18n({ ...LG_I18N_DE, close: 'Zumachen' });
+provideLgI18n({ close: 'Chiudi', noResults: 'Nessun risultato', resultsCount: (n) => `${n} risultati` });
 ```

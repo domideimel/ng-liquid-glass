@@ -1,0 +1,46 @@
+name: Bug report
+description: Something doesn't work as documented, or isn't accessible.
+labels: [bug]
+body:
+  - type: input
+    id: component
+    attributes:
+      label: Component
+      placeholder: combobox
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happens, and what did you expect?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      description: A StackBlitz or a minimal snippet helps most.
+      placeholder: |
+        1. …
+        2. …
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Affected area
+      multiple: true
+      options:
+        - Keyboard
+        - Screen reader
+        - Contrast or forced colors
+        - Visual or layout
+        - Forms or validation
+        - Other
+  - type: input
+    id: environment
+    attributes:
+      label: Versions and environment
+      placeholder: ng-liquid-glass 0.1.0, Angular 22.2, Safari 19 + VoiceOver, macOS
+    validations:
+      required: true

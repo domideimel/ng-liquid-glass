@@ -25,11 +25,11 @@ The Angular skill assumes a plain Angular CLI project. Here, Nx wins:
 - Signal inputs/outputs/queries, no `zone.js`, no NgModules. Never set `changeDetection`: OnPush is the default since Angular 22 and lint rejects both explicit `OnPush` and `Eager`.
 - Specs use Testing Library and cover ARIA states, keyboard behaviour and `expectNoA11yViolations()`. Coverage gates: ≥ 95 % statements/functions/lines, ≥ 90 % branches.
 - Every component has a docs demo in `apps/docs` and an entry in `apps/docs-e2e/src/pages.ts`.
-- The library must stay under a 40 KB gzipped budget (`pnpm size`).
+- Every entry point must stay under 5 KB gzipped (`pnpm size`); apps pay only for what they import.
 
 ## Workflow
 
-- `main` is protected: work on a branch and open a PR. The required checks are lint/typecheck/test/build, e2e in Chromium, Firefox and WebKit, and CodeQL.
+- Branch off `develop` and open PRs against `develop` (squash-merged; the PR title must be a Conventional Commit). `main` only takes release merges from `develop`. Both are protected; the required checks are lint/typecheck/test/build, the docs build, e2e in Chromium, Firefox and WebKit, CodeQL, the PR title and dependency review.
 - Conventional Commits with entry-point scopes (`feat(combobox): …`); the changelog and version come from them.
 - Before pushing: `pnpm nx format:write`, then `pnpm lint && pnpm test && pnpm build && pnpm e2e`.
 

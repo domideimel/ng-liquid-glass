@@ -1,0 +1,23 @@
+name: Install a Playwright browser
+description: Restores the browser from the cache (keyed by the Playwright version) and installs its system dependencies.
+inputs:
+  browser:
+    description: chromium, firefox or webkit
+    required: true
+runs:
+  using: composite
+  steps:
+    - id: version
+      shell: bash
+      run: echo "playwright=$(pnpm exec playwright --version | awk '{print $2}')" >> "$GITHUB_OUTPUT"
+    - id: cache
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
+      with:
+        path: ~/.cache/ms-playwright
+        key: playwright-${{ runner.os }}-${{ steps.version.outputs.playwright }}-${{ inputs.browser }}
+    - if: steps.cache.outputs.cache-hit != 'true'
+      shell: bash
+      run: pnpm exec playwright install --with-deps ${{ inputs.browser }}
+    - if: steps.cache.outputs.cache-hit == 'true'
+      shell: bash
+      run: pnpm exec playwright install-deps ${{ inputs.browser }}

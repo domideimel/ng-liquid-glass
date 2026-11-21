@@ -1,1 +1,1 @@
-export { LgDialog, LgDialogClose, LgDialogTitle } from './dialog';
+export { LgDialog, LgDialogClose, LgDialogTitle, type LgDialogPlacement } from './dialog';

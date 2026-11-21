@@ -1,0 +1,24 @@
+name: Component request
+description: Suggest a new component or a feature for an existing one.
+labels: [enhancement]
+body:
+  - type: input
+    id: name
+    attributes:
+      label: Component or feature
+      placeholder: Date picker
+    validations:
+      required: true
+  - type: textarea
+    id: use-case
+    attributes:
+      label: Use case
+      description: What do you need to build, and why don't the existing components cover it?
+    validations:
+      required: true
+  - type: input
+    id: pattern
+    attributes:
+      label: Native element or WAI-ARIA pattern
+      description: The native element it would build on, or the APG pattern it should follow.
+      placeholder: https://www.w3.org/WAI/ARIA/apg/patterns/…

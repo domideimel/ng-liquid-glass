@@ -28,6 +28,27 @@
         "development": {}
       }
     },
+    "build-schematics": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["build"],
+      "cache": true,
+      "inputs": ["{projectRoot}/schematics/**/*", "!{projectRoot}/schematics/**/*.test.mjs"],
+      "outputs": ["{workspaceRoot}/dist/{projectRoot}/schematics"],
+      "options": {
+        "parallel": false,
+        "commands": [
+          "tsc -p packages/ng-liquid-glass/schematics/tsconfig.json",
+          "node -e \"const fs=require('node:fs');const s='packages/ng-liquid-glass/schematics/',d='dist/packages/ng-liquid-glass/schematics/';for(const f of ['collection.json','ng-add/schema.json'])fs.copyFileSync(s+f,d+f);fs.writeFileSync(d+'package.json',JSON.stringify({type:'commonjs'})+'\\\\n')\""
+        ]
+      }
+    },
+    "test-schematics": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["build-schematics"],
+      "options": {
+        "command": "node --test packages/ng-liquid-glass/schematics/ng-add/ng-add.test.mjs"
+      }
+    },
     "nx-release-publish": {
       "options": {
         "packageRoot": "dist/{projectRoot}"
@@ -40,7 +61,7 @@
         "browsers": ["chromiumHeadless"],
         "setupFiles": ["packages/ng-liquid-glass/test/process-shim.ts", "packages/ng-liquid-glass/test/setup.ts"],
         "coverage": true,
-        "coverageReporters": ["text-summary", "lcov", "html"],
+        "coverageReporters": ["text-summary", "json-summary", "lcov", "html"],
         "coverageExclude": ["**/test/**", "**/*.spec.ts", "**/index.ts"],
         "coverageThresholds": {
           "statements": 95,

@@ -80,9 +80,10 @@
     "projects": ["ng-liquid-glass"],
     "version": {
       "conventionalCommits": true,
-      "preVersionCommand": "pnpm nx run ng-liquid-glass:build"
+      "preVersionCommand": "pnpm nx run ng-liquid-glass:build-schematics"
     },
     "changelog": {
+      "automaticFromRef": true,
       "workspaceChangelog": {
         "createRelease": "github",
         "file": "{workspaceRoot}/CHANGELOG.md"

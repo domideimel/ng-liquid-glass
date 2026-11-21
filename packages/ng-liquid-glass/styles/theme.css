@@ -24,6 +24,9 @@
   --lg-primary: light-dark(#18181b, #fafafa);
   --lg-on-primary: light-dark(#ffffff, #18181b);
   --lg-primary-hover: light-dark(#3f3f46, #d4d4d8);
+  --lg-accent: light-dark(#1e40af, #93c5fd);
+  --lg-on-accent: light-dark(#ffffff, #172554);
+  --lg-accent-hover: light-dark(#1e3a8a, #bfdbfe);
   --lg-focus: light-dark(#09090b, #fafafa);
   --lg-danger: light-dark(#991b1b, #fca5a5);
   --lg-danger-surface: light-dark(#fef2f2, #450a0a);
@@ -37,6 +40,17 @@
   --lg-glass: light-dark(rgb(255 255 255 / 0.92), rgb(24 24 27 / 0.92));
   --lg-glass-border: light-dark(rgb(9 9 11 / 0.1), rgb(250 250 250 / 0.12));
   --lg-overlay: light-dark(rgb(9 9 11 / 0.6), rgb(0 0 0 / 0.7));
+}
+
+/* prefers-contrast: more: stronger borders and muted text, opaque glass. */
+@media (prefers-contrast: more) {
+  :root {
+    --lg-fg-muted: var(--lg-fg);
+    --lg-border: var(--lg-control-border);
+    --lg-control-border: light-dark(#3f3f46, #d4d4d8);
+    --lg-glass: var(--lg-surface);
+    --lg-glass-border: var(--lg-control-border);
+  }
 }
 
 [data-theme='light'] {
@@ -58,6 +72,9 @@
   --color-lg-primary: var(--lg-primary);
   --color-lg-on-primary: var(--lg-on-primary);
   --color-lg-primary-hover: var(--lg-primary-hover);
+  --color-lg-accent: var(--lg-accent);
+  --color-lg-on-accent: var(--lg-on-accent);
+  --color-lg-accent-hover: var(--lg-accent-hover);
   --color-lg-focus: var(--lg-focus);
   --color-lg-danger: var(--lg-danger);
   --color-lg-danger-surface: var(--lg-danger-surface);
@@ -84,6 +101,19 @@
   &:focus-visible {
     outline: 3px solid var(--lg-focus);
     outline-offset: 2px;
+  }
+}
+
+/*
+ * Selected state for Windows High Contrast / forced colors, where backgrounds are replaced by the system palette:
+ * use the system highlight colours so the selected tab, page or option stays visible.
+ */
+@utility lg-forced-selected {
+  @media (forced-colors: active) {
+    /* !important: must win over the component's own background utility, which forced colors would otherwise keep. */
+    forced-color-adjust: none !important;
+    background-color: Highlight !important;
+    color: HighlightText !important;
   }
 }
 

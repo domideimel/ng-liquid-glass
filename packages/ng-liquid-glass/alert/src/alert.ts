@@ -18,7 +18,7 @@ const STATUS_CLASSES: Record<LgStatus, string> = {
 @Component({
   selector: 'lg-alert',
   imports: [LgStatusIcon],
-  host: { class: 'flex gap-3 rounded-lg-surface border-l-4 p-4 text-lg-fg', '[class]': 'statusClass()' },
+  host: { class: 'flex gap-3 rounded-lg-surface border-s-4 p-4 text-lg-fg', '[class]': 'statusClass()' },
   template: `
     <lg-status-icon [status]="status()" class="mt-0.5" />
     <div class="flex flex-col gap-1">
