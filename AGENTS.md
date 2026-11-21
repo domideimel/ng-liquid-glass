@@ -4,7 +4,7 @@ An accessible Angular component library (`@domideimel/ng-liquid-glass`) targetin
 
 ## Stack
 
-Nx 24 · Angular 22.2 (standalone, zoneless, signals, Signal Forms, OnPush by default) · Tailwind CSS 4 · NgDoc 22 · Vitest 5 in real Chromium · Playwright · pnpm 12 · Node 24.
+Nx 24.1 (beta) · Angular 22.3 (standalone, zoneless, signals, Signal Forms, OnPush by default) · Tailwind CSS 4 · NgDoc 22 · Vitest 5 in real Chromium · Playwright · pnpm 12 · Node 24.
 
 ## Skills
 
@@ -15,7 +15,7 @@ The Angular skill assumes a plain Angular CLI project. Here, Nx wins:
 
 - Never run `ng …`. Build, test and lint through Nx: `pnpm nx build ng-liquid-glass`, `pnpm nx test ng-liquid-glass`, `pnpm lint`.
 - Scaffold with Nx generators (`pnpm nx g @nx/angular:…`), not `ng generate`. A new component is a secondary entry point; the command is in CONTRIBUTING.md.
-- Do not upgrade Angular or Nx, or remove the `@angular-devkit/architect` pin in `pnpm-workspace.yaml` (see README, "Known constraint").
+- Keep the `@angular-devkit/architect` pin in `pnpm-workspace.yaml` until Nx stops importing its `node/index` subpath (see README, "Known constraints"); upgrade Nx with `pnpm nx migrate`, not by editing versions.
 
 ## Library rules
 
