@@ -14,6 +14,7 @@ describe('LgButton', () => {
 
   it.each([
     ['primary', 'bg-lg-primary'],
+    ['accent', 'bg-lg-accent'],
     ['ghost', 'bg-transparent'],
     ['danger', 'bg-lg-danger'],
   ])('applies the %s variant', async (variant, cls) => {

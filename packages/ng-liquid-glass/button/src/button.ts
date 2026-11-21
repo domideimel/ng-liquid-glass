@@ -1,9 +1,10 @@
 import { booleanAttribute, computed, Directive, ElementRef, inject, input } from '@angular/core';
 
-export type LgButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger';
+export type LgButtonVariant = 'primary' | 'accent' | 'secondary' | 'ghost' | 'danger';
 
 const VARIANTS: Record<LgButtonVariant, string> = {
   primary: 'border border-transparent bg-lg-primary text-lg-on-primary hover:bg-lg-primary-hover',
+  accent: 'border border-transparent bg-lg-accent text-lg-on-accent hover:bg-lg-accent-hover',
   secondary: 'bg-lg-surface text-lg-fg border border-lg-control-border hover:bg-lg-surface-muted',
   ghost: 'border border-transparent bg-transparent text-lg-fg hover:bg-lg-surface-muted',
   danger: 'border border-transparent bg-lg-danger text-lg-on-danger hover:opacity-90',

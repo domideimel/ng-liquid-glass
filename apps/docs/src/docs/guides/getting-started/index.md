@@ -55,7 +55,7 @@ export class App {}
 
 | Import from                   | Contents                                                                                                                            |
 | ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| `@domideimel/ng-liquid-glass` | `LgSkipLink`, `LgVisuallyHidden`, `provideLgI18n`, `LgStatusIcon`                                                                   |
+| `@domideimel/ng-liquid-glass` | `LgSkipLink`, `LgVisuallyHidden`, `provideLgI18n`, `LG_I18N_DE`/`_FR`/`_ES`, `LgStatusIcon`                                         |
 | `…/accordion`                 | `LgAccordionItem`                                                                                                                   |
 | `…/alert`                     | `LgAlert`                                                                                                                           |
 | `…/avatar`                    | `LgAvatar`                                                                                                                          |
@@ -74,15 +74,28 @@ export class App {}
 | `…/tabs`                      | `LgTabs`, `LgTab`, `LgTabPanel`                                                                                                     |
 | `…/toast`                     | `LgToaster`, `LgToasterRegion`                                                                                                      |
 | `…/tooltip`                   | `LgTooltip`                                                                                                                         |
+| `…/testing`                   | Component test harnesses (needs `@angular/cdk`), see [Testing](guides/testing)                                                      |
 
 ## Translations
 
-Every text the components render themselves can be replaced:
+German, French and Spanish are built in. Provide one at bootstrap:
 
 ```typescript
-import { provideLgI18n } from '@domideimel/ng-liquid-glass';
+import { LG_I18N_DE, provideLgI18n } from '@domideimel/ng-liquid-glass';
 
-bootstrapApplication(App, {
-  providers: [provideLgI18n({ close: 'Schließen', noResults: 'Keine Treffer', resultsCount: (n) => `${n} Treffer` })],
-});
+bootstrapApplication(App, { providers: [provideLgI18n(LG_I18N_DE)] });
+```
+
+| Locale  | Constant      |
+| ------- | ------------- |
+| English | (the default) |
+| German  | `LG_I18N_DE`  |
+| French  | `LG_I18N_FR`  |
+| Spanish | `LG_I18N_ES`  |
+
+For another language, or to change single texts, pass your own; missing texts fall back to English:
+
+```typescript
+provideLgI18n({ ...LG_I18N_DE, close: 'Zumachen' });
+provideLgI18n({ close: 'Chiudi', noResults: 'Nessun risultato', resultsCount: (n) => `${n} risultati` });
 ```
