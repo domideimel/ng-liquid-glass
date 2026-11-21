@@ -49,18 +49,18 @@ Nice to have:
 
 ## Missing components
 
-Ordered by how often apps need them:
+All shipped, each as its own entry point with specs, a docs page and e2e coverage:
 
-1. [ ] Select with rich options (listbox popup). Native `<select lgInput>` covers the plain case.
-2. [ ] Popover: generic, using the Popover API and anchor positioning, which menu and tooltip already rely on.
-3. [ ] Drawer or sheet: a `<dialog>` variant from the edges.
-4. [ ] Table: styled native table, sortable headers with `aria-sort`.
-5. [ ] Toggle button group or segmented control.
-6. [ ] Tag or chip, then chip input.
-7. [ ] Toolbar (APG pattern, roving tabindex).
-8. [ ] Separator, link, kbd.
-9. [ ] Navigation: sidebar or disclosure navigation.
-10. [ ] Date field: styled native `type=date` first, picker later.
-11. [ ] File input or dropzone.
-12. [ ] Stepper, tree view.
-13. [ ] Theme switcher (light, dark, system via `data-theme`).
+1. [x] Select with rich options (listbox popup). Native `<select lgInput>` covers the plain case.
+2. [x] Popover: generic, using the Popover API and anchor positioning, which menu and tooltip already rely on.
+3. [x] Drawer or sheet: `lg-dialog placement="start|end|bottom"`.
+4. [x] Table: styled native table, sortable headers with `aria-sort`.
+5. [x] Toggle button group or segmented control.
+6. [x] Tag or chip, then chip input.
+7. [x] Toolbar (APG pattern, roving tabindex).
+8. [x] Separator, link, kbd.
+9. [x] Navigation: sidebar or disclosure navigation.
+10. [x] Date field: styled native `type=date` (`lgInput`); a custom picker only if native ones fall short.
+11. [x] File input or dropzone.
+12. [x] Stepper, tree view.
+13. [x] Theme switcher (light, dark, system via `data-theme`).

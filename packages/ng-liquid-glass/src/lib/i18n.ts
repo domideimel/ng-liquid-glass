@@ -27,6 +27,10 @@ export interface LgI18n {
   themeSystem: string;
   /** Read after a completed step of `lg-stepper`. */
   completed: string;
+  /** `lg-file-input` texts. */
+  chooseFiles: string;
+  dropFiles: string;
+  filesSelected: (count: number) => string;
 }
 
 export const LG_I18N_DEFAULTS: LgI18n = {
@@ -50,6 +54,9 @@ export const LG_I18N_DEFAULTS: LgI18n = {
   themeDark: 'Dark',
   themeSystem: 'System',
   completed: 'completed',
+  chooseFiles: 'Choose files',
+  dropFiles: 'or drop them here',
+  filesSelected: (count) => (count === 1 ? '1 file selected' : `${String(count)} files selected`),
 };
 
 export const LG_I18N = new InjectionToken<LgI18n>('LG_I18N', {

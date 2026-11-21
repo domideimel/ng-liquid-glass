@@ -35,8 +35,8 @@ for (const theme of ['light', 'dark'] as const) {
               // 2.5.5 exception: links inside a sentence are inline targets.
               .filter((el) => !el.matches('p a[href]'))
               .map((el) => {
-                // A checkbox or radio is activated through its whole label row.
-                const target = el.matches('input[type=checkbox], input[type=radio]') ? (el.closest('label') ?? el) : el;
+                // Checkboxes, radios and visually hidden file inputs are activated through their wrapping label.
+                const target = el.matches('input[type=checkbox], input[type=radio], input[type=file]') ? (el.closest('label') ?? el) : el;
                 const { width, height } = target.getBoundingClientRect();
                 return { name: el.outerHTML.slice(0, 80), width: Math.round(width), height: Math.round(height) };
               })

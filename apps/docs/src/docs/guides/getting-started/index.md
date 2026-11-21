@@ -75,26 +75,30 @@ export class App {}
 | `…/card`                      | `LgCard`                                                                                                                            |
 | `…/combobox`                  | `LgCombobox` (typeahead)                                                                                                            |
 | `…/dialog`                    | `LgDialog` (also drawers and sheets), `LgDialogTitle`, `LgDialogClose`                                                              |
+| `…/file-input`                | `LgFileInput`                                                                                                                       |
 | `…/forms`                     | `LgFormField`, `LgLabel`, `LgHint`, `LgError`, `LgInput`, `LgCheckbox`, `LgRadio`, `LgSwitch`, `LgSlider`, `LgChoice`, `LgFieldset` |
 | `…/kbd`                       | `LgKbd`                                                                                                                             |
 | `…/layout`                    | `LgGrid`, `LgCol`, `LgContainer`, `LgStack`, `LgCluster`                                                                            |
 | `…/link`                      | `LgLink`                                                                                                                            |
 | `…/menu`                      | `LgMenu`, `LgMenuItem`, `LgMenuTrigger`                                                                                             |
+| `…/navigation`                | `LgNav`, `LgNavLink`, `LgNavGroup`                                                                                                  |
 | `…/pagination`                | `LgPagination`                                                                                                                      |
 | `…/popover`                   | `LgPopover`, `LgPopoverTrigger`                                                                                                     |
 | `…/progress`                  | `LgProgress`, `LgMeter`, `LgSpinner`                                                                                                |
 | `…/segmented`                 | `LgSegmented`, `LgSegment`, `LgToggle`                                                                                              |
+| `…/select`                    | `LgSelect`                                                                                                                          |
 | `…/separator`                 | `LgSeparator`                                                                                                                       |
 | `…/skeleton`                  | `LgSkeleton`                                                                                                                        |
 | `…/stepper`                   | `LgStepper`                                                                                                                         |
 | `…/table`                     | `LgTable`, `LgSortHeader`, `LgTableScroll`, `lgSortRows`                                                                            |
 | `…/tabs`                      | `LgTabs`, `LgTab`, `LgTabPanel`                                                                                                     |
 | `…/tag`                       | `LgTag`, `LgTagInput`                                                                                                               |
+| `…/testing`                   | Component test harnesses (needs `@angular/cdk`), see [Testing](guides/testing)                                                      |
 | `…/theme`                     | `LgTheme`, `LgThemeSwitcher`                                                                                                        |
 | `…/toast`                     | `LgToaster`, `LgToasterRegion`                                                                                                      |
 | `…/toolbar`                   | `LgToolbar`, `LgToolbarItem`                                                                                                        |
 | `…/tooltip`                   | `LgTooltip`                                                                                                                         |
-| `…/testing`                   | Component test harnesses (needs `@angular/cdk`), see [Testing](guides/testing)                                                      |
+| `…/tree`                      | `LgTree`                                                                                                                            |
 
 ## Translations
 
