@@ -1,9 +1,11 @@
 # Settings only: this is a single-package Nx workspace (projects are resolved via tsconfig paths).
 overrides:
-  # Nx 24.0 cannot load @angular-devkit/architect >= 0.2203 (new "exports" map). Remove once Nx supports it.
+  # Nx 24.0.6 and 24.1.0-beta.2 import '@angular-devkit/architect/node/index.js', which the "exports" map of
+  # architect >= 0.2203 rejects. The rest of the Angular toolchain is on 22.3. Remove once Nx stops importing it.
   '@angular-devkit/architect': 0.2202.8
-  # Security fixes for transitive dev dependencies whose parents (Nx, NgDoc, mermaid) haven't updated yet.
-  # Remove once nx, @ng-doc/builder and mermaid depend on patched versions themselves.
+  # Security fixes for transitive dev dependencies whose parents haven't updated yet: minimatch via @ng-doc/builder,
+  # ng-morph, multimatch and ts-morph 0.28 (Nx 24.1 ships 11.0.8 itself); katex via mermaid in @ng-doc/app.
+  # Remove once NgDoc and mermaid depend on patched versions.
   'minimatch@>=7.0.0 <11.0.1': ^11.0.1 # GHSA: ReDoS via globparts amplification
   'katex@>=0.11.0 <0.18.2': ^0.18.2 # GHSA: prototype pollution bypassing trust restrictions
 allowBuilds:
@@ -16,7 +18,6 @@ allowBuilds:
   unrs-resolver: true
 minimumReleaseAgeExclude:
   - '@angular-devkit/architect@0.2202.8'
-  - '@angular-devkit/core@22.2.8'
   - '@ng-doc/app@22.2.1'
   - '@ng-doc/builder@22.2.1'
   - '@ng-doc/core@22.2.1'

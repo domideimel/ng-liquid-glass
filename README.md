@@ -13,7 +13,7 @@ An accessible, native-first Angular component library styled with Tailwind CSS v
 | `apps/docs-e2e`            | `docs-e2e`        | Playwright: axe (WCAG A–AAA) and 44 px target checks on every demo, keyboard flows   |
 | `tools`                    | —                 | `size-report.mjs`, the per-entry bundle-size budget used in CI                       |
 
-Stack: Nx 24 · Angular 22.2 (zoneless, signals, Signal Forms) · Tailwind CSS 4 · NgDoc 22 · Vitest 5 in real Chromium · Playwright · pnpm 12.
+Stack: Nx 24.1 (beta) · Angular 22.3 (zoneless, signals, Signal Forms) · Tailwind CSS 4 · NgDoc 22 · Vitest 5 in real Chromium · Playwright · pnpm 12.
 
 ## Commands
 
@@ -70,9 +70,12 @@ Both branches are protected by the rulesets in [`.github/rulesets`](.github/rule
 
 Apply a changed ruleset with `gh api -X PUT repos/domideimel/ng-liquid-glass/rulesets/<id> --input .github/rulesets/<file>.json` (`gh api repos/domideimel/ng-liquid-glass/rulesets` lists the ids), or create one with `-X POST …/rulesets`.
 
-## Known constraint
+## Known constraints
 
-`pnpm-workspace.yaml` pins `@angular-devkit/architect` to `0.2202.8`, because Nx 24.0 cannot load the `exports` map added in 0.2203 (Angular 22.3). That is also why the workspace uses Angular 22.2. Remove the override and upgrade once Nx supports it.
+- **Nx 24.1 beta:** the workspace runs `nx` 24.1.0-beta.2, whose own dependencies are free of the minimatch ReDoS (GHSA, fixed in 11.0.1). Move to 24.1.0 stable with `pnpm nx migrate latest` once it is released.
+- **`@angular-devkit/architect` pin:** Nx (24.0.6 and 24.1.0-beta.2) imports `@angular-devkit/architect/node/index.js`, which the `exports` map of architect 0.2203 (Angular 22.3) rejects. `pnpm-workspace.yaml` therefore keeps architect on `0.2202.8`; the rest of the Angular toolchain is on 22.3. Remove the override once Nx imports `@angular-devkit/architect/node`.
+- **Security overrides:** `pnpm-workspace.yaml` forces minimatch ≥ 11.0.1 and katex ≥ 0.18.2, because NgDoc (`@ng-doc/builder`, `ng-morph`, mermaid) still depends on vulnerable versions.
+- **TypeScript 6.0:** Angular 22.3 supports TypeScript `>=6.0 <6.1`, so TypeScript 7 waits for Angular.
 
 ## Contributing
 
