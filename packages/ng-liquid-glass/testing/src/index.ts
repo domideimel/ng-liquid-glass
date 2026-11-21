@@ -8,8 +8,13 @@ export {
   LgMenuHarness,
   LgMenuItemHarness,
   LgPaginationHarness,
+  LgPopoverHarness,
+  LgSelectHarness,
   LgTabHarness,
   LgTabsHarness,
+  LgTagInputHarness,
   LgToastHarness,
+  LgTreeHarness,
+  LgTreeItemHarness,
   type LgTextFilters,
 } from './harnesses';

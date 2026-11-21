@@ -1,4 +1,4 @@
-import { Component, Directive, ElementRef, inject, input, signal } from '@angular/core';
+import { afterRenderEffect, Component, Directive, ElementRef, inject, input, signal } from '@angular/core';
 import { lgUniqueId } from '@domideimel/ng-liquid-glass';
 
 const FOCUSABLE =
@@ -64,7 +64,6 @@ export class LgPopover {
     '[attr.aria-expanded]': 'lgPopoverTrigger().isOpen()',
     '[attr.aria-controls]': 'lgPopoverTrigger().id',
     '[style.anchor-name]': 'anchorName',
-    '[popoverTargetElement]': 'lgPopoverTrigger().element',
     '(click)': 'anchor()',
   },
 })
@@ -72,6 +71,14 @@ export class LgPopoverTrigger {
   /** The popover to toggle. */
   readonly lgPopoverTrigger = input.required<LgPopover>();
   protected readonly anchorName = `--${lgUniqueId('lg-popover-trigger')}`;
+
+  constructor() {
+    const element = inject<ElementRef<HTMLButtonElement>>(ElementRef).nativeElement;
+    // Set in the browser only: the server DOM has no popoverTargetElement.
+    afterRenderEffect(() => {
+      element.popoverTargetElement = this.lgPopoverTrigger().element;
+    });
+  }
 
   /** Runs before the browser toggles the popover, so it opens next to this trigger. */
   protected anchor(): void {

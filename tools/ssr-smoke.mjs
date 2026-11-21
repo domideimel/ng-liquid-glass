@@ -41,12 +41,29 @@ const { LgSkeleton } = await lib('skeleton');
 const { LgTab, LgTabPanel, LgTabs } = await lib('tabs');
 const { LgToasterRegion } = await lib('toast');
 const { LgTooltip } = await lib('tooltip');
+const { LgSeparator } = await lib('separator');
+const { LgLink } = await lib('link');
+const { LgKbd } = await lib('kbd');
+const { LgTag, LgTagInput } = await lib('tag');
+const { LgSegment, LgSegmented, LgToggle } = await lib('segmented');
+const { LgToolbar } = await lib('toolbar');
+const { LgSortHeader, LgTable, LgTableScroll } = await lib('table');
+const { LgPopover, LgPopoverTrigger } = await lib('popover');
+const { LgThemeSwitcher } = await lib('theme');
+const { LgStepper } = await lib('stepper');
+const { LgSelect } = await lib('select');
+const { LgNav, LgNavGroup, LgNavLink } = await lib('navigation');
+const { LgFileInput } = await lib('file-input');
+const { LgTree } = await lib('tree');
 
 class App {
   open = signal(false);
   tab = signal('one');
   page = signal(2);
   languages = ['English', 'German', 'Spanish'];
+  sort = signal({ active: 'name', direction: 'ascending' });
+  files = [{ label: 'src', value: 'src', children: [{ label: 'main.ts', value: 'main.ts' }] }];
+  expanded = signal(['src']);
 }
 Component({
   selector: 'ssr-app',
@@ -92,6 +109,28 @@ Component({
     LgTabs,
     LgToasterRegion,
     LgTooltip,
+    LgSeparator,
+    LgLink,
+    LgKbd,
+    LgTag,
+    LgTagInput,
+    LgSegment,
+    LgSegmented,
+    LgToggle,
+    LgToolbar,
+    LgSortHeader,
+    LgTable,
+    LgTableScroll,
+    LgPopover,
+    LgPopoverTrigger,
+    LgThemeSwitcher,
+    LgStepper,
+    LgSelect,
+    LgNav,
+    LgNavGroup,
+    LgNavLink,
+    LgFileInput,
+    LgTree,
   ],
   template: `
     <a lgSkipLink href="#main">Skip to content</a>
@@ -141,6 +180,23 @@ Component({
         </lg-tabs>
         <lg-dialog [(open)]="open"><h2 lgDialogTitle>Title</h2><button lgButton lgDialogClose>Close</button></lg-dialog>
         <lg-toaster />
+        <hr lgSeparator />
+        <p>Read <a lgLink href="https://angular.dev" target="_blank">Angular</a>, press <kbd lgKbd>K</kbd>.</p>
+        <lg-tag removable>Draft</lg-tag>
+        <lg-tag-input [value]="['Angular']" />
+        <fieldset lgSegmented><legend>View</legend><label lgSegment><input type="radio" name="v" checked /> List</label></fieldset>
+        <div lgToolbar aria-label="Format"><button lgToggle type="button">Bold</button></div>
+        <div lgTableScroll aria-label="People">
+          <table lgTable [(sort)]="sort"><thead><tr><th lgSortHeader="name">Name</th></tr></thead><tbody><tr><td>Ada</td></tr></tbody></table>
+        </div>
+        <button type="button" [lgPopoverTrigger]="pop">Filters</button>
+        <lg-popover #pop label="Filters">Content</lg-popover>
+        <lg-theme-switcher />
+        <lg-stepper label="Checkout" [steps]="['Cart', 'Pay']" current="2" />
+        <lg-select placeholder="Plan" [options]="languages" />
+        <nav lgNav aria-label="Side"><ul><li><a lgNavLink href="/" aria-current="page">Home</a></li><li><details lgNavGroup><summary>More</summary></details></li></ul></nav>
+        <lg-file-input multiple />
+        <lg-tree label="Files" [nodes]="files" [(expanded)]="expanded" />
       </div>
     </main>
   `,
@@ -178,6 +234,21 @@ const expected = [
   ['dialog', /<dialog/],
   ['toaster region', /aria-label="Notifications"/],
   ['hydration annotations', /ngh=/],
+  ['separator', /<hr[^>]*lgseparator/i],
+  ['external link', /opens in a new tab/],
+  ['tag remove button', /Remove/],
+  ['tag input', /Angular/],
+  ['toggle', /aria-pressed="false"/],
+  ['toolbar', /role="toolbar"/],
+  ['sorted column', /aria-sort="ascending"/],
+  ['popover', /role="dialog"[^>]*popover="auto"|popover="auto"[^>]*role="dialog"/],
+  ['theme switcher', />\s*System\s*</],
+  ['stepper', /aria-current="step"/],
+  ['select', /<button[^>]*role="combobox"/],
+  ['nav link', /lgnavlink/i],
+  ['file input', /type="file"/],
+  ['tree', /role="tree"/],
+  ['tree item', /role="treeitem"[^>]*aria-expanded="true"/],
 ];
 const missing = expected.filter(([, pattern]) => !pattern.test(html)).map(([name]) => name);
 if (missing.length > 0) {
