@@ -55,7 +55,7 @@ interface VisibleNode<T> {
               <svg
                 aria-hidden="true"
                 class="shrink-0 transition-transform rtl:-scale-x-100"
-                [class.rotate-90]="isExpanded(node)"
+                [class]="isExpanded(node) ? 'rotate-90 rtl:-rotate-90' : ''"
                 viewBox="0 0 24 24"
                 width="16"
                 height="16"
