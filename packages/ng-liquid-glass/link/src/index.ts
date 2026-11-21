@@ -1,0 +1,1 @@
+export { LgLink } from './link';

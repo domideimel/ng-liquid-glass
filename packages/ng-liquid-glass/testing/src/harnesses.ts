@@ -402,3 +402,160 @@ export class LgFormFieldHarness extends ComponentHarness {
     return control !== null;
   }
 }
+
+/** `lg-select`. */
+export class LgSelectHarness extends ComponentHarness {
+  static hostSelector = 'lg-select';
+  private readonly button = this.locatorFor('button[role="combobox"]');
+
+  /** The selected option's text, or the placeholder. */
+  async getValueText(): Promise<string> {
+    return (await this.button()).text();
+  }
+
+  async isOpen(): Promise<boolean> {
+    return (await (await this.button()).getAttribute('aria-expanded')) === 'true';
+  }
+
+  async isDisabled(): Promise<boolean> {
+    return (await (await this.button()).getProperty<boolean | undefined>('disabled')) === true;
+  }
+
+  async open(): Promise<void> {
+    if (!(await this.isOpen())) await (await this.button()).click();
+  }
+
+  /** Main texts of the options (opens the list). */
+  async getOptions(): Promise<string[]> {
+    await this.open();
+    const options = await this.locatorForAll('[role="option"] > span:first-child')();
+    return Promise.all(options.map((option) => option.text()));
+  }
+
+  /** Opens the list and clicks the first option whose text matches. */
+  async selectOption(text: string | RegExp): Promise<void> {
+    await this.open();
+    const options = await this.locatorForAll('[role="option"]')();
+    const labels = await this.locatorForAll('[role="option"] > span:first-child')();
+    for (const [index, label] of labels.entries()) {
+      if (await HarnessPredicate.stringMatches(label.text(), text)) {
+        await options[index]?.click();
+        return;
+      }
+    }
+    throw new Error(`lg-select has no option matching ${String(text)}`);
+  }
+}
+
+/** `lg-tag-input`. */
+export class LgTagInputHarness extends ComponentHarness {
+  static hostSelector = 'lg-tag-input';
+  private readonly input = this.locatorFor('input');
+
+  async getTags(): Promise<string[]> {
+    const tags = await this.locatorForAll('lg-tag span[id$="-text"]')();
+    return Promise.all(tags.map((tag) => tag.text()));
+  }
+
+  /** Types the text and presses Enter. */
+  async addTag(text: string): Promise<void> {
+    const input = await this.input();
+    await input.sendKeys(text);
+    await input.dispatchEvent('keydown', { key: 'Enter' });
+  }
+
+  /** Clicks the remove button of the first tag with this text. */
+  async removeTag(text: string): Promise<void> {
+    const labels = await this.locatorForAll('lg-tag span[id$="-text"]')();
+    const buttons = await this.locatorForAll('lg-tag button')();
+    for (const [index, label] of labels.entries()) {
+      if ((await label.text()) === text) {
+        await buttons[index]?.click();
+        return;
+      }
+    }
+    throw new Error(`lg-tag-input has no tag "${text}"`);
+  }
+}
+
+/** A popover, located through its trigger (`button[lgPopoverTrigger]`). Filter by `text` (the trigger's text). */
+export class LgPopoverHarness extends ComponentHarness {
+  static hostSelector = 'button[aria-haspopup="dialog"]';
+
+  static with(options: LgTextFilters = {}): HarnessPredicate<LgPopoverHarness> {
+    return withText(LgPopoverHarness, options, (h) => h.getTriggerText());
+  }
+
+  async getTriggerText(): Promise<string> {
+    return (await this.host()).text();
+  }
+
+  async isOpen(): Promise<boolean> {
+    return (await (await this.host()).getAttribute('aria-expanded')) === 'true';
+  }
+
+  /** Toggles the popover through its trigger. */
+  async toggle(): Promise<void> {
+    await (await this.host()).click();
+  }
+
+  /** Text content of the popover. */
+  async getText(): Promise<string> {
+    const id = await (await this.host()).getAttribute('aria-controls');
+    return (await this.documentRootLocatorFactory().locatorFor(`#${id ?? ''}`)()).text();
+  }
+}
+
+/** One node of `lg-tree`. Filter by `text` (its label). */
+export class LgTreeItemHarness extends ComponentHarness {
+  static hostSelector = '[role="treeitem"]';
+  private readonly row = this.locatorFor(':scope > span');
+
+  static with(options: LgTextFilters = {}): HarnessPredicate<LgTreeItemHarness> {
+    return withText(LgTreeItemHarness, options, (h) => h.getLabel());
+  }
+
+  async getLabel(): Promise<string> {
+    return (await this.row()).text();
+  }
+
+  async getLevel(): Promise<number> {
+    return Number(await (await this.host()).getAttribute('aria-level'));
+  }
+
+  /** `null` for a node without children. */
+  async isExpanded(): Promise<boolean | null> {
+    const expanded = await (await this.host()).getAttribute('aria-expanded');
+    return expanded === null ? null : expanded === 'true';
+  }
+
+  async isSelected(): Promise<boolean> {
+    return (await (await this.host()).getAttribute('aria-selected')) === 'true';
+  }
+
+  /** Selects the node and toggles it when it has children, like a click. */
+  async click(): Promise<void> {
+    await (await this.row()).click();
+  }
+}
+
+/** `lg-tree`. Filter by `text` (its accessible name). */
+export class LgTreeHarness extends ComponentHarness {
+  static hostSelector = 'lg-tree';
+
+  static with(options: LgTextFilters = {}): HarnessPredicate<LgTreeHarness> {
+    return withText(LgTreeHarness, options, async (h) => (await (await h.locatorFor('[role="tree"]')()).getAttribute('aria-label')) ?? '');
+  }
+
+  /** The visible nodes, in order. */
+  async getItems(filter: LgTextFilters = {}): Promise<LgTreeItemHarness[]> {
+    return this.locatorForAll(LgTreeItemHarness.with(filter))();
+  }
+
+  async getSelectedLabel(): Promise<string | null> {
+    for (const item of await this.getItems()) {
+      if (await item.isSelected()) return item.getLabel();
+    }
+    return null;
+  }
+}

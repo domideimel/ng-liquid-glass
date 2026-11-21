@@ -43,8 +43,13 @@ it('saves the selected language', async () => {
 | `LgMenuHarness`          | the menu's trigger         | trigger text            | `getTriggerText`, `isOpen`, `open`, `close`, `getItems`, `clickItem`                                        |
 | `LgMenuItemHarness`      | `[role=menuitem]`          | text                    | `getText`, `isDisabled`, `click`                                                                            |
 | `LgPaginationHarness`    | `lg-pagination`            | –                       | `getCurrentPage`, `getVisiblePages`, `goToPage`, `next`, `previous`, `isNextDisabled`, `isPreviousDisabled` |
-| `LgTabsHarness`          | `lg-tabs`                  | tab list label          | `getLabel`, `getTabs`, `getSelectedTab`, `selectTab`, `getPanelText`                                        |
+| `LgPopoverHarness`       | the popover's trigger      | trigger text            | `getTriggerText`, `isOpen`, `toggle`, `getText`                                                             |
+| `LgSelectHarness`        | `lg-select`                | –                       | `getValueText`, `isOpen`, `isDisabled`, `open`, `getOptions`, `selectOption`                                |
 | `LgTabHarness`           | `[role=tab]`               | label                   | `getLabel`, `isSelected`, `isDisabled`, `select`                                                            |
+| `LgTabsHarness`          | `lg-tabs`                  | tab list label          | `getLabel`, `getTabs`, `getSelectedTab`, `selectTab`, `getPanelText`                                        |
+| `LgTagInputHarness`      | `lg-tag-input`             | –                       | `getTags`, `addTag`, `removeTag`                                                                            |
 | `LgToastHarness`         | `lg-toast`                 | message                 | `getMessage`, `getActionLabel`, `clickAction`, `dismiss`                                                    |
+| `LgTreeHarness`          | `lg-tree`                  | tree label              | `getItems`, `getSelectedLabel`                                                                              |
+| `LgTreeItemHarness`      | `[role=treeitem]`          | label                   | `getLabel`, `getLevel`, `isExpanded`, `isSelected`, `click`                                                 |
 
 Keyboard behaviour that depends on native browser handling, such as Escape closing a `<dialog>`, needs an end-to-end test with real key presses.

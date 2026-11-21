@@ -26,10 +26,11 @@ if (!baseSize && !baseCoverage) lines.push('_No report from the base branch yet,
 if (size) {
   const baseRows = new Map((baseSize?.rows ?? []).map((row) => [row.entry, row.gzip]));
   const changed = size.rows.filter((row) => !baseSize || baseRows.get(row.entry) !== row.gzip);
+  const largest = size.rows.reduce((max, row) => (row.gzip > max.gzip ? row : max), size.rows[0]);
   lines.push(
-    `**Total: ${kb(size.total)}** gzipped of the ${kb(size.budget)} budget` +
+    `**Total: ${kb(size.total)}** gzipped` +
       (baseSize ? ` (${signedKb(size.total - baseSize.total)} vs. base)` : '') +
-      '.',
+      `. Largest entry point: \`${largest.entry}\` with ${kb(largest.gzip)} of the ${kb(size.budgetPerEntry ?? size.budget)} per-entry budget.`,
     '',
   );
   if (baseSize && changed.length === 0) {

@@ -55,4 +55,17 @@ describe('LgDialog', () => {
     fixture.detectChanges();
     expect(screen.getByRole('dialog')).toHaveAttribute('closedby', 'any');
   });
+
+  it.each([
+    ['center', 'm-auto'],
+    ['start', 'me-auto'],
+    ['end', 'ms-auto'],
+    ['bottom', 'mt-auto'],
+  ] as const)('places a %s dialog', async (placement, cls) => {
+    await render(`<lg-dialog [placement]="placement" [open]="true"><h2 lgDialogTitle>Filters</h2></lg-dialog>`, {
+      imports: [LgDialog, LgDialogTitle],
+      componentProperties: { placement },
+    });
+    expect(screen.getByRole('dialog', { name: 'Filters' })).toHaveClass(cls, 'lg-glass');
+  });
 });
