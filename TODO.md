@@ -18,7 +18,7 @@ High value:
 - [x] Build the docs once and share them with the three e2e jobs; each browser job builds them again today.
 - [x] Find out why WebKit e2e takes ~11 min while Chromium and Firefox take ~2.5 min. It was runner queueing: the WebKit tests take ~2 min; browser caching trims the install.
 - [x] Set `timeout-minutes` on every job.
-- [ ] Release dry run after the dependency update (#18) to check `release.yml` with the new action versions and the deploy key.
+- [x] Release dry run after the dependency update (#18) to check `release.yml` with the new action versions and the deploy key. It found that the first changelog had no start tag; fixed with `release.changelog.automaticFromRef`.
 
 Nice to have:
 
@@ -33,8 +33,8 @@ Nice to have:
 ## Distribution
 
 - [x] Publish to public npm with provenance as well. Installing from GitHub Packages needs a token, even for public packages, which blocks most users. `release.yml` is ready; **you** finish the npm account setup (CONTRIBUTING.md, "Releasing").
-- [ ] `ng add` schematic: install, add the theme import to the global stylesheet, check the Tailwind setup.
-- [ ] First real release (currently 0.0.1) with a 1.0 checklist: stable APIs, migration notes policy.
+- [x] `ng add` schematic: install, add the theme import to the global stylesheet, check the Tailwind setup (plus an optional `--locale`).
+- [x] First real release (currently 0.0.1) with a 1.0 checklist: stable APIs, migration notes policy (CONTRIBUTING.md, "Versioning and 1.0"). Release whenever you like: the _Release_ workflow's new _version_ input takes `0.1.0`.
 
 ## Existing components
 
