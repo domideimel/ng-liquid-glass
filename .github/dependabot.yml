@@ -23,6 +23,16 @@ updates:
     ignore:
       # Pinned until Nx supports @angular-devkit/architect >= 0.2203 (see pnpm-workspace.yaml).
       - dependency-name: '@angular-devkit/architect'
+      # The Angular toolchain stays on 22.2 for the same reason (Nx 24.0 can't load 22.3); patches still come.
+      # Remove these once Nx supports Angular 22.3.
+      - dependency-name: '@angular/*'
+        update-types: ['version-update:semver-minor', 'version-update:semver-major']
+      - dependency-name: '@angular-devkit/*'
+        update-types: ['version-update:semver-minor', 'version-update:semver-major']
+      - dependency-name: '@schematics/angular'
+        update-types: ['version-update:semver-minor', 'version-update:semver-major']
+      - dependency-name: 'ng-packagr'
+        update-types: ['version-update:semver-minor', 'version-update:semver-major']
       # Types must match the Node major we run on (engines + CI: Node 24).
       - dependency-name: '@types/node'
         update-types: ['version-update:semver-major']

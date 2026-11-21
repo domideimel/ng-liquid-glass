@@ -20,7 +20,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          subjectPattern: ^(?![A-Z]).+$
+          # Lowercase subjects; Dependabot's "Bump …" titles are the one exception.
+          subjectPattern: ^(?:Bump |(?![A-Z])).+$
           subjectPatternError: 'Start the subject "{subject}" with a lowercase letter, e.g. "feat(combobox): support option groups".'
 
   dependency-review:

@@ -2,6 +2,10 @@
 overrides:
   # Nx 24.0 cannot load @angular-devkit/architect >= 0.2203 (new "exports" map). Remove once Nx supports it.
   '@angular-devkit/architect': 0.2202.8
+  # Security fixes for transitive dev dependencies whose parents (Nx, NgDoc, mermaid) haven't updated yet.
+  # Remove once nx, @ng-doc/builder and mermaid depend on patched versions themselves.
+  'minimatch@>=7.0.0 <11.0.1': ^11.0.1 # GHSA: ReDoS via globparts amplification
+  'katex@>=0.11.0 <0.18.2': ^0.18.2 # GHSA: prototype pollution bypassing trust restrictions
 allowBuilds:
   '@parcel/watcher': true
   '@swc/core': true
