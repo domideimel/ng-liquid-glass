@@ -1,19 +1,6 @@
-import {
-  booleanAttribute,
-  Component,
-  computed,
-  DestroyRef,
-  type ElementRef,
-  inject,
-  input,
-  model,
-  output,
-  signal,
-  viewChild,
-} from '@angular/core';
-import type { FormValueControl, ValidationError } from '@angular/forms/signals';
+import { booleanAttribute, Component, type ElementRef, inject, input, model, signal, viewChild } from '@angular/core';
 import { LG_I18N, lgAnnouncement, lgUniqueId } from '@domideimel/ng-liquid-glass';
-import { LG_FORM_FIELD, type LgFieldControl } from '@domideimel/ng-liquid-glass/forms';
+import { LgCustomControl } from '@domideimel/ng-liquid-glass/forms';
 import { LgTag } from '@domideimel/ng-liquid-glass/tag';
 
 /**
@@ -88,9 +75,8 @@ import { LgTag } from '@domideimel/ng-liquid-glass/tag';
     <span class="sr-only" aria-live="polite">{{ announcement() }}</span>
   `,
 })
-export class LgFileInput implements FormValueControl<readonly File[]>, LgFieldControl {
+export class LgFileInput extends LgCustomControl<readonly File[]> {
   protected readonly i18n = inject(LG_I18N);
-  protected readonly field = inject(LG_FORM_FIELD, { optional: true });
   private readonly input = viewChild.required<ElementRef<HTMLInputElement>>('input');
 
   /** The selected files. Bind with `[formField]` or `[(value)]`. */
@@ -99,13 +85,6 @@ export class LgFileInput implements FormValueControl<readonly File[]>, LgFieldCo
   readonly multiple = input(false, { transform: booleanAttribute });
   /** Accepted types, as in the native `accept` attribute (`.pdf,image/*`). Also applied to dropped files. */
   readonly accept = input('');
-  readonly disabled = input(false, { transform: booleanAttribute });
-  readonly required = input(false, { transform: booleanAttribute });
-  readonly invalid = input(false, { transform: booleanAttribute });
-  readonly touched = input(false, { transform: booleanAttribute });
-  readonly errors = input<readonly ValidationError.WithOptionalFieldTree[]>([]);
-  /** Signal Forms marks the field as touched on this event. */
-  readonly touch = output();
 
   readonly id = lgUniqueId('lg-file-input');
   protected readonly dragging = signal(false);
@@ -113,26 +92,8 @@ export class LgFileInput implements FormValueControl<readonly File[]>, LgFieldCo
   /** Message about the last files that didn't match `accept`; announced through the live region too. */
   protected readonly rejected = signal('');
 
-  readonly showInvalid = computed(() => this.invalid() && this.touched());
-  readonly isRequired = this.required;
-  readonly errorMessages = computed(() =>
-    this.errors()
-      .map((error) => error.message)
-      .filter((message): message is string => !!message),
-  );
-
-  constructor() {
-    const field = this.field;
-    if (field) {
-      field.control.set(this);
-      inject(DestroyRef).onDestroy(() => {
-        field.control.set(undefined);
-      });
-    }
-  }
-
   /** Moves focus to the native file input. */
-  focus(options?: FocusOptions): void {
+  override focus(options?: FocusOptions): void {
     this.input().nativeElement.focus(options);
   }
 
