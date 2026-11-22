@@ -16,7 +16,7 @@ interface VisibleNode<T> {
 
 /**
  * A hierarchical list with single selection (WAI-ARIA tree view pattern), e.g. folders or a table of
- * contents. One Tab stop; Up/Down move, Right expands or enters a node, Left collapses or goes to the
+ * contents. Click selects a node, its arrow (or a double-click) expands it. One Tab stop; Up/Down move, Right expands or enters a node, Left collapses or goes to the
  * parent (mirrored right-to-left), Home/End, typing jumps to a label, Enter or Space selects.
  *
  * @example
@@ -47,26 +47,35 @@ interface VisibleNode<T> {
         >
           <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- the treeitem handles the keyboard -->
           <span
+            data-lg-part="row"
             class="flex min-h-11 cursor-pointer items-center gap-1.5 rounded-lg-control pe-3 hover:bg-lg-surface-muted [li:focus-visible>&]:outline-3 [li:focus-visible>&]:outline-offset-[-3px] [li:focus-visible>&]:outline-lg-focus [li[aria-selected=true]>&]:bg-lg-primary [li[aria-selected=true]>&]:text-lg-on-primary [li[aria-selected=true]>&]:lg-forced-selected"
             [style.padding-inline-start.rem]="0.25 + (depth - 1) * 1.25"
             (click)="onClick(node)"
+            (dblclick)="onToggle(node, $event)"
           >
             @if (hasChildren(node)) {
-              <svg
+              <span
+                data-lg-part="toggle"
                 aria-hidden="true"
-                class="shrink-0 transition-transform rtl:-scale-x-100"
-                [class]="isExpanded(node) ? 'rotate-90 rtl:-rotate-90' : ''"
-                viewBox="0 0 24 24"
-                width="16"
-                height="16"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                class="-ms-1 inline-flex w-8 shrink-0 items-center justify-center self-stretch"
+                (click)="onToggle(node, $event)"
               >
-                <path d="m9 6 6 6-6 6" />
-              </svg>
+                <svg
+                  aria-hidden="true"
+                  class="shrink-0 transition-transform rtl:-scale-x-100"
+                  [class]="isExpanded(node) ? 'rotate-90 rtl:-rotate-90' : ''"
+                  viewBox="0 0 24 24"
+                  width="16"
+                  height="16"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="m9 6 6 6-6 6" />
+                </svg>
+              </span>
             } @else {
               <span aria-hidden="true" class="w-4 shrink-0"></span>
             }
@@ -148,8 +157,14 @@ export class LgTree<T = string> {
     return this.tabStop() === node.value;
   }
 
+  /** A click selects the node; the arrow (or a double-click) expands or collapses it. */
   protected onClick(node: LgTreeNode<T>): void {
     this.value.set(node.value);
+    this.focus(node);
+  }
+
+  protected onToggle(node: LgTreeNode<T>, event: Event): void {
+    event.stopPropagation();
     if (this.hasChildren(node)) this.setExpanded(node, !this.isExpanded(node));
     this.focus(node);
   }

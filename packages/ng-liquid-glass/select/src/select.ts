@@ -62,7 +62,7 @@ import { LgCustomControl } from '@domideimel/ng-liquid-glass/forms';
             (pointerdown)="$event.preventDefault()"
             (click)="select(i)"
           >
-            <span class="flex items-center gap-2 font-medium">
+            <span data-lg-part="label" class="flex items-center gap-2 font-medium">
               {{ display(option) }}
               @if (i === selectedIndex()) {
                 <svg

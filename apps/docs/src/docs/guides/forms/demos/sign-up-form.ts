@@ -21,7 +21,7 @@ import { LgToaster } from '@domideimel/ng-liquid-glass/toast';
       </lg-form-field>
       <lg-form-field>
         <label lgLabel>Country</label>
-        <lg-combobox ariaLabel="Countries" [options]="countries" [formField]="signUp.country" />
+        <lg-combobox listLabel="Countries" [options]="countries" [formField]="signUp.country" />
       </lg-form-field>
       <label lgChoice><input type="checkbox" lgCheckbox [formField]="signUp.terms" /> I accept the terms</label>
       <button lgButton variant="primary" type="submit">Create account</button>

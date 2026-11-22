@@ -67,7 +67,11 @@ export const LG_I18N = new InjectionToken<LgI18n>('LG_I18N', {
   factory: () => LG_I18N_DEFAULTS,
 });
 
-/** Overrides some or all built-in texts, e.g. `provideLgI18n({ close: 'Schließen' })`. */
+/**
+ * Overrides some or all built-in texts, e.g. `provideLgI18n({ close: 'Schließen' })`. Missing texts fall
+ * back to English, so pass partial objects: new versions may add texts (see the changelog), and a complete
+ * object provided directly as `LG_I18N` would miss them.
+ */
 export function provideLgI18n(texts: Partial<LgI18n>): Provider {
   return { provide: LG_I18N, useValue: { ...LG_I18N_DEFAULTS, ...texts } };
 }

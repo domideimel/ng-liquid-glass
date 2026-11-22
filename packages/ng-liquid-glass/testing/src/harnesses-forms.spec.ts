@@ -77,11 +77,13 @@ describe('testing harnesses (selection and disclosure)', () => {
     expect(await tree.getItems()).toHaveLength(2);
     const [src] = await tree.getItems({ text: 'src' });
     expect(await src?.isExpanded()).toBe(false);
-    await src?.click();
+    await src?.toggle();
     expect(host.expanded()).toEqual(['src']);
+    expect(host.file()).toBeNull();
     const [main] = await tree.getItems({ text: 'main.ts' });
     expect(await main?.getLevel()).toBe(2);
     expect(await main?.isExpanded()).toBeNull();
+    await expect(main?.toggle()).rejects.toThrow('no children');
     await main?.click();
     expect(await tree.getSelectedLabel()).toBe('main.ts');
     expect(host.file()).toBe('main.ts');

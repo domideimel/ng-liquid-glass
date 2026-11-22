@@ -23,7 +23,7 @@ const STATUS_CLASSES: Record<LgStatus, string> = {
     <lg-status-icon [status]="status()" class="mt-0.5" />
     <div class="flex flex-col gap-1">
       @if (heading()) {
-        <p class="m-0 font-semibold">{{ heading() }}</p>
+        <p data-lg-part="heading" class="m-0 font-semibold">{{ heading() }}</p>
       }
       <div><ng-content /></div>
     </div>
