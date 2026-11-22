@@ -179,12 +179,12 @@ const ICON_CLASS: Record<LgStatus, string> = {
     '(focusout)': 'onFocusout($event)',
   },
   template: `
-    <div role="status" class="contents">
+    <div role="status" class="flex w-full flex-col items-center gap-2">
       @for (toast of polite(); track toast.id) {
         <lg-toast [toast]="toast" />
       }
     </div>
-    <div role="alert" class="contents">
+    <div role="alert" class="flex w-full flex-col items-center gap-2">
       @for (toast of assertive(); track toast.id) {
         <lg-toast [toast]="toast" />
       }

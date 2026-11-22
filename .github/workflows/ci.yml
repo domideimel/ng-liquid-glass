@@ -38,6 +38,8 @@ jobs:
       - run: pnpm nx affected -t lint typecheck
       # All tests, every time: ~20 s, and the coverage report is always complete for the PR report.
       - run: pnpm nx run-many -t test --configuration=ci
+      - name: Per-file coverage floor
+        run: node tools/coverage-floor.mjs
       - run: pnpm nx run-many -t build build-schematics --exclude docs
       - run: pnpm nx run ng-liquid-glass:test-schematics
       - name: Bundle size budget

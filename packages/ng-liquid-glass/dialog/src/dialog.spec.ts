@@ -56,6 +56,28 @@ describe('LgDialog', () => {
     expect(screen.getByRole('dialog')).toHaveAttribute('closedby', 'any');
   });
 
+  it('closes on a backdrop click when dismissible, also without closedby support', async () => {
+    const { fixture } = await render(Host);
+    fixture.componentInstance.open.set(true);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    const dialog = screen.getByRole('dialog');
+    const box = dialog.getBoundingClientRect();
+    const click = (x: number, y: number) => {
+      dialog.dispatchEvent(new MouseEvent('click', { bubbles: true, clientX: x, clientY: y }));
+    };
+    // Not dismissible: a backdrop click does nothing.
+    click(box.left - 10, box.top - 10);
+    expect(fixture.componentInstance.open()).toBe(true);
+    fixture.componentInstance.dismissible.set(true);
+    fixture.detectChanges();
+    // A click inside the dialog's own padding keeps it open.
+    click(box.left + 2, box.top + 2);
+    expect(fixture.componentInstance.open()).toBe(true);
+    click(box.left - 10, box.top - 10);
+    expect(fixture.componentInstance.open()).toBe(false);
+  });
+
   it.each([
     ['center', 'm-auto'],
     ['start', 'me-auto'],

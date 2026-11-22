@@ -1,4 +1,4 @@
-import { Component, Directive, inject, input } from '@angular/core';
+import { afterNextRender, Component, Directive, inject, input, signal } from '@angular/core';
 import { LG_I18N } from '@domideimel/ng-liquid-glass';
 
 /** Styles a native `<progress>`. Omit `value` for an indeterminate state; label it with `aria-label` or a `<label>`. */
@@ -30,11 +30,22 @@ export class LgMeter {}
       <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-opacity="0.25" stroke-width="3" />
       <path d="M22 12a10 10 0 0 0-10-10" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
     </svg>
-    <span class="sr-only">{{ label() || i18n.loading }}</span>
+    <span class="sr-only">{{ announced() ? label() || i18n.loading : '' }}</span>
   `,
 })
 export class LgSpinner {
   protected readonly i18n = inject(LG_I18N);
   /** Announced text; defaults to the translated "Loading". */
   readonly label = input('');
+  /**
+   * A live region is only announced when its content changes, not when it appears with content.
+   * So the text is added right after the first render.
+   */
+  protected readonly announced = signal(false);
+
+  constructor() {
+    afterNextRender(() => {
+      this.announced.set(true);
+    });
+  }
 }
