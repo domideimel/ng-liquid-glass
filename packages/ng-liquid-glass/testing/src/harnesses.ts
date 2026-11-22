@@ -284,11 +284,11 @@ export class LgPaginationHarness extends ComponentHarness {
   }
 
   async isNextDisabled(): Promise<boolean> {
-    return (await (await this.locatorFor('li:last-child button')()).getProperty<boolean | undefined>('disabled')) === true;
+    return (await (await this.locatorFor('li:last-child button')()).getAttribute('aria-disabled')) === 'true';
   }
 
   async isPreviousDisabled(): Promise<boolean> {
-    return (await (await this.locatorFor('li:first-child button')()).getProperty<boolean | undefined>('disabled')) === true;
+    return (await (await this.locatorFor('li:first-child button')()).getAttribute('aria-disabled')) === 'true';
   }
 }
 

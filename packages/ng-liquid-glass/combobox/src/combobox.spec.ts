@@ -159,4 +159,21 @@ describe('LgCombobox', () => {
     await userEvent.click(input);
     expect(input).toHaveAttribute('aria-expanded', 'false');
   });
+
+  it('stays open while the list itself is clicked or scrolled', async () => {
+    const { input } = await setup();
+    await userEvent.click(input);
+    expect(input).toHaveAttribute('aria-expanded', 'true');
+    const listbox = screen.getByRole('listbox');
+    const press = new MouseEvent('mousedown', { bubbles: true, cancelable: true });
+    listbox.dispatchEvent(press);
+    expect(press.defaultPrevented).toBe(true);
+    // Dragging an overlay scrollbar focuses the scrolling popup in some browsers.
+    input.dispatchEvent(new FocusEvent('blur', { relatedTarget: listbox }));
+    expect(input).toHaveAttribute('aria-expanded', 'true');
+    expect(input).toHaveFocus();
+    input.dispatchEvent(new FocusEvent('blur', { relatedTarget: null }));
+    await new Promise((resolve) => setTimeout(resolve));
+    expect(input).toHaveAttribute('aria-expanded', 'false');
+  });
 });

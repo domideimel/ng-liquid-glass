@@ -32,7 +32,14 @@ export class LgAvatar {
       .split(/\s+/)
       .filter(Boolean)
       .slice(0, 2)
-      .map((part) => part.charAt(0).toLocaleUpperCase())
+      .map((part) => firstGrapheme(part).toLocaleUpperCase())
       .join(''),
   );
+}
+
+const graphemes = new Intl.Segmenter(undefined, { granularity: 'grapheme' });
+
+/** The first user-perceived character: keeps emoji, flags and combining accents whole. */
+function firstGrapheme(text: string): string {
+  return graphemes.segment(text)[Symbol.iterator]().next().value?.segment ?? '';
 }

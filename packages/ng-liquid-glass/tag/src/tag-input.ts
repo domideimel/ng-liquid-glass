@@ -12,7 +12,7 @@ import {
   viewChild,
 } from '@angular/core';
 import type { FormValueControl, ValidationError } from '@angular/forms/signals';
-import { LG_I18N, lgUniqueId } from '@domideimel/ng-liquid-glass';
+import { LG_I18N, lgAnnouncement, lgUniqueId } from '@domideimel/ng-liquid-glass';
 import { LG_FORM_FIELD, type LgFieldControl } from '@domideimel/ng-liquid-glass/forms';
 import { LgTag } from './tag';
 
@@ -134,7 +134,7 @@ export class LgTagInput implements FormValueControl<readonly string[]>, LgFieldC
     const tag = this.value()[index];
     if (tag === undefined || this.disabled()) return;
     this.value.set(this.value().filter((_, i) => i !== index));
-    this.announcement.set(this.i18n.tagRemoved(tag));
+    this.announcement.update((previous) => lgAnnouncement(previous, this.i18n.tagRemoved(tag)));
     this.focus();
   }
 
@@ -143,6 +143,6 @@ export class LgTagInput implements FormValueControl<readonly string[]>, LgFieldC
     this.text.set('');
     if (tag === '' || (!this.allowDuplicates() && this.value().includes(tag))) return;
     this.value.set([...this.value(), tag]);
-    this.announcement.set(this.i18n.tagAdded(tag));
+    this.announcement.update((previous) => lgAnnouncement(previous, this.i18n.tagAdded(tag)));
   }
 }

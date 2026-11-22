@@ -31,6 +31,8 @@ export interface LgI18n {
   chooseFiles: string;
   dropFiles: string;
   filesSelected: (count: number) => string;
+  /** Shown and announced when files don't match `accept`; `names` is a comma-separated list. */
+  filesRejected: (names: string) => string;
 }
 
 export const LG_I18N_DEFAULTS: LgI18n = {
@@ -57,6 +59,7 @@ export const LG_I18N_DEFAULTS: LgI18n = {
   chooseFiles: 'Choose files',
   dropFiles: 'or drop them here',
   filesSelected: (count) => (count === 1 ? '1 file selected' : `${String(count)} files selected`),
+  filesRejected: (names) => `Not an accepted file type: ${names}`,
 };
 
 export const LG_I18N = new InjectionToken<LgI18n>('LG_I18N', {

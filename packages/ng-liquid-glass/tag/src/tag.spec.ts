@@ -92,6 +92,21 @@ describe('LgTagInput', () => {
     expect(model().skills).toEqual(['Testing']);
   });
 
+  it('announces the same change twice in a row', async () => {
+    await render(`<label for="t">Tags</label><lg-tag-input allowDuplicates [(value)]="tags" />`, {
+      imports: [LgTagInput],
+      componentProperties: { tags: signal<readonly string[]>([]) },
+    });
+    const input = screen.getByRole('textbox');
+    const region = document.querySelector('lg-tag-input > [aria-live]')!;
+    await userEvent.type(input, 'A{Enter}');
+    const first = region.textContent;
+    await userEvent.type(input, 'A{Enter}');
+    expect(region.textContent.trim()).toBe('A added');
+    // The text must change, or the screen reader stays silent.
+    expect(region.textContent).not.toBe(first);
+  });
+
   it('can be disabled', async () => {
     await render(`<label for="t">Tags</label><lg-tag-input disabled [value]="['A']" />`, { imports: [LgTagInput] });
     expect(screen.getByRole('textbox')).toBeDisabled();

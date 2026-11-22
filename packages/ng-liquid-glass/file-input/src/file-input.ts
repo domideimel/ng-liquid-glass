@@ -12,7 +12,7 @@ import {
   viewChild,
 } from '@angular/core';
 import type { FormValueControl, ValidationError } from '@angular/forms/signals';
-import { LG_I18N, lgUniqueId } from '@domideimel/ng-liquid-glass';
+import { LG_I18N, lgAnnouncement, lgUniqueId } from '@domideimel/ng-liquid-glass';
 import { LG_FORM_FIELD, type LgFieldControl } from '@domideimel/ng-liquid-glass/forms';
 import { LgTag } from '@domideimel/ng-liquid-glass/tag';
 
@@ -72,6 +72,9 @@ import { LgTag } from '@domideimel/ng-liquid-glass/tag';
         {{ i18n.chooseFiles }}
       </label>
       <p aria-hidden="true" class="m-0 text-sm text-lg-fg-muted">{{ i18n.dropFiles }}</p>
+      @if (rejected()) {
+        <p aria-hidden="true" class="m-0 text-sm font-medium text-lg-danger">{{ rejected() }}</p>
+      }
     </div>
     @if (value().length > 0) {
       <ul class="m-0 mt-2 flex list-none flex-wrap gap-1.5 p-0">
@@ -107,6 +110,8 @@ export class LgFileInput implements FormValueControl<readonly File[]>, LgFieldCo
   readonly id = lgUniqueId('lg-file-input');
   protected readonly dragging = signal(false);
   protected readonly announcement = signal('');
+  /** Message about the last files that didn't match `accept`; announced through the live region too. */
+  protected readonly rejected = signal('');
 
   readonly showInvalid = computed(() => this.invalid() && this.touched());
   readonly isRequired = this.required;
@@ -147,7 +152,7 @@ export class LgFileInput implements FormValueControl<readonly File[]>, LgFieldCo
     event.preventDefault();
     this.dragging.set(false);
     if (this.disabled()) return;
-    this.add([...(event.dataTransfer?.files ?? [])].filter((file) => this.accepts(file)));
+    this.add([...(event.dataTransfer?.files ?? [])]);
     this.touch.emit();
   }
 
@@ -155,7 +160,7 @@ export class LgFileInput implements FormValueControl<readonly File[]>, LgFieldCo
     const file = this.value()[index];
     if (file === undefined) return;
     this.value.set(this.value().filter((_, i) => i !== index));
-    this.announcement.set(this.i18n.tagRemoved(file.name));
+    this.announcement.update((previous) => lgAnnouncement(previous, this.i18n.tagRemoved(file.name)));
     this.focus();
   }
 
@@ -165,8 +170,16 @@ export class LgFileInput implements FormValueControl<readonly File[]>, LgFieldCo
     return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
   }
 
-  private add(files: File[]): void {
-    if (files.length === 0) return;
+  /** Adds the accepted files; rejected ones (dropped, or picked with "All files") are reported instead. */
+  private add(candidates: File[]): void {
+    if (candidates.length === 0) return;
+    const files = candidates.filter((file) => this.accepts(file));
+    const rejected = candidates.filter((file) => !this.accepts(file)).map((file) => file.name);
+    this.rejected.set(rejected.length > 0 ? this.i18n.filesRejected(rejected.join(', ')) : '');
+    if (files.length === 0) {
+      this.announcement.update((previous) => lgAnnouncement(previous, this.rejected()));
+      return;
+    }
     const key = (file: File): string => `${file.name}:${String(file.size)}:${String(file.lastModified)}`;
     if (this.multiple()) {
       const existing = new Set(this.value().map(key));
@@ -174,7 +187,8 @@ export class LgFileInput implements FormValueControl<readonly File[]>, LgFieldCo
     } else {
       this.value.set(files.slice(0, 1));
     }
-    this.announcement.set(this.i18n.filesSelected(this.value().length));
+    const message = [this.i18n.filesSelected(this.value().length), this.rejected()].filter(Boolean).join('. ');
+    this.announcement.update((previous) => lgAnnouncement(previous, message));
   }
 
   /** Same rules as the native `accept` attribute: extensions, exact MIME types and `type/*`. */
