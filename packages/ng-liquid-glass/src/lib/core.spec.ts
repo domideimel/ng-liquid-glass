@@ -5,7 +5,7 @@ import { expectNoA11yViolations } from '../../test/a11y';
 import { LG_I18N, LG_I18N_DEFAULTS, provideLgI18n } from './i18n';
 import { LG_I18N_DE, LG_I18N_ES, LG_I18N_FR } from './i18n-locales';
 import { lgAnnouncement } from './announce';
-import { lgUniqueId } from './id';
+import { LgIdCounter, lgUniqueId } from './id';
 import { LgTypeahead } from './typeahead';
 import { LgSkipLink } from './skip-link';
 import { LgVisuallyHidden } from './visually-hidden';
@@ -45,6 +45,13 @@ describe('core', () => {
   it('creates unique ids', () => {
     expect(lgUniqueId('x')).not.toBe(lgUniqueId('x'));
     expect(lgUniqueId('field')).toMatch(/^field-\d+$/);
+  });
+
+  it('counts ids per application inside an injection context', () => {
+    const first = TestBed.runInInjectionContext(() => lgUniqueId('lg-x'));
+    const second = TestBed.runInInjectionContext(() => lgUniqueId('lg-x'));
+    expect([first, second]).toEqual(['lg-x-1', 'lg-x-2']);
+    expect(TestBed.inject(LgIdCounter).next()).toBe(3);
   });
 
   it('provides default texts', () => {

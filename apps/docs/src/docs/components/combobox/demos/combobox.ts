@@ -13,7 +13,7 @@ interface Language {
   template: `
     <lg-form-field class="max-w-sm">
       <label lgLabel>Language</label>
-      <lg-combobox ariaLabel="Languages" placeholder="Start typing…" [options]="languages" [displayWith]="byName" [(value)]="language" />
+      <lg-combobox listLabel="Languages" placeholder="Start typing…" [options]="languages" [displayWith]="byName" [(value)]="language" />
     </lg-form-field>
     <p class="mt-4">Selected: {{ language()?.code ?? 'none' }}</p>
   `,

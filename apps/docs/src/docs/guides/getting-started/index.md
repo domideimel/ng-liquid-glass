@@ -117,7 +117,7 @@ bootstrapApplication(App, { providers: [provideLgI18n(LG_I18N_DE)] });
 | French  | `LG_I18N_FR`  |
 | Spanish | `LG_I18N_ES`  |
 
-For another language, or to change single texts, pass your own; missing texts fall back to English:
+For another language, or to change single texts, pass your own; missing texts fall back to English. New versions may add texts, so prefer `provideLgI18n` with a partial object over providing a complete `LG_I18N` yourself:
 
 ```typescript
 provideLgI18n({ ...LG_I18N_DE, close: 'Zumachen' });

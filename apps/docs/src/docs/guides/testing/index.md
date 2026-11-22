@@ -50,6 +50,8 @@ it('saves the selected language', async () => {
 | `LgTagInputHarness`      | `lg-tag-input`             | –                       | `getTags`, `addTag`, `removeTag`                                                                            |
 | `LgToastHarness`         | `lg-toast`                 | message                 | `getMessage`, `getActionLabel`, `clickAction`, `dismiss`                                                    |
 | `LgTreeHarness`          | `lg-tree`                  | tree label              | `getItems`, `getSelectedLabel`                                                                              |
-| `LgTreeItemHarness`      | `[role=treeitem]`          | label                   | `getLabel`, `getLevel`, `isExpanded`, `isSelected`, `click`                                                 |
+| `LgTreeItemHarness`      | `[role=treeitem]`          | label                   | `getLabel`, `getLevel`, `isExpanded`, `isSelected`, `click` (selects), `toggle`                             |
+
+The harnesses find elements through `data-lg-part` attributes, not styling classes, so styling changes don't break your tests.
 
 Keyboard behaviour that depends on native browser handling, such as Escape closing a `<dialog>`, needs an end-to-end test with real key presses.

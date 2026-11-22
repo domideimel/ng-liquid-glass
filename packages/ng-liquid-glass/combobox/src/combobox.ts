@@ -58,7 +58,7 @@ export function lgContains(text: string, query: string): boolean {
       (blur)="onBlur($event)"
     />
     <div [lgAnchoredPopup]="popupVisible()" [anchor]="anchorName">
-      <ul role="listbox" class="m-0 list-none p-0" [id]="listboxId" [hidden]="!expanded()" [attr.aria-label]="ariaLabel() || null">
+      <ul role="listbox" class="m-0 list-none p-0" [id]="listboxId" [hidden]="!expanded()" [attr.aria-label]="listLabel() || null">
         @for (option of results(); track $index; let i = $index) {
           <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- keyboard is handled on the input via aria-activedescendant (ARIA combobox pattern) -->
           <li
@@ -95,8 +95,11 @@ export class LgCombobox<T> extends LgCustomControl<T | null> {
   /** Local filter; `null` turns local filtering off (e.g. for server-side search). */
   readonly filter = input<((text: string, query: string) => boolean) | null>(lgContains);
   readonly placeholder = input('');
-  /** Accessible name of the suggestion list. */
-  readonly ariaLabel = input('');
+  /**
+   * Accessible name of the suggestion list (the input itself is named by its label). Named `listLabel`, not
+   * `label`, because `label` names the whole component everywhere else in the library.
+   */
+  readonly listLabel = input('');
   /** Shows a loading state while you fetch suggestions. */
   readonly loading = input(false, { transform: booleanAttribute });
 

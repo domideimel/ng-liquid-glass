@@ -16,10 +16,11 @@ import { LG_I18N, lgUniqueId } from '@domideimel/ng-liquid-glass';
     '[class.pe-3]': '!removable()',
   },
   template: `
-    <span class="truncate" [id]="textId"><ng-content /></span>
+    <span data-lg-part="text" class="truncate" [id]="textId"><ng-content /></span>
     @if (removable()) {
       <button
         type="button"
+        data-lg-part="remove"
         class="lg-focus-ring -my-1.5 inline-flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-full border border-transparent bg-transparent text-lg-fg hover:bg-lg-border disabled:cursor-not-allowed disabled:opacity-60"
         [disabled]="disabled()"
         [attr.aria-labelledby]="removeId + ' ' + textId"

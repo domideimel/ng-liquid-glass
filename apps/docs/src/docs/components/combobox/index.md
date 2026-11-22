@@ -16,7 +16,7 @@ Set `[filter]="null"` to turn off local filtering, load suggestions from `(query
 | `options`                             | The options, or your search results                         |
 | `displayWith`                         | Maps an option to its text (default `String`)               |
 | `filter`                              | `(text, query) => boolean`, `null` to filter yourself       |
-| `loading`, `placeholder`, `ariaLabel` | Loading state, placeholder, name of the list                |
+| `loading`, `placeholder`, `listLabel` | Loading state, placeholder, name of the suggestion list     |
 | `(query)`                             | The text the user typed                                     |
 
 Free text is not kept: on blur the input shows the selected option again, or clears.

@@ -81,12 +81,19 @@ describe('LgTree', () => {
     expect(item('package.json')).toHaveAttribute('aria-selected', 'true');
     await userEvent.keyboard('{ArrowDown} ');
     expect(value()).toBe('README.md');
+    // A click on the label selects without toggling; the arrow and a double-click toggle.
     await userEvent.click(screen.getByText('src'));
     expect(value()).toBe('src');
-    expect(open()).toEqual(['src']);
-    expect(item('src')).toHaveFocus();
-    await userEvent.click(screen.getByText('src'));
     expect(open()).toEqual([]);
+    expect(item('src')).toHaveFocus();
+    const arrow = item('src').querySelector<HTMLElement>('[data-lg-part="toggle"]')!;
+    await userEvent.click(arrow);
+    expect(open()).toEqual(['src']);
+    expect(value()).toBe('src');
+    await userEvent.dblClick(screen.getByText('src'));
+    expect(open()).toEqual([]);
+    await userEvent.dblClick(screen.getByText('README.md'));
+    expect(value()).toBe('README.md');
     await expectNoA11yViolations();
   });
 
