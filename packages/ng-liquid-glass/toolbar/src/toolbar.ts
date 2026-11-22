@@ -1,4 +1,4 @@
-import { afterEveryRender, Directive, ElementRef, inject, input } from '@angular/core';
+import { afterNextRender, DestroyRef, Directive, ElementRef, inject, input } from '@angular/core';
 
 const ITEMS = 'button:not([disabled]), a[href], input:not([disabled]):not([type=hidden]), select:not([disabled]), [lgToolbarItem]';
 
@@ -31,8 +31,17 @@ export class LgToolbar {
   private current: HTMLElement | null = null;
 
   constructor() {
-    afterEveryRender(() => {
+    const destroyRef = inject(DestroyRef);
+    afterNextRender(() => {
       this.syncTabStops();
+      // Re-sync when items are added, removed, enabled or disabled; tabindex changes are ours and not observed.
+      const observer = new MutationObserver(() => {
+        this.syncTabStops();
+      });
+      observer.observe(this.element, { childList: true, subtree: true, attributes: true, attributeFilter: ['disabled', 'href', 'type'] });
+      destroyRef.onDestroy(() => {
+        observer.disconnect();
+      });
     });
   }
 

@@ -6,6 +6,7 @@ import { LG_I18N, LG_I18N_DEFAULTS, provideLgI18n } from './i18n';
 import { LG_I18N_DE, LG_I18N_ES, LG_I18N_FR } from './i18n-locales';
 import { lgAnnouncement } from './announce';
 import { lgUniqueId } from './id';
+import { LgTypeahead } from './typeahead';
 import { LgSkipLink } from './skip-link';
 import { LgVisuallyHidden } from './visually-hidden';
 
@@ -16,6 +17,29 @@ describe('core', () => {
     expect(repeated).not.toBe('Saved');
     expect(repeated.trim()).toBe('Saved');
     expect(lgAnnouncement(repeated, 'Saved')).toBe('Saved');
+  });
+
+  it('matches typed text, cycles on a repeated character and ignores shortcuts', () => {
+    vi.useFakeTimers();
+    try {
+      const typeahead = TestBed.runInInjectionContext(() => new LgTypeahead());
+      const labels = ['Apple', 'Banana', 'Blueberry', 'Cherry'];
+      const key = (k: string, init: KeyboardEventInit = {}) => new KeyboardEvent('keydown', { key: k, ...init });
+      expect(typeahead.match(key('b'), labels, -1)).toBe(1);
+      expect(typeahead.typing).toBe(true);
+      expect(typeahead.match(key('l'), labels, 1)).toBe(2);
+      vi.advanceTimersByTime(500);
+      expect(typeahead.typing).toBe(false);
+      expect(typeahead.match(key('b'), labels, 1)).toBe(2);
+      expect(typeahead.match(key('b'), labels, 2)).toBe(1);
+      typeahead.reset();
+      expect(typeahead.match(key('a'), labels, 3)).toBe(0);
+      expect(typeahead.match(key('z'), labels, 0)).toBe(-1);
+      expect(typeahead.match(key('ArrowDown'), labels, 0)).toBeNull();
+      expect(typeahead.match(key('c', { ctrlKey: true }), labels, 0)).toBeNull();
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   it('creates unique ids', () => {

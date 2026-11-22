@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/angular';
+import { render, screen, waitFor } from '@testing-library/angular';
 import userEvent from '@testing-library/user-event';
 import { expectNoA11yViolations } from '../../test/a11y';
 import { LgToolbar } from './toolbar';
@@ -67,5 +67,27 @@ describe('LgToolbar', () => {
     } finally {
       document.documentElement.dir = '';
     }
+  });
+
+  it('keeps one tab stop when items are added, disabled or removed', async () => {
+    const item = await setup();
+    const toolbar = screen.getByRole('toolbar');
+    const bold = item('Bold');
+    expect(bold).toHaveAttribute('tabindex', '0');
+    const added = document.createElement('button');
+    added.type = 'button';
+    added.textContent = 'Strike';
+    toolbar.append(added);
+    await waitFor(() => {
+      expect(added).toHaveAttribute('tabindex', '-1');
+    });
+    (bold as HTMLButtonElement).disabled = true;
+    await waitFor(() => {
+      expect(item('Underline')).toHaveAttribute('tabindex', '0');
+    });
+    item('Underline').remove();
+    await waitFor(() => {
+      expect(item('Help')).toHaveAttribute('tabindex', '0');
+    });
   });
 });

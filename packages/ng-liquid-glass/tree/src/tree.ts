@@ -1,6 +1,6 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { Component, computed, ElementRef, inject, input, model, signal } from '@angular/core';
-import { lgUniqueId } from '@domideimel/ng-liquid-glass';
+import { LgTypeahead, lgUniqueId } from '@domideimel/ng-liquid-glass';
 
 /** A node of `lg-tree`. `value` identifies it and must be unique in the tree. */
 export interface LgTreeNode<T = string> {
@@ -94,8 +94,7 @@ export class LgTree<T = string> {
 
   private readonly id = lgUniqueId('lg-tree');
   protected readonly focused = signal<T | null>(null);
-  private typeahead = '';
-  private typeaheadTimer: ReturnType<typeof setTimeout> | undefined;
+  private readonly typeahead = new LgTypeahead();
 
   /** Nodes in display order, skipping children of collapsed nodes. */
   private readonly visible = computed(() => {
@@ -209,16 +208,13 @@ export class LgTree<T = string> {
 
   /** Type-ahead: focuses the next visible node whose label starts with the typed characters. */
   private search(event: KeyboardEvent, visible: readonly VisibleNode<T>[], index: number): boolean {
-    if (event.key.length !== 1 || event.ctrlKey || event.metaKey || event.altKey) return false;
-    clearTimeout(this.typeaheadTimer);
-    this.typeaheadTimer = setTimeout(() => {
-      this.typeahead = '';
-    }, 500);
-    this.typeahead += event.key.toLocaleLowerCase();
-    const start = this.typeahead.length === 1 ? index + 1 : index;
-    const order = visible.map((_, offset) => visible[(start + offset) % visible.length]);
-    const match = order.find((entry) => entry?.node.label.toLocaleLowerCase().startsWith(this.typeahead));
-    this.focus(match?.node);
+    const match = this.typeahead.match(
+      event,
+      visible.map((entry) => entry.node.label),
+      index,
+    );
+    if (match === null) return false;
+    this.focus(visible[match]?.node);
     return true;
   }
 }
