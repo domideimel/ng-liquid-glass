@@ -45,7 +45,7 @@ import { LG_FORM_FIELD, type LgFieldControl } from '@domideimel/ng-liquid-glass/
       [attr.aria-required]="required() || null"
       (click)="toggle()"
       (keydown)="onKeydown($event)"
-      (blur)="onBlur()"
+      (blur)="onBlur($event)"
     >
       <span class="truncate" [class.text-lg-fg-muted]="selectedIndex() < 0">{{ label() }}</span>
       <svg
@@ -65,6 +65,7 @@ import { LG_FORM_FIELD, type LgFieldControl } from '@domideimel/ng-liquid-glass/
     <div
       #popup
       popover="manual"
+      (mousedown)="onPopupMousedown($event)"
       class="lg-glass m-0 max-h-72 w-[anchor-size(width)] overflow-auto rounded-lg-surface p-1 shadow-xl [inset:auto] [margin-block:0.25rem] [position-area:block-end_span-inline-end] [position-try-fallbacks:flip-block]"
       [style.position-anchor]="anchorName"
     >
@@ -249,7 +250,18 @@ export class LgSelect<T> implements FormValueControl<T | null>, LgFieldControl {
     event.preventDefault();
   }
 
-  protected onBlur(): void {
+  /** Keeps focus on the button when the list is clicked, except on a classic scrollbar, so it can still be dragged. */
+  protected onPopupMousedown(event: MouseEvent): void {
+    const popup = this.popup().nativeElement;
+    if (event.target !== popup || event.offsetX < popup.clientWidth) event.preventDefault();
+  }
+
+  protected onBlur(event: FocusEvent): void {
+    // Focus moved into the list (e.g. an overlay scrollbar was dragged): keep it open and take focus back.
+    if (event.relatedTarget instanceof Node && this.popup().nativeElement.contains(event.relatedTarget)) {
+      this.focus();
+      return;
+    }
     this.close();
     this.touch.emit();
   }

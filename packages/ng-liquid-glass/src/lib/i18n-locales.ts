@@ -29,6 +29,7 @@ export const LG_I18N_DE: LgI18n = {
   chooseFiles: 'Dateien auswählen',
   dropFiles: 'oder hier ablegen',
   filesSelected: (count) => (count === 1 ? '1 Datei ausgewählt' : `${String(count)} Dateien ausgewählt`),
+  filesRejected: (names) => `Kein erlaubter Dateityp: ${names}`,
 };
 
 export const LG_I18N_FR: LgI18n = {
@@ -55,6 +56,7 @@ export const LG_I18N_FR: LgI18n = {
   chooseFiles: 'Choisir des fichiers',
   dropFiles: 'ou déposez-les ici',
   filesSelected: (count) => (count === 1 ? '1 fichier sélectionné' : `${String(count)} fichiers sélectionnés`),
+  filesRejected: (names) => `Type de fichier non accepté : ${names}`,
 };
 
 export const LG_I18N_ES: LgI18n = {
@@ -81,4 +83,5 @@ export const LG_I18N_ES: LgI18n = {
   chooseFiles: 'Elegir archivos',
   dropFiles: 'o suéltalos aquí',
   filesSelected: (count) => (count === 1 ? '1 archivo seleccionado' : `${String(count)} archivos seleccionados`),
+  filesRejected: (names) => `Tipo de archivo no admitido: ${names}`,
 };

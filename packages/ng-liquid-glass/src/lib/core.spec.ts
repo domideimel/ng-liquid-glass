@@ -4,11 +4,20 @@ import { render, screen } from '@testing-library/angular';
 import { expectNoA11yViolations } from '../../test/a11y';
 import { LG_I18N, LG_I18N_DEFAULTS, provideLgI18n } from './i18n';
 import { LG_I18N_DE, LG_I18N_ES, LG_I18N_FR } from './i18n-locales';
+import { lgAnnouncement } from './announce';
 import { lgUniqueId } from './id';
 import { LgSkipLink } from './skip-link';
 import { LgVisuallyHidden } from './visually-hidden';
 
 describe('core', () => {
+  it('makes repeated announcements differ', () => {
+    expect(lgAnnouncement('', 'Saved')).toBe('Saved');
+    const repeated = lgAnnouncement('Saved', 'Saved');
+    expect(repeated).not.toBe('Saved');
+    expect(repeated.trim()).toBe('Saved');
+    expect(lgAnnouncement(repeated, 'Saved')).toBe('Saved');
+  });
+
   it('creates unique ids', () => {
     expect(lgUniqueId('x')).not.toBe(lgUniqueId('x'));
     expect(lgUniqueId('field')).toMatch(/^field-\d+$/);
@@ -39,6 +48,18 @@ describe('core', () => {
     expect(TestBed.inject(LG_I18N).nextPage).toBe('Nächste Seite');
     expect(LG_I18N_FR.resultsCount(2)).toBe('2 résultats disponibles');
     expect(LG_I18N_ES.resultsCount(1)).toBe('1 resultado disponible');
+  });
+
+  it('fills every message function of every locale with its argument', () => {
+    for (const locale of [LG_I18N_DEFAULTS, LG_I18N_DE, LG_I18N_FR, LG_I18N_ES]) {
+      for (const [key, value] of Object.entries(locale)) {
+        if (typeof value !== 'function') continue;
+        const text = (value as (arg: number | string) => string)(
+          key === 'tagAdded' || key === 'tagRemoved' || key === 'filesRejected' ? 'report.pdf' : 7,
+        );
+        expect(text, key).toMatch(/report\.pdf|7/);
+      }
+    }
   });
 
   it('renders an accessible skip link and visually hidden text', async () => {
