@@ -52,6 +52,18 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      # The packed package on the GitHub release, so apps can install it from GitHub without a token:
+      # pnpm add https://github.com/domideimel/ng-liquid-glass/releases/download/v<version>/domideimel-ng-liquid-glass-<version>.tgz
+      - name: Attach the package tarball to the GitHub release
+        if: ${{ !inputs.dry-run }}
+        working-directory: dist/packages/ng-liquid-glass
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          version=$(node -p "require('./package.json').version")
+          file=$(npm pack --pack-destination "$RUNNER_TEMP" | tail -n 1)
+          gh release upload "v$version" "$RUNNER_TEMP/$file" --clobber --repo "$GITHUB_REPOSITORY"
+
       # setup-node's .npmrc routes @domideimel to GitHub Packages, so npmjs.com gets its own config.
       # Auth: npm trusted publishing (OIDC) when configured on npmjs.com, otherwise the NPM_TOKEN secret.
       - name: Publish to npmjs.com with provenance
