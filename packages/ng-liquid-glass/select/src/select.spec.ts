@@ -139,4 +139,32 @@ describe('LgSelect', () => {
     expect(empty).toHaveAttribute('aria-expanded', 'false');
     expect(disabled).toBeDisabled();
   });
+
+  it('stays open while the list itself is clicked or scrolled', async () => {
+    const { select } = await setup();
+    await userEvent.click(select);
+    const listbox = screen.getByRole('listbox');
+    const press = new MouseEvent('mousedown', { bubbles: true, cancelable: true });
+    listbox.dispatchEvent(press);
+    expect(press.defaultPrevented).toBe(true);
+    select.dispatchEvent(new FocusEvent('blur', { relatedTarget: listbox }));
+    expect(select).toHaveAttribute('aria-expanded', 'true');
+    expect(select).toHaveFocus();
+    select.dispatchEvent(new FocusEvent('blur', { relatedTarget: null }));
+    await new Promise((resolve) => setTimeout(resolve));
+    expect(select).toHaveAttribute('aria-expanded', 'false');
+  });
+
+  it('opens at the ends with Home and End, and lets Space continue a type-ahead query', async () => {
+    const { select } = await setup();
+    select.focus();
+    await userEvent.keyboard('{End}');
+    expect(select).toHaveAttribute('aria-activedescendant', option(/Enterprise/).id);
+    await userEvent.keyboard('{Escape}{Home}');
+    expect(select).toHaveAttribute('aria-activedescendant', option(/Free/).id);
+    // While typing, Space belongs to the query instead of selecting.
+    await userEvent.keyboard('p ');
+    expect(select).toHaveAttribute('aria-expanded', 'true');
+    expect(select).toHaveAttribute('aria-activedescendant', option(/Pro/).id);
+  });
 });

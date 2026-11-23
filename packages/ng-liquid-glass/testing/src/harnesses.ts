@@ -284,11 +284,11 @@ export class LgPaginationHarness extends ComponentHarness {
   }
 
   async isNextDisabled(): Promise<boolean> {
-    return (await (await this.locatorFor('li:last-child button')()).getProperty<boolean | undefined>('disabled')) === true;
+    return (await (await this.locatorFor('li:last-child button')()).getAttribute('aria-disabled')) === 'true';
   }
 
   async isPreviousDisabled(): Promise<boolean> {
-    return (await (await this.locatorFor('li:first-child button')()).getProperty<boolean | undefined>('disabled')) === true;
+    return (await (await this.locatorFor('li:first-child button')()).getAttribute('aria-disabled')) === 'true';
   }
 }
 
@@ -331,7 +331,7 @@ export class LgAlertHarness extends ComponentHarness {
   }
 
   async getHeading(): Promise<string> {
-    return (await this.locatorForOptional('p.font-semibold')())?.text() ?? '';
+    return (await this.locatorForOptional('[data-lg-part="heading"]')())?.text() ?? '';
   }
 
   async getText(): Promise<string> {
@@ -348,23 +348,21 @@ export class LgToastHarness extends ComponentHarness {
   }
 
   async getMessage(): Promise<string> {
-    return (await this.locatorFor('p')()).text();
+    return (await this.locatorFor('[data-lg-part="message"]')()).text();
   }
 
   async getActionLabel(): Promise<string | null> {
-    const buttons = await this.locatorForAll('button')();
-    return buttons.length > 1 ? (buttons[0]?.text() ?? null) : null;
+    return (await this.locatorForOptional('[data-lg-part="action"]')())?.text() ?? null;
   }
 
   async clickAction(): Promise<void> {
-    const buttons = await this.locatorForAll('button')();
-    if (buttons.length < 2) throw new Error('The toast has no action');
-    await buttons[0]?.click();
+    const action = await this.locatorForOptional('[data-lg-part="action"]')();
+    if (!action) throw new Error('The toast has no action');
+    await action.click();
   }
 
   async dismiss(): Promise<void> {
-    const buttons = await this.locatorForAll('button')();
-    await buttons.at(-1)?.click();
+    await (await this.locatorFor('[data-lg-part="dismiss"]')()).click();
   }
 }
 
@@ -428,7 +426,7 @@ export class LgSelectHarness extends ComponentHarness {
   /** Main texts of the options (opens the list). */
   async getOptions(): Promise<string[]> {
     await this.open();
-    const options = await this.locatorForAll('[role="option"] > span:first-child')();
+    const options = await this.locatorForAll('[role="option"] [data-lg-part="label"]')();
     return Promise.all(options.map((option) => option.text()));
   }
 
@@ -436,7 +434,7 @@ export class LgSelectHarness extends ComponentHarness {
   async selectOption(text: string | RegExp): Promise<void> {
     await this.open();
     const options = await this.locatorForAll('[role="option"]')();
-    const labels = await this.locatorForAll('[role="option"] > span:first-child')();
+    const labels = await this.locatorForAll('[role="option"] [data-lg-part="label"]')();
     for (const [index, label] of labels.entries()) {
       if (await HarnessPredicate.stringMatches(label.text(), text)) {
         await options[index]?.click();
@@ -453,7 +451,7 @@ export class LgTagInputHarness extends ComponentHarness {
   private readonly input = this.locatorFor('input');
 
   async getTags(): Promise<string[]> {
-    const tags = await this.locatorForAll('lg-tag span[id$="-text"]')();
+    const tags = await this.locatorForAll('lg-tag [data-lg-part="text"]')();
     return Promise.all(tags.map((tag) => tag.text()));
   }
 
@@ -466,8 +464,8 @@ export class LgTagInputHarness extends ComponentHarness {
 
   /** Clicks the remove button of the first tag with this text. */
   async removeTag(text: string): Promise<void> {
-    const labels = await this.locatorForAll('lg-tag span[id$="-text"]')();
-    const buttons = await this.locatorForAll('lg-tag button')();
+    const labels = await this.locatorForAll('lg-tag [data-lg-part="text"]')();
+    const buttons = await this.locatorForAll('lg-tag [data-lg-part="remove"]')();
     for (const [index, label] of labels.entries()) {
       if ((await label.text()) === text) {
         await buttons[index]?.click();
@@ -509,7 +507,7 @@ export class LgPopoverHarness extends ComponentHarness {
 /** One node of `lg-tree`. Filter by `text` (its label). */
 export class LgTreeItemHarness extends ComponentHarness {
   static hostSelector = '[role="treeitem"]';
-  private readonly row = this.locatorFor(':scope > span');
+  private readonly row = this.locatorFor(':scope > [data-lg-part="row"]');
 
   static with(options: LgTextFilters = {}): HarnessPredicate<LgTreeItemHarness> {
     return withText(LgTreeItemHarness, options, (h) => h.getLabel());
@@ -533,9 +531,16 @@ export class LgTreeItemHarness extends ComponentHarness {
     return (await (await this.host()).getAttribute('aria-selected')) === 'true';
   }
 
-  /** Selects the node and toggles it when it has children, like a click. */
+  /** Selects the node, like a click on its label. */
   async click(): Promise<void> {
     await (await this.row()).click();
+  }
+
+  /** Expands or collapses the node through its arrow. */
+  async toggle(): Promise<void> {
+    const toggle = await this.locatorForOptional(':scope > [data-lg-part="row"] [data-lg-part="toggle"]')();
+    if (!toggle) throw new Error('The tree node has no children to toggle');
+    await toggle.click();
   }
 }
 

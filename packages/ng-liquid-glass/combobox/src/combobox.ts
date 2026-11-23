@@ -3,7 +3,6 @@ import {
   booleanAttribute,
   Component,
   computed,
-  DestroyRef,
   type ElementRef,
   inject,
   input,
@@ -13,9 +12,8 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
-import type { FormValueControl, ValidationError } from '@angular/forms/signals';
-import { LG_I18N, lgUniqueId } from '@domideimel/ng-liquid-glass';
-import { LG_FORM_FIELD, type LgFieldControl } from '@domideimel/ng-liquid-glass/forms';
+import { LG_I18N, LgAnchoredPopup, lgUniqueId } from '@domideimel/ng-liquid-glass';
+import { LgCustomControl } from '@domideimel/ng-liquid-glass/forms';
 
 /** Default filter: case-insensitive "contains" on the displayed text. */
 export function lgContains(text: string, query: string): boolean {
@@ -32,6 +30,7 @@ export function lgContains(text: string, query: string): boolean {
  */
 @Component({
   selector: 'lg-combobox',
+  imports: [LgAnchoredPopup],
   host: { class: 'relative block' },
   template: `
     <input
@@ -56,15 +55,10 @@ export function lgContains(text: string, query: string): boolean {
       (input)="onInput($event)"
       (keydown)="onKeydown($event)"
       (click)="openList()"
-      (blur)="onBlur()"
+      (blur)="onBlur($event)"
     />
-    <div
-      #popup
-      popover="manual"
-      class="lg-glass m-0 max-h-72 w-[anchor-size(width)] overflow-auto rounded-lg-surface p-1 shadow-xl [inset:auto] [margin-block:0.25rem] [position-area:block-end_span-inline-end] [position-try-fallbacks:flip-block]"
-      [style.position-anchor]="anchorName"
-    >
-      <ul role="listbox" class="m-0 list-none p-0" [id]="listboxId" [hidden]="!expanded()" [attr.aria-label]="ariaLabel() || null">
+    <div [lgAnchoredPopup]="popupVisible()" [anchor]="anchorName">
+      <ul role="listbox" class="m-0 list-none p-0" [id]="listboxId" [hidden]="!expanded()" [attr.aria-label]="listLabel() || null">
         @for (option of results(); track $index; let i = $index) {
           <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- keyboard is handled on the input via aria-activedescendant (ARIA combobox pattern) -->
           <li
@@ -87,11 +81,10 @@ export function lgContains(text: string, query: string): boolean {
     <span class="sr-only" aria-live="polite">{{ announcement() }}</span>
   `,
 })
-export class LgCombobox<T> implements FormValueControl<T | null>, LgFieldControl {
+export class LgCombobox<T> extends LgCustomControl<T | null> {
   private readonly i18n = inject(LG_I18N);
-  protected readonly field = inject(LG_FORM_FIELD, { optional: true });
   private readonly input = viewChild.required<ElementRef<HTMLInputElement>>('input');
-  private readonly popup = viewChild.required<ElementRef<HTMLElement>>('popup');
+  private readonly popup = viewChild.required(LgAnchoredPopup);
 
   /** The selected option. Bind with `[formField]` or `[(value)]`. */
   readonly value = model<T | null>(null);
@@ -102,20 +95,16 @@ export class LgCombobox<T> implements FormValueControl<T | null>, LgFieldControl
   /** Local filter; `null` turns local filtering off (e.g. for server-side search). */
   readonly filter = input<((text: string, query: string) => boolean) | null>(lgContains);
   readonly placeholder = input('');
-  /** Accessible name of the suggestion list. */
-  readonly ariaLabel = input('');
+  /**
+   * Accessible name of the suggestion list (the input itself is named by its label). Named `listLabel`, not
+   * `label`, because `label` names the whole component everywhere else in the library.
+   */
+  readonly listLabel = input('');
   /** Shows a loading state while you fetch suggestions. */
   readonly loading = input(false, { transform: booleanAttribute });
-  readonly disabled = input(false, { transform: booleanAttribute });
-  readonly required = input(false, { transform: booleanAttribute });
-  readonly invalid = input(false, { transform: booleanAttribute });
-  readonly touched = input(false, { transform: booleanAttribute });
-  readonly errors = input<readonly ValidationError.WithOptionalFieldTree[]>([]);
 
   /** Emits the typed text, for loading suggestions. */
   readonly query = output<string>();
-  /** Signal Forms marks the field as touched on this event. */
-  readonly touch = output();
 
   readonly id = lgUniqueId('lg-combobox');
   protected readonly listboxId = `${this.id}-listbox`;
@@ -135,7 +124,7 @@ export class LgCombobox<T> implements FormValueControl<T | null>, LgFieldControl
   });
   protected readonly expanded = computed(() => this.open() && this.results().length > 0);
   /** The popup shows the options, or a "Loading" / "No results" status. */
-  private readonly popupVisible = computed(() => this.expanded() || (this.open() && this.statusText() !== ''));
+  protected readonly popupVisible = computed(() => this.expanded() || (this.open() && this.statusText() !== ''));
   protected readonly activeId = computed(() => (this.expanded() && this.active() >= 0 ? this.optionId(this.active()) : null));
   protected readonly statusText = computed(() => {
     if (this.loading()) return this.i18n.loading;
@@ -146,27 +135,8 @@ export class LgCombobox<T> implements FormValueControl<T | null>, LgFieldControl
     return this.statusText() || this.i18n.resultsCount(this.results().length);
   });
 
-  readonly showInvalid = computed(() => this.invalid() && this.touched());
-  readonly isRequired = this.required;
-  readonly errorMessages = computed(() =>
-    this.errors()
-      .map((error) => error.message)
-      .filter((message): message is string => !!message),
-  );
-
   constructor() {
-    const field = this.field;
-    if (field) {
-      field.control.set(this);
-      inject(DestroyRef).onDestroy(() => {
-        field.control.set(undefined);
-      });
-    }
-    afterRenderEffect(() => {
-      const popup = this.popup().nativeElement;
-      const visible = this.popupVisible();
-      if (visible !== popup.matches(':popover-open')) popup.togglePopover(visible);
-    });
+    super();
     afterRenderEffect(() => {
       const id = this.activeId();
       if (id) this.input().nativeElement.ownerDocument.getElementById(id)?.scrollIntoView({ block: 'nearest' });
@@ -174,7 +144,7 @@ export class LgCombobox<T> implements FormValueControl<T | null>, LgFieldControl
   }
 
   /** Moves focus to the text input. */
-  focus(options?: FocusOptions): void {
+  override focus(options?: FocusOptions): void {
     this.input().nativeElement.focus(options);
   }
 
@@ -242,7 +212,12 @@ export class LgCombobox<T> implements FormValueControl<T | null>, LgFieldControl
     }
   }
 
-  protected onBlur(): void {
+  protected onBlur(event: FocusEvent): void {
+    // Focus moved into the list (e.g. an overlay scrollbar was dragged): keep it open and take focus back.
+    if (this.popup().contains(event.relatedTarget)) {
+      this.focus();
+      return;
+    }
     this.close();
     const value = this.value();
     this.text.set(value === null ? '' : this.display(value));

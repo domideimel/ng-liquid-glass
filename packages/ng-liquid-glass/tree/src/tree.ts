@@ -1,6 +1,6 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { Component, computed, ElementRef, inject, input, model, signal } from '@angular/core';
-import { lgUniqueId } from '@domideimel/ng-liquid-glass';
+import { LgTypeahead, lgUniqueId } from '@domideimel/ng-liquid-glass';
 
 /** A node of `lg-tree`. `value` identifies it and must be unique in the tree. */
 export interface LgTreeNode<T = string> {
@@ -16,7 +16,7 @@ interface VisibleNode<T> {
 
 /**
  * A hierarchical list with single selection (WAI-ARIA tree view pattern), e.g. folders or a table of
- * contents. One Tab stop; Up/Down move, Right expands or enters a node, Left collapses or goes to the
+ * contents. Click selects a node, its arrow (or a double-click) expands it. One Tab stop; Up/Down move, Right expands or enters a node, Left collapses or goes to the
  * parent (mirrored right-to-left), Home/End, typing jumps to a label, Enter or Space selects.
  *
  * @example
@@ -47,26 +47,35 @@ interface VisibleNode<T> {
         >
           <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- the treeitem handles the keyboard -->
           <span
+            data-lg-part="row"
             class="flex min-h-11 cursor-pointer items-center gap-1.5 rounded-lg-control pe-3 hover:bg-lg-surface-muted [li:focus-visible>&]:outline-3 [li:focus-visible>&]:outline-offset-[-3px] [li:focus-visible>&]:outline-lg-focus [li[aria-selected=true]>&]:bg-lg-primary [li[aria-selected=true]>&]:text-lg-on-primary [li[aria-selected=true]>&]:lg-forced-selected"
             [style.padding-inline-start.rem]="0.25 + (depth - 1) * 1.25"
             (click)="onClick(node)"
+            (dblclick)="onToggle(node, $event)"
           >
             @if (hasChildren(node)) {
-              <svg
+              <span
+                data-lg-part="toggle"
                 aria-hidden="true"
-                class="shrink-0 transition-transform rtl:-scale-x-100"
-                [class]="isExpanded(node) ? 'rotate-90 rtl:-rotate-90' : ''"
-                viewBox="0 0 24 24"
-                width="16"
-                height="16"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                class="-ms-1 inline-flex w-8 shrink-0 items-center justify-center self-stretch"
+                (click)="onToggle(node, $event)"
               >
-                <path d="m9 6 6 6-6 6" />
-              </svg>
+                <svg
+                  aria-hidden="true"
+                  class="shrink-0 transition-transform rtl:-scale-x-100"
+                  [class]="isExpanded(node) ? 'rotate-90 rtl:-rotate-90' : ''"
+                  viewBox="0 0 24 24"
+                  width="16"
+                  height="16"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="m9 6 6 6-6 6" />
+                </svg>
+              </span>
             } @else {
               <span aria-hidden="true" class="w-4 shrink-0"></span>
             }
@@ -94,8 +103,7 @@ export class LgTree<T = string> {
 
   private readonly id = lgUniqueId('lg-tree');
   protected readonly focused = signal<T | null>(null);
-  private typeahead = '';
-  private typeaheadTimer: ReturnType<typeof setTimeout> | undefined;
+  private readonly typeahead = new LgTypeahead();
 
   /** Nodes in display order, skipping children of collapsed nodes. */
   private readonly visible = computed(() => {
@@ -149,8 +157,14 @@ export class LgTree<T = string> {
     return this.tabStop() === node.value;
   }
 
+  /** A click selects the node; the arrow (or a double-click) expands or collapses it. */
   protected onClick(node: LgTreeNode<T>): void {
     this.value.set(node.value);
+    this.focus(node);
+  }
+
+  protected onToggle(node: LgTreeNode<T>, event: Event): void {
+    event.stopPropagation();
     if (this.hasChildren(node)) this.setExpanded(node, !this.isExpanded(node));
     this.focus(node);
   }
@@ -209,16 +223,13 @@ export class LgTree<T = string> {
 
   /** Type-ahead: focuses the next visible node whose label starts with the typed characters. */
   private search(event: KeyboardEvent, visible: readonly VisibleNode<T>[], index: number): boolean {
-    if (event.key.length !== 1 || event.ctrlKey || event.metaKey || event.altKey) return false;
-    clearTimeout(this.typeaheadTimer);
-    this.typeaheadTimer = setTimeout(() => {
-      this.typeahead = '';
-    }, 500);
-    this.typeahead += event.key.toLocaleLowerCase();
-    const start = this.typeahead.length === 1 ? index + 1 : index;
-    const order = visible.map((_, offset) => visible[(start + offset) % visible.length]);
-    const match = order.find((entry) => entry?.node.label.toLocaleLowerCase().startsWith(this.typeahead));
-    this.focus(match?.node);
+    const match = this.typeahead.match(
+      event,
+      visible.map((entry) => entry.node.label),
+      index,
+    );
+    if (match === null) return false;
+    this.focus(visible[match]?.node);
     return true;
   }
 }

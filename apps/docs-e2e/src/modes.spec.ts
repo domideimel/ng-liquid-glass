@@ -82,15 +82,15 @@ test.describe('forced colors (Windows High Contrast)', () => {
   });
 });
 
-// Screenshots are compared against Linux baselines rendered in CI, so they only run there, in Chromium.
-// Update them with the "Update screenshots" workflow (see CONTRIBUTING.md).
+// Screenshots are compared against the base branch's rendering in CI's Linux Chromium, so they only run there.
+// Baselines are CI artifacts, not files in git; see CONTRIBUTING.md, "Visual changes".
 test.describe('visual regression', () => {
   // eslint-disable-next-line playwright/no-skipped-test -- conditional skip by browser and environment
   test.skip(({ browserName }) => browserName !== 'chromium' || !process.env['CI'], 'Chromium in CI only');
 
   const variants = [
+    // Dark mode is covered by axe's contrast checks in both themes; a screenshot adds little.
     { name: 'light', theme: 'light' as const },
-    { name: 'dark', theme: 'dark' as const },
     { name: 'rtl', theme: 'light' as const, rtl: true },
     { name: 'forced-colors', theme: 'light' as const, forcedColors: true },
   ];

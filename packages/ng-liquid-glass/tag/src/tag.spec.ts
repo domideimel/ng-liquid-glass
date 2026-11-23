@@ -19,7 +19,10 @@ describe('LgTag', () => {
     const removed = vi.fn();
     await render(`<lg-tag removable (remove)="removed()">Angular</lg-tag>`, { imports: [LgTag], componentProperties: { removed } });
     const button = screen.getByRole('button', { name: 'Remove Angular' });
-    expect(button).toHaveClass('size-11');
+    // Unit tests load the real styles, so the 44 × 44 px target is measured, not assumed.
+    const { width, height } = button.getBoundingClientRect();
+    expect(Math.round(width)).toBeGreaterThanOrEqual(44);
+    expect(Math.round(height)).toBeGreaterThanOrEqual(44);
     await userEvent.click(button);
     expect(removed).toHaveBeenCalledTimes(1);
     await expectNoA11yViolations();
@@ -90,6 +93,21 @@ describe('LgTagInput', () => {
     await userEvent.type(input, 'Testing');
     await userEvent.tab();
     expect(model().skills).toEqual(['Testing']);
+  });
+
+  it('announces the same change twice in a row', async () => {
+    await render(`<label for="t">Tags</label><lg-tag-input allowDuplicates [(value)]="tags" />`, {
+      imports: [LgTagInput],
+      componentProperties: { tags: signal<readonly string[]>([]) },
+    });
+    const input = screen.getByRole('textbox');
+    const region = document.querySelector('lg-tag-input > [aria-live]')!;
+    await userEvent.type(input, 'A{Enter}');
+    const first = region.textContent;
+    await userEvent.type(input, 'A{Enter}');
+    expect(region.textContent.trim()).toBe('A added');
+    // The text must change, or the screen reader stays silent.
+    expect(region.textContent).not.toBe(first);
   });
 
   it('can be disabled', async () => {

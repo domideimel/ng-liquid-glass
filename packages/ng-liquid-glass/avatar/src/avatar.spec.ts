@@ -13,6 +13,16 @@ describe('LgAvatar', () => {
     await expectNoA11yViolations();
   });
 
+  it.each([
+    ['Émile Zola', 'ÉZ'],
+    ['E\u0301mile', 'É'],
+    ['👩🏽‍💻 Dev', '👩🏽‍💻D'],
+    ['  ', ''],
+  ])('keeps whole characters in the initials of %s', async (name, initials) => {
+    await render(`<lg-avatar [name]="name" />`, { imports: [LgAvatar], componentProperties: { name } });
+    expect(document.querySelector('lg-avatar')?.textContent.trim().normalize()).toBe(initials.normalize());
+  });
+
   it('shows the image and falls back to initials when it fails', async () => {
     const { rerender } = await render(LgAvatar, { inputs: { name: 'Grace Hopper', src: PIXEL } });
     const img = screen.getByRole('img', { name: 'Grace Hopper' });

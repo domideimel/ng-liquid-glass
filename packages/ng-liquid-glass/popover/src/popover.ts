@@ -1,4 +1,4 @@
-import { afterRenderEffect, Component, Directive, ElementRef, inject, input, signal } from '@angular/core';
+import { afterRenderEffect, Component, Directive, ElementRef, inject, input, model, signal } from '@angular/core';
 import { lgUniqueId } from '@domideimel/ng-liquid-glass';
 
 const FOCUSABLE =
@@ -34,17 +34,26 @@ export class LgPopover {
   readonly label = input('');
 
   readonly id = lgUniqueId('lg-popover');
-  readonly isOpen = signal(false);
+  /** Whether the popover is shown; two-way bindable with `[(open)]`, like `lg-dialog`. */
+  readonly open = model(false);
   readonly anchorName = signal<string | null>(null);
 
-  /** Closes the popover; focus returns to its trigger. */
+  constructor() {
+    // Opening through the model (or the trigger) and the browser's own toggling stay in sync.
+    afterRenderEffect(() => {
+      const open = this.open();
+      if (open !== this.element.matches(':popover-open')) this.element.togglePopover(open);
+    });
+  }
+
+  /** Closes the popover; focus returns to its trigger. Same as setting `open` to false. */
   close(): void {
-    if (this.element.matches(':popover-open')) this.element.hidePopover();
+    this.open.set(false);
   }
 
   protected onToggle(event: Event): void {
     const open = (event as ToggleEvent).newState === 'open';
-    this.isOpen.set(open);
+    this.open.set(open);
     if (open) {
       const first = this.element.querySelector<HTMLElement>(FOCUSABLE);
       (first ?? this.element).focus();
@@ -61,7 +70,7 @@ export class LgPopover {
   host: {
     type: 'button',
     'aria-haspopup': 'dialog',
-    '[attr.aria-expanded]': 'lgPopoverTrigger().isOpen()',
+    '[attr.aria-expanded]': 'lgPopoverTrigger().open()',
     '[attr.aria-controls]': 'lgPopoverTrigger().id',
     '[style.anchor-name]': 'anchorName',
     '(click)': 'anchor()',
@@ -76,7 +85,9 @@ export class LgPopoverTrigger {
     const element = inject<ElementRef<HTMLButtonElement>>(ElementRef).nativeElement;
     // Set in the browser only: the server DOM has no popoverTargetElement.
     afterRenderEffect(() => {
-      element.popoverTargetElement = this.lgPopoverTrigger().element;
+      const popover = this.lgPopoverTrigger();
+      element.popoverTargetElement = popover.element;
+      popover.anchorName.set(this.anchorName);
     });
   }
 

@@ -31,6 +31,8 @@ export interface LgI18n {
   chooseFiles: string;
   dropFiles: string;
   filesSelected: (count: number) => string;
+  /** Shown and announced when files don't match `accept`; `names` is a comma-separated list. */
+  filesRejected: (names: string) => string;
 }
 
 export const LG_I18N_DEFAULTS: LgI18n = {
@@ -57,6 +59,7 @@ export const LG_I18N_DEFAULTS: LgI18n = {
   chooseFiles: 'Choose files',
   dropFiles: 'or drop them here',
   filesSelected: (count) => (count === 1 ? '1 file selected' : `${String(count)} files selected`),
+  filesRejected: (names) => `Not an accepted file type: ${names}`,
 };
 
 export const LG_I18N = new InjectionToken<LgI18n>('LG_I18N', {
@@ -64,7 +67,11 @@ export const LG_I18N = new InjectionToken<LgI18n>('LG_I18N', {
   factory: () => LG_I18N_DEFAULTS,
 });
 
-/** Overrides some or all built-in texts, e.g. `provideLgI18n({ close: 'Schließen' })`. */
+/**
+ * Overrides some or all built-in texts, e.g. `provideLgI18n({ close: 'Schließen' })`. Missing texts fall
+ * back to English, so pass partial objects: new versions may add texts (see the changelog), and a complete
+ * object provided directly as `LG_I18N` would miss them.
+ */
 export function provideLgI18n(texts: Partial<LgI18n>): Provider {
   return { provide: LG_I18N, useValue: { ...LG_I18N_DEFAULTS, ...texts } };
 }

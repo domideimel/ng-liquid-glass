@@ -41,7 +41,7 @@ const CITIES = [
     <lg-form-field class="max-w-sm">
       <label lgLabel>City</label>
       <lg-hint>Results load as you type (simulated server).</lg-hint>
-      <lg-combobox ariaLabel="Cities" [filter]="null" [options]="results()" [loading]="loading()" (query)="search($event)" />
+      <lg-combobox listLabel="Cities" [filter]="null" [options]="results()" [loading]="loading()" (query)="search($event)" />
     </lg-form-field>
   `,
 })

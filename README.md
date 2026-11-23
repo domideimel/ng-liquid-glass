@@ -13,7 +13,7 @@ An accessible, native-first Angular component library styled with Tailwind CSS v
 | `apps/docs-e2e`            | `docs-e2e`        | Playwright: axe (WCAG A–AAA) and 44 px target checks on every demo, keyboard flows   |
 | `tools`                    | —                 | `size-report.mjs`, the per-entry bundle-size budget used in CI                       |
 
-Stack: Nx 24 · Angular 22.2 (zoneless, signals, Signal Forms) · Tailwind CSS 4 · NgDoc 22 · Vitest 5 in real Chromium · Playwright · pnpm 12.
+Stack: Nx 24.1 (beta) · Angular 22.3 (zoneless, signals, Signal Forms) · Tailwind CSS 4 · NgDoc 22 · Vitest 5 in real Chromium · Playwright · pnpm 12.
 
 ## Commands
 
@@ -34,7 +34,7 @@ Browser tests use Playwright's Chromium (`pnpm exec playwright install chromium`
 - **TypeScript:** `strict`, `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes` and related flags.
 - **Angular compiler:** strict templates and host bindings, with extended diagnostics treated as errors.
 - **ESLint:** `typescript-eslint` `strictTypeChecked` + `stylisticTypeChecked`, angular-eslint template accessibility rules, and Nx module boundaries.
-- **Unit tests:** every component is checked with axe-core. Coverage must stay ≥ 95 % statements, functions and lines, and ≥ 90 % branches.
+- **Unit tests:** run in real Chromium with the library's CSS (Tailwind without Preflight, plus the theme), so visibility and size assertions are real; every component is checked with axe-core. Coverage must stay ≥ 95 % statements, functions and lines and ≥ 90 % branches overall, and every file ≥ 90 % statements and lines and ≥ 85 % branches and functions (`tools/coverage-floor.mjs`).
 - **E2E:** every demo in light and dark mode is checked with axe, including the AAA rules, plus a 44 × 44 px target-size check.
 - **Bundle size:** every entry point must stay under 5 KB gzipped; apps only ship the entry points they import.
 
@@ -51,6 +51,8 @@ Browser tests use Playwright's Chromium (`pnpm exec playwright install chromium`
 | `scorecard.yml`    | push to `main`, weekly        | OpenSSF Scorecard                                                                                                                                        |
 
 On every PR:
+
+- visual regression: every demo (light, right-to-left, forced colors) is compared with the screenshots of the base branch's last CI run. The screenshots are CI artifacts, not files in git;
 
 - a comment with the bundle size and coverage, and their change against the base branch;
 - the built docs as the `docs-preview` artifact (download it, then `npx vite preview --outDir <folder>`).
@@ -70,9 +72,12 @@ Both branches are protected by the rulesets in [`.github/rulesets`](.github/rule
 
 Apply a changed ruleset with `gh api -X PUT repos/domideimel/ng-liquid-glass/rulesets/<id> --input .github/rulesets/<file>.json` (`gh api repos/domideimel/ng-liquid-glass/rulesets` lists the ids), or create one with `-X POST …/rulesets`.
 
-## Known constraint
+## Known constraints
 
-`pnpm-workspace.yaml` pins `@angular-devkit/architect` to `0.2202.8`, because Nx 24.0 cannot load the `exports` map added in 0.2203 (Angular 22.3). That is also why the workspace uses Angular 22.2. Remove the override and upgrade once Nx supports it.
+- **Nx 24.1 beta:** the workspace runs `nx` 24.1.0-beta.2, whose own dependencies are free of the minimatch ReDoS (GHSA, fixed in 11.0.1). Move to 24.1.0 stable with `pnpm nx migrate latest` once it is released.
+- **`@angular-devkit/architect` pin:** Nx (24.0.6 and 24.1.0-beta.2) imports `@angular-devkit/architect/node/index.js`, which the `exports` map of architect 0.2203 (Angular 22.3) rejects. `pnpm-workspace.yaml` therefore keeps architect on `0.2202.8`; the rest of the Angular toolchain is on 22.3. Remove the override once Nx imports `@angular-devkit/architect/node`.
+- **Security overrides:** `pnpm-workspace.yaml` forces minimatch ≥ 11.0.1 and katex ≥ 0.18.2, because NgDoc (`@ng-doc/builder`, `ng-morph`, mermaid) still depends on vulnerable versions.
+- **TypeScript 6.0:** Angular 22.3 supports TypeScript `>=6.0 <6.1`, so TypeScript 7 waits for Angular.
 
 ## Contributing
 

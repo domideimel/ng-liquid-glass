@@ -22,4 +22,11 @@ describe('progress', () => {
     expect(second).toHaveTextContent('Saving');
     expect(first?.querySelector('svg')).toHaveAttribute('aria-hidden', 'true');
   });
+
+  it('fills the spinner status after it appears, so it is announced', async () => {
+    const { fixture } = await render(`<lg-spinner label="Saving" />`, { imports: [LgSpinner] });
+    const status = screen.getByRole('status');
+    await fixture.whenStable();
+    expect(status).toHaveTextContent('Saving');
+  });
 });

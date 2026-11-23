@@ -31,5 +31,5 @@ The library targets **WCAG 2.2 level AAA** for everything a component controls. 
 
 1. **Unit tests** run in a real Chromium with Vitest. Each component's rendered DOM is checked with axe-core (WCAG 2.x A/AA and best-practice rules), along with keyboard behaviour and ARIA states.
 2. **End-to-end tests** with Playwright load every documentation page of the production build in light and dark mode, in Chromium, Firefox and WebKit. They run axe including the AAA rules (`color-contrast-enhanced`, `target-size`) against the real styles, repeat it right-to-left, and check that selected states stay visible in forced colors.
-3. **Visual regression:** every demo is compared against screenshots in light, dark, right-to-left and forced colors.
+3. **Visual regression:** every demo is compared with its rendering on the base branch, in light mode, right-to-left and forced colors.
 4. **Manual testing** with screen readers (NVDA + Firefox, VoiceOver + Safari) is still required before a release; automated tools find only part of all issues.

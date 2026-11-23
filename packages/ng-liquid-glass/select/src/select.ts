@@ -1,20 +1,6 @@
-import {
-  afterRenderEffect,
-  booleanAttribute,
-  Component,
-  computed,
-  DestroyRef,
-  type ElementRef,
-  inject,
-  input,
-  model,
-  output,
-  signal,
-  viewChild,
-} from '@angular/core';
-import type { FormValueControl, ValidationError } from '@angular/forms/signals';
-import { lgUniqueId } from '@domideimel/ng-liquid-glass';
-import { LG_FORM_FIELD, type LgFieldControl } from '@domideimel/ng-liquid-glass/forms';
+import { afterRenderEffect, Component, computed, type ElementRef, input, model, signal, viewChild } from '@angular/core';
+import { LgAnchoredPopup, LgTypeahead, lgUniqueId } from '@domideimel/ng-liquid-glass';
+import { LgCustomControl } from '@domideimel/ng-liquid-glass/forms';
 
 /**
  * A select with rich options (WAI-ARIA select-only combobox): each option can have a second line of
@@ -27,6 +13,7 @@ import { LG_FORM_FIELD, type LgFieldControl } from '@domideimel/ng-liquid-glass/
  */
 @Component({
   selector: 'lg-select',
+  imports: [LgAnchoredPopup],
   host: { class: 'relative block' },
   template: `
     <button
@@ -45,7 +32,7 @@ import { LG_FORM_FIELD, type LgFieldControl } from '@domideimel/ng-liquid-glass/
       [attr.aria-required]="required() || null"
       (click)="toggle()"
       (keydown)="onKeydown($event)"
-      (blur)="onBlur()"
+      (blur)="onBlur($event)"
     >
       <span class="truncate" [class.text-lg-fg-muted]="selectedIndex() < 0">{{ label() }}</span>
       <svg
@@ -62,12 +49,7 @@ import { LG_FORM_FIELD, type LgFieldControl } from '@domideimel/ng-liquid-glass/
         <path d="m6 9 6 6 6-6" />
       </svg>
     </button>
-    <div
-      #popup
-      popover="manual"
-      class="lg-glass m-0 max-h-72 w-[anchor-size(width)] overflow-auto rounded-lg-surface p-1 shadow-xl [inset:auto] [margin-block:0.25rem] [position-area:block-end_span-inline-end] [position-try-fallbacks:flip-block]"
-      [style.position-anchor]="anchorName"
-    >
+    <div [lgAnchoredPopup]="popupOpen()" [anchor]="anchorName">
       <ul role="listbox" class="m-0 list-none p-0" [id]="listboxId" [attr.aria-labelledby]="id">
         @for (option of options(); track $index; let i = $index) {
           <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- keyboard is handled on the button via aria-activedescendant -->
@@ -80,7 +62,7 @@ import { LG_FORM_FIELD, type LgFieldControl } from '@domideimel/ng-liquid-glass/
             (pointerdown)="$event.preventDefault()"
             (click)="select(i)"
           >
-            <span class="flex items-center gap-2 font-medium">
+            <span data-lg-part="label" class="flex items-center gap-2 font-medium">
               {{ display(option) }}
               @if (i === selectedIndex()) {
                 <svg
@@ -108,10 +90,9 @@ import { LG_FORM_FIELD, type LgFieldControl } from '@domideimel/ng-liquid-glass/
     </div>
   `,
 })
-export class LgSelect<T> implements FormValueControl<T | null>, LgFieldControl {
-  protected readonly field = inject(LG_FORM_FIELD, { optional: true });
+export class LgSelect<T> extends LgCustomControl<T | null> {
   private readonly button = viewChild.required<ElementRef<HTMLButtonElement>>('button');
-  private readonly popup = viewChild.required<ElementRef<HTMLElement>>('popup');
+  private readonly popup = viewChild.required(LgAnchoredPopup);
 
   /** The selected option. Bind with `[formField]` or `[(value)]`. */
   readonly value = model<T | null>(null);
@@ -123,21 +104,14 @@ export class LgSelect<T> implements FormValueControl<T | null>, LgFieldControl {
   /** Compares options with the value; defaults to identity. */
   readonly compareWith = input<(a: T, b: T) => boolean>(Object.is);
   readonly placeholder = input('');
-  readonly disabled = input(false, { transform: booleanAttribute });
-  readonly required = input(false, { transform: booleanAttribute });
-  readonly invalid = input(false, { transform: booleanAttribute });
-  readonly touched = input(false, { transform: booleanAttribute });
-  readonly errors = input<readonly ValidationError.WithOptionalFieldTree[]>([]);
-  /** Signal Forms marks the field as touched on this event. */
-  readonly touch = output();
 
   readonly id = lgUniqueId('lg-select');
   protected readonly listboxId = `${this.id}-listbox`;
   protected readonly anchorName = `--${this.id}`;
   protected readonly open = signal(false);
+  protected readonly popupOpen = computed(() => this.open() && this.options().length > 0);
   protected readonly active = signal(-1);
-  private typeahead = '';
-  private typeaheadTimer: ReturnType<typeof setTimeout> | undefined;
+  private readonly typeahead = new LgTypeahead();
 
   protected readonly selectedIndex = computed(() => {
     const value = this.value();
@@ -148,27 +122,9 @@ export class LgSelect<T> implements FormValueControl<T | null>, LgFieldControl {
     const option = this.options()[this.selectedIndex()];
     return option === undefined ? this.placeholder() : this.display(option);
   });
-  readonly showInvalid = computed(() => this.invalid() && this.touched());
-  readonly isRequired = this.required;
-  readonly errorMessages = computed(() =>
-    this.errors()
-      .map((error) => error.message)
-      .filter((message): message is string => !!message),
-  );
 
   constructor() {
-    const field = this.field;
-    if (field) {
-      field.control.set(this);
-      inject(DestroyRef).onDestroy(() => {
-        field.control.set(undefined);
-      });
-    }
-    afterRenderEffect(() => {
-      const popup = this.popup().nativeElement;
-      const open = this.open() && this.options().length > 0;
-      if (open !== popup.matches(':popover-open')) popup.togglePopover(open);
-    });
+    super();
     afterRenderEffect(() => {
       if (this.open() && this.active() >= 0) {
         this.button().nativeElement.ownerDocument.getElementById(this.optionId(this.active()))?.scrollIntoView({ block: 'nearest' });
@@ -177,7 +133,7 @@ export class LgSelect<T> implements FormValueControl<T | null>, LgFieldControl {
   }
 
   /** Moves focus to the select. */
-  focus(options?: FocusOptions): void {
+  override focus(options?: FocusOptions): void {
     this.button().nativeElement.focus(options);
   }
 
@@ -230,7 +186,7 @@ export class LgSelect<T> implements FormValueControl<T | null>, LgFieldControl {
         break;
       case 'Enter':
       case ' ':
-        if (this.typeahead !== '' && key === ' ') {
+        if (this.typeahead.typing && key === ' ') {
           this.search(event);
           return;
         }
@@ -249,7 +205,12 @@ export class LgSelect<T> implements FormValueControl<T | null>, LgFieldControl {
     event.preventDefault();
   }
 
-  protected onBlur(): void {
+  protected onBlur(event: FocusEvent): void {
+    // Focus moved into the list (e.g. an overlay scrollbar was dragged): keep it open and take focus back.
+    if (this.popup().contains(event.relatedTarget)) {
+      this.focus();
+      return;
+    }
     this.close();
     this.touch.emit();
   }
@@ -271,30 +232,15 @@ export class LgSelect<T> implements FormValueControl<T | null>, LgFieldControl {
   private close(): void {
     this.open.set(false);
     this.active.set(-1);
-    this.typeahead = '';
+    this.typeahead.reset();
   }
 
   /** Type-ahead: jumps to the next option starting with the typed characters; opens the list if needed. */
   private search(event: KeyboardEvent): void {
-    if (event.key.length !== 1 || event.ctrlKey || event.metaKey || event.altKey) return;
+    const labels = this.options().map((option) => this.display(option));
+    const match = this.typeahead.match(event, labels, this.open() ? this.active() : this.selectedIndex());
+    if (match === null) return;
     event.preventDefault();
-    clearTimeout(this.typeaheadTimer);
-    this.typeaheadTimer = setTimeout(() => {
-      this.typeahead = '';
-    }, 500);
-    this.typeahead += event.key.toLocaleLowerCase();
-    const options = this.options();
-    const start = this.open() ? this.active() : this.selectedIndex();
-    // The same character typed repeatedly cycles through options starting with it.
-    const repeated = /^(.)\1+$/u.test(this.typeahead);
-    const query = repeated ? this.typeahead.charAt(0) : this.typeahead;
-    const order = [...options.keys()].map(
-      (offset) => (start + (repeated || this.typeahead.length === 1 ? 1 : 0) + offset) % options.length,
-    );
-    const match = order.find((i) => {
-      const option = options[i];
-      return option !== undefined && this.display(option).toLocaleLowerCase().startsWith(query);
-    });
-    if (match !== undefined) this.show(match);
+    if (match >= 0) this.show(match);
   }
 }

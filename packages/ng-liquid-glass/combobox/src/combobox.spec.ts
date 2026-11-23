@@ -21,7 +21,7 @@ const COUNTRIES: Country[] = [
   template: `
     <lg-form-field>
       <label lgLabel>Country</label>
-      <lg-combobox ariaLabel="Countries" [options]="countries" [displayWith]="byName" [formField]="address.country" />
+      <lg-combobox listLabel="Countries" [options]="countries" [displayWith]="byName" [formField]="address.country" />
     </lg-form-field>
   `,
 })
@@ -138,7 +138,7 @@ describe('LgCombobox', () => {
   it('lets you search remotely with [filter]="null"', async () => {
     const search = vi.fn();
     await render(
-      `<label for="c">City</label><lg-combobox id="c" ariaLabel="Cities" [options]="results" [filter]="null" [loading]="loading" (query)="search($event)" />`,
+      `<label for="c">City</label><lg-combobox id="c" listLabel="Cities" [options]="results" [filter]="null" [loading]="loading" (query)="search($event)" />`,
       { imports: [LgCombobox], componentProperties: { results: ['Berlin', 'Bern'], loading: true, search } },
     );
     const input = screen.getAllByRole('combobox')[0];
@@ -151,12 +151,29 @@ describe('LgCombobox', () => {
   });
 
   it('does not open when disabled and supports focus()', async () => {
-    const { fixture } = await render(`<lg-combobox ariaLabel="Fruit" [options]="['Apple']" disabled />`, { imports: [LgCombobox] });
+    const { fixture } = await render(`<lg-combobox listLabel="Fruit" [options]="['Apple']" disabled />`, { imports: [LgCombobox] });
     const input = screen.getByRole('combobox');
     expect(input).toBeDisabled();
     const combobox = fixture.debugElement.children[0]?.componentInstance as LgCombobox<string>;
     combobox.focus();
     await userEvent.click(input);
+    expect(input).toHaveAttribute('aria-expanded', 'false');
+  });
+
+  it('stays open while the list itself is clicked or scrolled', async () => {
+    const { input } = await setup();
+    await userEvent.click(input);
+    expect(input).toHaveAttribute('aria-expanded', 'true');
+    const listbox = screen.getByRole('listbox');
+    const press = new MouseEvent('mousedown', { bubbles: true, cancelable: true });
+    listbox.dispatchEvent(press);
+    expect(press.defaultPrevented).toBe(true);
+    // Dragging an overlay scrollbar focuses the scrolling popup in some browsers.
+    input.dispatchEvent(new FocusEvent('blur', { relatedTarget: listbox }));
+    expect(input).toHaveAttribute('aria-expanded', 'true');
+    expect(input).toHaveFocus();
+    input.dispatchEvent(new FocusEvent('blur', { relatedTarget: null }));
+    await new Promise((resolve) => setTimeout(resolve));
     expect(input).toHaveAttribute('aria-expanded', 'false');
   });
 });

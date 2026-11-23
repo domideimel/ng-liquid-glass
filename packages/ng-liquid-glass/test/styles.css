@@ -1,0 +1,8 @@
+/*
+ * The real styles for unit tests, so visibility, layout and size assertions match the apps.
+ * Without Tailwind's Preflight, like the docs: the components must not rely on it (e.g. for [hidden]).
+ */
+@layer theme, base, components, utilities;
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/utilities.css' layer(utilities);
+@import '../styles/theme.css';

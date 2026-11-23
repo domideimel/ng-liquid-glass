@@ -1,3 +1,4 @@
+import { signal } from '@angular/core';
 import { render, screen, waitFor } from '@testing-library/angular';
 import userEvent from '@testing-library/user-event';
 import { userEvent as nativeEvent } from 'vitest/browser';
@@ -69,6 +70,33 @@ describe('LgPopover', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Info' }));
     await waitFor(() => {
       expect(screen.getByRole('dialog', { name: 'About' })).toHaveFocus();
+    });
+  });
+
+  it('opens and closes through the open model', async () => {
+    const open = signal(false);
+    await render(
+      `<button [lgPopoverTrigger]="info">Info</button><lg-popover #info label="About" [(open)]="open">Version 1.0</lg-popover>`,
+      {
+        imports: [LgPopover, LgPopoverTrigger],
+        componentProperties: { open },
+      },
+    );
+    const trigger = screen.getByRole('button', { name: 'Info' });
+    const dialog = document.querySelector<HTMLElement>('lg-popover')!;
+    open.set(true);
+    await waitFor(() => {
+      expect(dialog.matches(':popover-open')).toBe(true);
+    });
+    expect(trigger).toHaveAttribute('aria-expanded', 'true');
+    expect(dialog.style.getPropertyValue('position-anchor')).toBe(trigger.style.getPropertyValue('anchor-name'));
+    open.set(false);
+    await waitFor(() => {
+      expect(dialog.matches(':popover-open')).toBe(false);
+    });
+    await userEvent.click(trigger);
+    await waitFor(() => {
+      expect(open()).toBe(true);
     });
   });
 });

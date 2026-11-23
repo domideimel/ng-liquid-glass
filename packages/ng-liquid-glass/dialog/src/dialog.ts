@@ -34,6 +34,7 @@ const PLACEMENTS: Record<LgDialogPlacement, string> = {
 @Component({
   selector: 'lg-dialog',
   template: `
+    <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- backdrop clicks only; Escape closes natively -->
     <dialog
       #dialog
       class="lg-glass overflow-auto p-6 text-lg-fg shadow-2xl backdrop:bg-lg-overlay"
@@ -41,6 +42,7 @@ const PLACEMENTS: Record<LgDialogPlacement, string> = {
       [attr.aria-labelledby]="titleId"
       [attr.closedby]="dismissible() ? 'any' : 'closerequest'"
       (close)="open.set(false)"
+      (click)="onClick($event)"
     >
       <ng-content />
     </dialog>
@@ -61,6 +63,18 @@ export class LgDialog {
 
   readonly titleId = lgUniqueId('lg-dialog-title');
   protected readonly placementClass = computed(() => PLACEMENTS[this.placement()]);
+
+  /**
+   * Light dismiss for `dismissible`, also where `closedby="any"` isn't supported: a click on the
+   * backdrop targets the dialog element itself, outside its box.
+   */
+  protected onClick(event: MouseEvent): void {
+    const dialog = this.dialog().nativeElement;
+    if (!this.dismissible() || event.target !== dialog) return;
+    const box = dialog.getBoundingClientRect();
+    const inside = event.clientX >= box.left && event.clientX <= box.right && event.clientY >= box.top && event.clientY <= box.bottom;
+    if (!inside) this.open.set(false);
+  }
 
   constructor() {
     afterRenderEffect(() => {

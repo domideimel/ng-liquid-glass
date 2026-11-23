@@ -21,8 +21,11 @@ updates:
       build-tooling:
         patterns: ['vite', '@swc/*', '@swc-node/*', 'jiti', 'tsx', 'ng-packagr', 'autoprefixer']
     ignore:
-      # Pinned until Nx supports @angular-devkit/architect >= 0.2203 (see pnpm-workspace.yaml).
+      # Pinned until Nx stops importing @angular-devkit/architect/node/index.js (README, "Known constraints").
       - dependency-name: '@angular-devkit/architect'
+      # Angular 22.3 supports TypeScript >=6.0 <6.1; move with Angular.
+      - dependency-name: 'typescript'
+        update-types: ['version-update:semver-minor', 'version-update:semver-major']
       # Types must match the Node major we run on (engines + CI: Node 24).
       - dependency-name: '@types/node'
         update-types: ['version-update:semver-major']

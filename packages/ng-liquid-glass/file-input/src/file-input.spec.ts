@@ -59,6 +59,16 @@ describe('LgFileInput', () => {
     await expectNoA11yViolations();
   });
 
+  it('rejects picked files that bypass accept with "All files"', async () => {
+    const view = await render(Upload);
+    const input = screen.getByLabelText(/Attachments/);
+    const user = userEvent.setup({ applyAccept: false });
+    await user.upload(input, [zip]);
+    expect(view.fixture.componentInstance.model().attachments).toEqual([]);
+    expect(screen.getByText('Not an accepted file type: archive.zip', { selector: 'p' })).toBeVisible();
+    expect(screen.getByText('Not an accepted file type: archive.zip', { selector: '[aria-live]' })).toBeInTheDocument();
+  });
+
   it('removes files and returns focus to the input', async () => {
     const { input, model } = await setup();
     await userEvent.upload(input, [pdf, png]);
@@ -78,7 +88,17 @@ describe('LgFileInput', () => {
     await fixture.whenStable();
     expect(zone).not.toHaveClass('border-lg-primary');
     drag(zone, 'drop', zip, png, pdf);
+    await fixture.whenStable();
     expect(model().attachments.map((file) => file.name)).toEqual(['photo.png', 'report.pdf']);
+    // Rejected files are reported, visibly and through the live region.
+    expect(screen.getByText('Not an accepted file type: archive.zip')).toBeVisible();
+    expect(screen.getByText('2 files selected. Not an accepted file type: archive.zip')).toBeInTheDocument();
+    drag(zone, 'drop', zip);
+    await fixture.whenStable();
+    expect(model().attachments).toHaveLength(2);
+    drag(zone, 'drop', png);
+    await fixture.whenStable();
+    expect(screen.queryByText('Not an accepted file type: archive.zip')).toBeNull();
   });
 
   it('replaces the file when single, and shows the error once touched', async () => {

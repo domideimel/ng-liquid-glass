@@ -1,4 +1,4 @@
-`lg-tree` shows a hierarchy with single selection (WAI-ARIA tree view), e.g. folders or a table of contents. `[(value)]` is the selected node, `[(expanded)]` the open ones.
+`lg-tree` shows a hierarchy with single selection (WAI-ARIA tree view), e.g. folders or a table of contents. `[(value)]` is the selected node, `[(expanded)]` the open ones. A click on a label selects the node; its arrow, or a double-click, expands or collapses it.
 
 {{ NgDocActions.demo("TreeDemo") }}
 

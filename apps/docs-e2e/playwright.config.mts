@@ -25,7 +25,7 @@ const baseURL = process.env['BASE_URL'] ?? getReadyUrl('http://localhost:4200');
  */
 export default defineConfig({
   ...nxE2EPreset(import.meta.dirname, { testDir: './src' }),
-  // Visual baselines live next to the spec (modes.spec.ts-snapshots/); a missing one is written, never a changed one.
+  // Visual baselines (modes.spec.ts-snapshots/) come from the base branch's CI run; a missing one is written.
   updateSnapshots: 'missing',
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {

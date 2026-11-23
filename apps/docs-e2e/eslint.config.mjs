@@ -8,7 +8,7 @@ export default [
     files: ['**/*.ts', '**/*.js'],
     rules: {
       // Helpers that wrap expect() count as assertions.
-      'playwright/expect-expect': ['warn', { assertFunctionNames: ['expectHighlighted'] }],
+      'playwright/expect-expect': ['warn', { assertFunctionNames: ['expectHighlighted', 'expectAnchoredTo'] }],
     },
   },
 ];

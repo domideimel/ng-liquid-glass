@@ -3,9 +3,11 @@ import { LG_I18N } from '@domideimel/ng-liquid-glass';
 
 /** The page numbers to show: first, last and a window around the current page, with gaps as `null`. */
 export function lgPageWindow(page: number, pageCount: number, siblings = 1): (number | null)[] {
+  const shown = (p: number): boolean => p === 1 || p === pageCount || Math.abs(p - page) <= siblings;
   const pages: (number | null)[] = [];
   for (let p = 1; p <= pageCount; p++) {
-    if (p === 1 || p === pageCount || Math.abs(p - page) <= siblings) pages.push(p);
+    // A gap of exactly one page shows that page: "…" would take the same space and hide it.
+    if (shown(p) || (shown(p - 1) && shown(p + 1))) pages.push(p);
     else if (pages.at(-1) !== null) pages.push(null);
   }
   return pages;
@@ -22,7 +24,7 @@ export function lgPageWindow(page: number, pageCount: number, siblings = 1): (nu
           <button
             type="button"
             [class]="buttonClass"
-            [disabled]="page() <= 1"
+            [attr.aria-disabled]="page() <= 1 || null"
             [attr.aria-label]="i18n.previousPage"
             (click)="go(page() - 1)"
           >
@@ -62,7 +64,7 @@ export function lgPageWindow(page: number, pageCount: number, siblings = 1): (nu
           <button
             type="button"
             [class]="buttonClass"
-            [disabled]="page() >= pageCount()"
+            [attr.aria-disabled]="page() >= pageCount() || null"
             [attr.aria-label]="i18n.nextPage"
             (click)="go(page() + 1)"
           >
@@ -95,10 +97,11 @@ export class LgPagination {
 
   protected readonly pages = computed(() => lgPageWindow(this.page(), this.pageCount()));
   protected readonly buttonClass =
-    'lg-focus-ring inline-flex min-h-11 min-w-11 cursor-pointer border border-transparent bg-transparent font-[inherit] text-base items-center justify-center rounded-lg-control px-3 font-medium text-lg-fg hover:bg-lg-surface-muted disabled:cursor-not-allowed disabled:opacity-60';
+    'lg-focus-ring inline-flex min-h-11 min-w-11 cursor-pointer border border-transparent bg-transparent font-[inherit] text-base items-center justify-center rounded-lg-control px-3 font-medium text-lg-fg hover:bg-lg-surface-muted aria-disabled:cursor-not-allowed aria-disabled:opacity-60 aria-disabled:hover:bg-transparent';
   protected readonly activeClass =
-    'lg-focus-ring inline-flex min-h-11 min-w-11 cursor-pointer border border-transparent bg-lg-primary lg-forced-selected font-[inherit] text-base items-center justify-center rounded-lg-control px-3 font-medium text-lg-on-primary disabled:cursor-not-allowed disabled:opacity-60';
+    'lg-focus-ring inline-flex min-h-11 min-w-11 cursor-pointer border border-transparent bg-lg-primary lg-forced-selected font-[inherit] text-base items-center justify-center rounded-lg-control px-3 font-medium text-lg-on-primary';
 
+  /** Clamped to the valid range, so the aria-disabled previous/next buttons do nothing at the ends. */
   protected go(page: number): void {
     this.page.set(Math.min(Math.max(page, 1), this.pageCount()));
   }
