@@ -37,7 +37,12 @@ for (const theme of ['light', 'dark'] as const) {
               .map((el) => {
                 // Checkboxes, radios and visually hidden file inputs are activated through their wrapping label.
                 const target = el.matches('input[type=checkbox], input[type=radio], input[type=file]') ? (el.closest('label') ?? el) : el;
-                const { width, height } = target.getBoundingClientRect();
+                const box = target.getBoundingClientRect();
+                // lg-hit-area extends the pointer target with an invisible, absolutely positioned ::before.
+                const hit = getComputedStyle(target, '::before');
+                const extended = hit.content !== 'none' && hit.position === 'absolute';
+                const width = Math.max(box.width, extended ? parseFloat(hit.width) : 0);
+                const height = Math.max(box.height, extended ? parseFloat(hit.height) : 0);
                 return { name: el.outerHTML.slice(0, 80), width: Math.round(width), height: Math.round(height) };
               })
               .filter(({ width, height }) => width < 44 || height < 44)

@@ -1,1 +1,1 @@
-export { LgButton, type LgButtonVariant } from './button';
+export { LgButton, type LgButtonShape, type LgButtonSize, type LgButtonVariant } from './button';

@@ -13,7 +13,7 @@ import { LgDialog, LgDialogClose, LgDialogTitle } from '@domideimel/ng-liquid-gl
         <div class="mb-4 flex items-center gap-2">
           <h2 lgDialogTitle class="!mb-0 me-auto">Setlists</h2>
           <button lgButton variant="ghost" type="button">New</button>
-          <button lgButton variant="ghost" type="button" lgDialogClose aria-label="Close" class="!rounded-full !px-0">
+          <button lgButton variant="ghost" shape="circle" type="button" lgDialogClose aria-label="Close">
             <svg
               aria-hidden="true"
               viewBox="0 0 24 24"

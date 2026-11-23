@@ -41,6 +41,8 @@
   --lg-glass: light-dark(rgb(255 255 255 / 0.92), rgb(24 24 27 / 0.92));
   --lg-glass-border: light-dark(rgb(9 9 11 / 0.1), rgb(250 250 250 / 0.12));
   --lg-overlay: light-dark(rgb(9 9 11 / 0.6), rgb(0 0 0 / 0.7));
+  /* Minimum pointer target (WCAG 2.5.5 AAA). */
+  --lg-target-size: 2.75rem;
 }
 
 /* prefers-contrast: more: stronger borders and muted text, opaque glass. */
@@ -114,6 +116,23 @@
   &:focus-visible {
     outline: 3px solid var(--lg-focus);
     outline-offset: 2px;
+  }
+}
+
+/*
+ * Keeps the pointer target at least --lg-target-size (44 px, WCAG 2.5.5 AAA) around a control drawn smaller,
+ * e.g. a small button: an invisible ::before centred on it. Compact density lowers the size (see Density).
+ */
+@utility lg-hit-area {
+  position: relative;
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: max(100%, var(--lg-target-size));
+    height: max(100%, var(--lg-target-size));
+    translate: -50% -50%;
   }
 }
 
