@@ -564,3 +564,41 @@ export class LgTreeHarness extends ComponentHarness {
     return null;
   }
 }
+
+/** `lg-number-field`. */
+export class LgNumberFieldHarness extends ComponentHarness {
+  static hostSelector = 'lg-number-field';
+  private readonly input = this.locatorFor('[role="spinbutton"]');
+
+  /** The current value, or `null` when empty. */
+  async getValue(): Promise<number | null> {
+    const now = await (await this.input()).getAttribute('aria-valuenow');
+    return now === null ? null : Number(now);
+  }
+
+  async getValueText(): Promise<string | null> {
+    return (await this.input()).getAttribute('aria-valuetext');
+  }
+
+  /** Types a value and applies it with Enter; an empty string clears the field. */
+  async setValue(value: number | string): Promise<void> {
+    const input = await this.input();
+    await input.clear();
+    if (String(value) !== '') await input.sendKeys(String(value));
+    await input.dispatchEvent('keydown', { key: 'Enter' });
+  }
+
+  async increment(): Promise<void> {
+    await this.press('increase');
+  }
+
+  async decrement(): Promise<void> {
+    await this.press('decrease');
+  }
+
+  private async press(part: 'increase' | 'decrease'): Promise<void> {
+    const button = await this.locatorFor(`[data-lg-part="${part}"]`)();
+    await button.dispatchEvent('pointerdown', { button: 0 });
+    await button.dispatchEvent('pointerup');
+  }
+}

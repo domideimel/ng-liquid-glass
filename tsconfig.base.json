@@ -29,6 +29,7 @@
       "@domideimel/ng-liquid-glass/link": ["./packages/ng-liquid-glass/link/src/index.ts"],
       "@domideimel/ng-liquid-glass/menu": ["./packages/ng-liquid-glass/menu/src/index.ts"],
       "@domideimel/ng-liquid-glass/navigation": ["./packages/ng-liquid-glass/navigation/src/index.ts"],
+      "@domideimel/ng-liquid-glass/number-field": ["./packages/ng-liquid-glass/number-field/src/index.ts"],
       "@domideimel/ng-liquid-glass/pagination": ["./packages/ng-liquid-glass/pagination/src/index.ts"],
       "@domideimel/ng-liquid-glass/popover": ["./packages/ng-liquid-glass/popover/src/index.ts"],
       "@domideimel/ng-liquid-glass/progress": ["./packages/ng-liquid-glass/progress/src/index.ts"],

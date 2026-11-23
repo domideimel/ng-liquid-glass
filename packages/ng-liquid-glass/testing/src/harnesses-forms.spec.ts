@@ -1,15 +1,17 @@
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { LgNumberField } from '@domideimel/ng-liquid-glass/number-field';
 import { LgPopover, LgPopoverTrigger } from '@domideimel/ng-liquid-glass/popover';
 import { LgSelect } from '@domideimel/ng-liquid-glass/select';
 import { LgTagInput } from '@domideimel/ng-liquid-glass/tag';
 import { LgTree, type LgTreeNode } from '@domideimel/ng-liquid-glass/tree';
-import { LgPopoverHarness, LgSelectHarness, LgTagInputHarness, LgTreeHarness } from './harnesses';
+import { LgNumberFieldHarness, LgPopoverHarness, LgSelectHarness, LgTagInputHarness, LgTreeHarness } from './harnesses';
 
 @Component({
-  imports: [LgPopover, LgPopoverTrigger, LgSelect, LgTagInput, LgTree],
+  imports: [LgNumberField, LgPopover, LgPopoverTrigger, LgSelect, LgTagInput, LgTree],
   template: `
+    <lg-number-field min="1" max="8" [valueText]="bars" [(value)]="count" />
     <label for="plan">Plan</label>
     <lg-select placeholder="Choose" [options]="plans" [(value)]="plan" />
     <label for="tags">Tags</label>
@@ -20,6 +22,8 @@ import { LgPopoverHarness, LgSelectHarness, LgTagInputHarness, LgTreeHarness } f
   `,
 })
 class Host {
+  readonly count = signal<number | null>(4);
+  readonly bars = (value: number): string => `${String(value)} bars`;
   readonly plans = ['Free', 'Pro', 'Team'];
   readonly plan = signal<string | null>(null);
   readonly tags = signal<readonly string[]>(['a']);
@@ -87,5 +91,21 @@ describe('testing harnesses (selection and disclosure)', () => {
     await main?.click();
     expect(await tree.getSelectedLabel()).toBe('main.ts');
     expect(host.file()).toBe('main.ts');
+  });
+
+  it('number field: value, value text, set, increment and decrement', async () => {
+    const { host, loader } = await setup();
+    const field = await loader.getHarness(LgNumberFieldHarness);
+    expect(await field.getValue()).toBe(4);
+    expect(await field.getValueText()).toBe('4 bars');
+    await field.increment();
+    expect(host.count()).toBe(5);
+    await field.decrement();
+    await field.decrement();
+    expect(host.count()).toBe(3);
+    await field.setValue(20);
+    expect(host.count()).toBe(8);
+    await field.setValue('');
+    expect(await field.getValue()).toBeNull();
   });
 });

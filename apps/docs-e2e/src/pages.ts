@@ -17,6 +17,7 @@ export const DEMO_PAGES = [
   'components/link',
   'components/menu',
   'components/navigation',
+  'components/number-field',
   'components/pagination',
   'components/popover',
   'components/progress',

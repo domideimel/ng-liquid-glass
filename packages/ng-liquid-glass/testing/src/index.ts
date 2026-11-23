@@ -7,6 +7,7 @@ export {
   LgFormFieldHarness,
   LgMenuHarness,
   LgMenuItemHarness,
+  LgNumberFieldHarness,
   LgPaginationHarness,
   LgPopoverHarness,
   LgSelectHarness,
