@@ -1,3 +1,20 @@
+## 0.2.0 (2026-11-23)
+
+### 🩹 Fixes
+
+- ⚠️  resolve the bugs found in the code review ([#31](https://github.com/domideimel/ng-liquid-glass/pull/31))
+
+### ⚠️  Breaking Changes
+
+- resolve the bugs found in the code review  ([#31](https://github.com/domideimel/ng-liquid-glass/pull/31))
+  LgToaster.paused is now read-only; the region calls
+  pause(reason)/resume(reason) instead of setting it. LgI18n has a new
+  filesRejected text; a complete custom LgI18n object needs it.
+
+### ❤️ Thank You
+
+- Dominik Deimel @domideimel
+
 ## 0.1.0 (2026-11-21)
 
 ### 🚀 Features
