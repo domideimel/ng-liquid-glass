@@ -7,8 +7,6 @@ on:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
   group: pages
@@ -36,6 +34,9 @@ jobs:
           path: dist/apps/docs/browser
 
   deploy:
+    permissions:
+      pages: write # publish to GitHub Pages
+      id-token: write # Pages deployments authenticate with OIDC
     needs: build
     runs-on: ubuntu-latest
     environment:
