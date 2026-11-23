@@ -49,6 +49,15 @@
         "command": "node --test packages/ng-liquid-glass/schematics/ng-add/ng-add.test.mjs"
       }
     },
+    "build-test": {
+      "executor": "@angular/build:application",
+      "options": {
+        "browser": "packages/ng-liquid-glass/test/setup.ts",
+        "tsConfig": "packages/ng-liquid-glass/tsconfig.spec.json",
+        "outputPath": "dist/test-build/ng-liquid-glass",
+        "styles": ["packages/ng-liquid-glass/test/styles.css"]
+      }
+    },
     "nx-release-publish": {
       "options": {
         "packageRoot": "dist/{projectRoot}"
@@ -68,7 +77,8 @@
           "branches": 90,
           "functions": 95,
           "lines": 95
-        }
+        },
+        "buildTarget": "ng-liquid-glass:build-test"
       },
       "configurations": {
         "ci": {

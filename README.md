@@ -34,7 +34,7 @@ Browser tests use Playwright's Chromium (`pnpm exec playwright install chromium`
 - **TypeScript:** `strict`, `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes` and related flags.
 - **Angular compiler:** strict templates and host bindings, with extended diagnostics treated as errors.
 - **ESLint:** `typescript-eslint` `strictTypeChecked` + `stylisticTypeChecked`, angular-eslint template accessibility rules, and Nx module boundaries.
-- **Unit tests:** every component is checked with axe-core. Coverage must stay ≥ 95 % statements, functions and lines, and ≥ 90 % branches.
+- **Unit tests:** run in real Chromium with the library's CSS (Tailwind without Preflight, plus the theme), so visibility and size assertions are real; every component is checked with axe-core. Coverage must stay ≥ 95 % statements, functions and lines and ≥ 90 % branches overall, and every file ≥ 90 % statements and lines and ≥ 85 % branches and functions (`tools/coverage-floor.mjs`).
 - **E2E:** every demo in light and dark mode is checked with axe, including the AAA rules, plus a 44 × 44 px target-size check.
 - **Bundle size:** every entry point must stay under 5 KB gzipped; apps only ship the entry points they import.
 

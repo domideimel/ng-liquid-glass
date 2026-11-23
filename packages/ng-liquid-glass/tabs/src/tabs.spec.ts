@@ -33,7 +33,9 @@ describe('LgTabs', () => {
     expect(tab('Security')).toHaveAttribute('tabindex', '-1');
     const panel = screen.getByRole('tabpanel', { name: 'Profile' });
     expect(tab('Profile')).toHaveAttribute('aria-controls', panel.id);
-    expect(screen.getByText('Security panel')).not.toBeVisible();
+    // checkVisibility() reports what is rendered; jest-dom's toBeVisible() trusts the hidden attribute alone.
+    expect(screen.getByText('Security panel').checkVisibility()).toBe(false);
+    expect(screen.getByText('Profile panel').checkVisibility()).toBe(true);
     await expectNoA11yViolations();
   });
 

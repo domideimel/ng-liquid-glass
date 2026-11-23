@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Locator } from '@playwright/test';
 
 test.beforeEach(async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
@@ -89,4 +89,88 @@ test('tabs: only the selected panel is shown', async ({ page }) => {
   await page.getByRole('tab', { name: 'Security' }).click();
   await expect(panels.filter({ visible: true })).toHaveCount(1);
   await expect(page.getByText('Passkeys, two-factor authentication and sessions.')).toBeVisible();
+});
+
+/** A popup opened from `trigger` sits right next to it (CSS anchor positioning works in this browser). */
+async function expectAnchoredTo(popup: Locator, trigger: Locator): Promise<void> {
+  const [box, anchor] = await Promise.all([popup.boundingBox(), trigger.boundingBox()]);
+  expect(box && anchor).toBeTruthy();
+  if (!box || !anchor) return;
+  const verticalGap = Math.min(Math.abs(box.y - (anchor.y + anchor.height)), Math.abs(anchor.y - (box.y + box.height)));
+  expect(verticalGap).toBeLessThan(16);
+  expect(Math.abs(box.x - anchor.x)).toBeLessThan(anchor.width);
+}
+
+test('select: open with the keyboard, pick an option, list anchored to the button', async ({ page }) => {
+  await page.goto('components/select');
+  const select = page.getByRole('combobox', { name: 'Plan' });
+  await select.focus();
+  await select.press('ArrowDown');
+  await expect(select).toHaveAttribute('aria-expanded', 'true');
+  await expectAnchoredTo(page.locator('[popover]:popover-open'), select);
+  await select.press('ArrowDown');
+  await select.press('Enter');
+  await expect(select).toHaveAttribute('aria-expanded', 'false');
+  await expect(select).toContainText('Pro');
+  await expect(select).toBeFocused();
+});
+
+test('combobox: suggestion list anchored to the input', async ({ page }) => {
+  await page.goto('components/combobox');
+  const combobox = page.getByRole('combobox', { name: 'Language' });
+  await combobox.press('ArrowDown');
+  await expectAnchoredTo(page.locator('[popover]:popover-open'), combobox);
+});
+
+test('tree: arrow keys move, expand and select', async ({ page }) => {
+  await page.goto('components/tree');
+  const item = (name: string) => page.getByRole('treeitem', { name, exact: true });
+  await item('main.ts').focus();
+  await page.keyboard.press('ArrowUp');
+  await expect(item('app')).toBeFocused();
+  await page.keyboard.press('ArrowRight');
+  await expect(item('app')).toHaveAttribute('aria-expanded', 'true');
+  await page.keyboard.press('ArrowRight');
+  await expect(item('app.ts')).toBeFocused();
+  await page.keyboard.press('Enter');
+  await expect(page.getByText('Selected: src/app/app.ts')).toBeVisible();
+  await page.keyboard.press('ArrowLeft');
+  await expect(item('app')).toBeFocused();
+});
+
+test('toolbar: one tab stop, arrow keys between items', async ({ page }) => {
+  await page.goto('components/toolbar');
+  const toolbar = page.getByRole('toolbar', { name: 'Text formatting' });
+  await toolbar.getByRole('button', { name: 'Bold' }).focus();
+  await page.keyboard.press('ArrowRight');
+  await expect(toolbar.getByRole('button', { name: 'Italic' })).toBeFocused();
+  await page.keyboard.press('End');
+  await expect(toolbar.getByRole('button', { name: 'Link' })).toBeFocused();
+  await page.keyboard.press('Home');
+  await expect(toolbar.getByRole('button', { name: 'Bold' })).toBeFocused();
+  await expect(toolbar.getByRole('button', { name: 'Italic' })).toHaveAttribute('tabindex', '-1');
+});
+
+test('popover: opens next to its trigger, moves focus in, Escape returns it', async ({ page }) => {
+  await page.goto('components/popover');
+  const trigger = page.getByRole('button', { name: /Filters/ });
+  await trigger.focus();
+  await page.keyboard.press('Enter');
+  const dialog = page.getByRole('dialog', { name: 'Status' });
+  await expect(dialog).toBeVisible();
+  await expectAnchoredTo(dialog, trigger);
+  await expect(dialog.getByRole('checkbox', { name: 'Open' })).toBeFocused();
+  await page.keyboard.press('Escape');
+  await expect(dialog).toBeHidden();
+  await expect(trigger).toBeFocused();
+});
+
+test('tag input: Enter adds a tag, Backspace removes the last one', async ({ page }) => {
+  await page.goto('components/tag');
+  const input = page.getByRole('textbox', { name: 'Skills' });
+  await input.fill('Testing');
+  await input.press('Enter');
+  await expect(page.getByRole('button', { name: 'Remove Testing' })).toBeVisible();
+  await input.press('Backspace');
+  await expect(page.getByRole('button', { name: 'Remove Testing' })).toHaveCount(0);
 });

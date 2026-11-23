@@ -154,4 +154,17 @@ describe('LgSelect', () => {
     await new Promise((resolve) => setTimeout(resolve));
     expect(select).toHaveAttribute('aria-expanded', 'false');
   });
+
+  it('opens at the ends with Home and End, and lets Space continue a type-ahead query', async () => {
+    const { select } = await setup();
+    select.focus();
+    await userEvent.keyboard('{End}');
+    expect(select).toHaveAttribute('aria-activedescendant', option(/Enterprise/).id);
+    await userEvent.keyboard('{Escape}{Home}');
+    expect(select).toHaveAttribute('aria-activedescendant', option(/Free/).id);
+    // While typing, Space belongs to the query instead of selecting.
+    await userEvent.keyboard('p ');
+    expect(select).toHaveAttribute('aria-expanded', 'true');
+    expect(select).toHaveAttribute('aria-activedescendant', option(/Pro/).id);
+  });
 });

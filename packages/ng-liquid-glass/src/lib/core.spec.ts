@@ -85,10 +85,14 @@ describe('core', () => {
     for (const locale of [LG_I18N_DEFAULTS, LG_I18N_DE, LG_I18N_FR, LG_I18N_ES]) {
       for (const [key, value] of Object.entries(locale)) {
         if (typeof value !== 'function') continue;
-        const text = (value as (arg: number | string) => string)(
-          key === 'tagAdded' || key === 'tagRemoved' || key === 'filesRejected' ? 'report.pdf' : 7,
-        );
-        expect(text, key).toMatch(/report\.pdf|7/);
+        const fill = value as (arg: number | string) => string;
+        if (key === 'tagAdded' || key === 'tagRemoved' || key === 'filesRejected') {
+          expect(fill('report.pdf'), key).toContain('report.pdf');
+        } else {
+          // Singular and plural forms.
+          expect(fill(1), key).toContain('1');
+          expect(fill(7), key).toContain('7');
+        }
       }
     }
   });

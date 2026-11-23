@@ -19,7 +19,10 @@ describe('LgTag', () => {
     const removed = vi.fn();
     await render(`<lg-tag removable (remove)="removed()">Angular</lg-tag>`, { imports: [LgTag], componentProperties: { removed } });
     const button = screen.getByRole('button', { name: 'Remove Angular' });
-    expect(button).toHaveClass('size-11');
+    // Unit tests load the real styles, so the 44 × 44 px target is measured, not assumed.
+    const { width, height } = button.getBoundingClientRect();
+    expect(Math.round(width)).toBeGreaterThanOrEqual(44);
+    expect(Math.round(height)).toBeGreaterThanOrEqual(44);
     await userEvent.click(button);
     expect(removed).toHaveBeenCalledTimes(1);
     await expectNoA11yViolations();
