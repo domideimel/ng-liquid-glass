@@ -15,14 +15,17 @@ on:
         type: string
         default: ''
 
+# Read-only by default; the release job asks for what it writes (Scorecard "Token-Permissions").
 permissions:
-  contents: write
-  packages: write
-  id-token: write # npm provenance and trusted publishing
+  contents: read
 
 jobs:
   release:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # GitHub release
+      packages: write # GitHub Packages
+      id-token: write # npm provenance and trusted publishing
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
