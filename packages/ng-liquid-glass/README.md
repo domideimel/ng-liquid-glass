@@ -17,6 +17,12 @@ Accessible, native-first Angular components styled with Tailwind CSS v4, targeti
 pnpm add @domideimel/ng-liquid-glass
 ```
 
+GitHub Packages needs a token, even for public packages. To install without one, use the tarball attached to each [GitHub release](https://github.com/domideimel/ng-liquid-glass/releases) from 0.2.1 on. It is pinned to that version, and the lockfile records its integrity:
+
+```bash
+pnpm add https://github.com/domideimel/ng-liquid-glass/releases/download/v0.2.1/domideimel-ng-liquid-glass-0.2.1.tgz
+```
+
 ```css
 /* styles.css */
 @import 'tailwindcss';
