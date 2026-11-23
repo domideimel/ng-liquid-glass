@@ -101,9 +101,11 @@ test.describe('visual regression', () => {
         await openDemoPage(page, path, variant);
         await page.evaluate(() => document.fonts.ready);
         const demos = page.locator('.ng-doc-demo-frame');
-        const count = await demos.count();
-        for (let index = 0; index < count; index++) {
-          await expect(demos.nth(index)).toHaveScreenshot(`${path.replaceAll('/', '-')}-${String(index)}-${variant.name}.png`, {
+        // Named after the demo component (e.g. docs-sheet-demo), not its position, so adding a demo to a
+        // page doesn't rename the screenshots of the others.
+        const names = await demos.evaluateAll((frames) => frames.map((frame) => frame.firstElementChild?.localName ?? 'demo'));
+        for (const [index, name] of names.entries()) {
+          await expect(demos.nth(index)).toHaveScreenshot(`${name}-${variant.name}.png`, {
             animations: 'disabled',
             caret: 'hide',
             maxDiffPixelRatio: 0.01,
