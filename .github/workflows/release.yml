@@ -68,4 +68,5 @@ jobs:
             exit 0
           fi
           npm pkg delete publishConfig
-          npx --yes npm@11 publish --provenance --access public --registry https://registry.npmjs.org/
+          # Node 24's bundled npm 11 supports trusted publishing; no download at release time.
+          npm publish --provenance --access public --registry https://registry.npmjs.org/

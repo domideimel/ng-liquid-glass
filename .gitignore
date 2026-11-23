@@ -68,3 +68,6 @@ __screenshots__/
 
 # ng-packagr scratch
 /tmp
+
+# Visual regression baselines are CI artifacts (see CONTRIBUTING.md, "Visual changes")
+apps/docs-e2e/src/modes.spec.ts-snapshots/

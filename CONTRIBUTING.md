@@ -32,6 +32,14 @@ pnpm nx format:write
 pnpm lint && pnpm test && pnpm build && pnpm e2e
 ```
 
+## Visual changes
+
+CI compares every demo's screenshots (light, right-to-left, forced colors; Chromium) with the latest screenshots of the PR's base branch. When a PR changes the look on purpose:
+
+1. Check the differences in the failed run's `playwright-chromium` report artifact.
+2. Add the label `accept-visual-changes` to the PR. CI then records the new screenshots instead of comparing; they are in the `screenshots` artifact.
+3. After the merge, the push run on the base branch stores them as the new baseline (`visual-baselines`, kept 90 days; any push refreshes it).
+
 ## Releasing
 
 1. Open a PR from `develop` into `main` and merge it with a merge commit. `develop` is fast-forwarded automatically.

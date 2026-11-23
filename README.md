@@ -52,6 +52,8 @@ Browser tests use Playwright's Chromium (`pnpm exec playwright install chromium`
 
 On every PR:
 
+- visual regression: every demo (light, right-to-left, forced colors) is compared with the screenshots of the base branch's last CI run. The screenshots are CI artifacts, not files in git;
+
 - a comment with the bundle size and coverage, and their change against the base branch;
 - the built docs as the `docs-preview` artifact (download it, then `npx vite preview --outDir <folder>`).
 
