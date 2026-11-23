@@ -1,0 +1,12 @@
+/*
+ * ng-liquid-glass accent preset: Rose. Import it after the theme:
+ *   @import '@domideimel/ng-liquid-glass/theme.css';
+ *   @import '@domideimel/ng-liquid-glass/presets/rose.css';
+ * Every pair meets WCAG AAA (7:1) in light and dark mode; checked in CI with lg-contrast.
+ */
+:root {
+  --lg-accent: light-dark(#9f1239, #fda4af);
+  --lg-on-accent: light-dark(#ffffff, #4c0519);
+  --lg-accent-hover: light-dark(#881337, #fecdd3);
+  --lg-accent-surface: light-dark(#fff1f2, #4c0519);
+}

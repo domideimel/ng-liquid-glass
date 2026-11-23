@@ -27,6 +27,7 @@
   --lg-accent: light-dark(#1e40af, #93c5fd);
   --lg-on-accent: light-dark(#ffffff, #172554);
   --lg-accent-hover: light-dark(#1e3a8a, #bfdbfe);
+  --lg-accent-surface: light-dark(#eef2ff, #172554);
   --lg-focus: light-dark(#09090b, #fafafa);
   --lg-danger: light-dark(#991b1b, #fca5a5);
   --lg-danger-surface: light-dark(#fef2f2, #450a0a);
@@ -75,6 +76,7 @@
   --color-lg-accent: var(--lg-accent);
   --color-lg-on-accent: var(--lg-on-accent);
   --color-lg-accent-hover: var(--lg-accent-hover);
+  --color-lg-accent-surface: var(--lg-accent-surface);
   --color-lg-focus: var(--lg-focus);
   --color-lg-danger: var(--lg-danger);
   --color-lg-danger-surface: var(--lg-danger-surface);
@@ -87,6 +89,17 @@
   --color-lg-info-surface: var(--lg-info-surface);
   --color-lg-glass-border: var(--lg-glass-border);
   --color-lg-overlay: var(--lg-overlay);
+  /* Display type scale for large numbers and headlines: text-lg-display-sm … -xl. Pair numbers with tabular-nums. */
+  --text-lg-display-sm: 2.25rem;
+  --text-lg-display-sm--line-height: 1.1;
+  --text-lg-display-md: 3.5rem;
+  --text-lg-display-md--line-height: 1.05;
+  --text-lg-display-lg: 5rem;
+  --text-lg-display-lg--line-height: 1;
+  --text-lg-display-lg--letter-spacing: -0.02em;
+  --text-lg-display-xl: 7rem;
+  --text-lg-display-xl--line-height: 1;
+  --text-lg-display-xl--letter-spacing: -0.03em;
   --radius-lg-control: 0.75rem;
   --radius-lg-surface: 1rem;
   /* Container-query breakpoints of lgGrid: @lg-sm, @lg-md, @lg-lg, @lg-xl */

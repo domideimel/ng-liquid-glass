@@ -1,0 +1,12 @@
+/*
+ * ng-liquid-glass accent preset: Violet. Import it after the theme:
+ *   @import '@domideimel/ng-liquid-glass/theme.css';
+ *   @import '@domideimel/ng-liquid-glass/presets/violet.css';
+ * Every pair meets WCAG AAA (7:1) in light and dark mode; checked in CI with lg-contrast.
+ */
+:root {
+  --lg-accent: light-dark(#5b21b6, #c4b5fd);
+  --lg-on-accent: light-dark(#ffffff, #2e1065);
+  --lg-accent-hover: light-dark(#4c1d95, #ddd6fe);
+  --lg-accent-surface: light-dark(#f5f3ff, #2e1065);
+}

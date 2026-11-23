@@ -35,7 +35,8 @@
     }
   },
   "exports": {
-    "./theme.css": "./styles/theme.css"
+    "./theme.css": "./styles/theme.css",
+    "./presets/*.css": "./styles/presets/*.css"
   },
   "sideEffects": [
     "*.css"
@@ -43,5 +44,8 @@
   "schematics": "./schematics/collection.json",
   "ng-add": {
     "save": "dependencies"
+  },
+  "bin": {
+    "lg-contrast": "./bin/lg-contrast.mjs"
   }
 }

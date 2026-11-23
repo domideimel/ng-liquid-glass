@@ -1,0 +1,12 @@
+/*
+ * ng-liquid-glass accent preset: Amber. Import it after the theme:
+ *   @import '@domideimel/ng-liquid-glass/theme.css';
+ *   @import '@domideimel/ng-liquid-glass/presets/amber.css';
+ * Every pair meets WCAG AAA (7:1) in light and dark mode; checked in CI with lg-contrast.
+ */
+:root {
+  --lg-accent: light-dark(#78350f, #fcd34d);
+  --lg-on-accent: light-dark(#ffffff, #451a03);
+  --lg-accent-hover: light-dark(#451a03, #fde68a);
+  --lg-accent-surface: light-dark(#fffbeb, #451a03);
+}
