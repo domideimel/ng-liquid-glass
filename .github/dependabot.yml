@@ -26,6 +26,12 @@ updates:
       # Angular 22.3 supports TypeScript >=6.0 <6.1; move with Angular.
       - dependency-name: 'typescript'
         update-types: ['version-update:semver-minor', 'version-update:semver-major']
+      # We run the Nx 24.1 beta until 24.1.0 is stable; don't move to canaries or other pre-releases.
+      # Stable releases (24.1.0 and later) still come through.
+      - dependency-name: 'nx'
+        versions: ['>= 24.1.0-0, < 24.1.0']
+      - dependency-name: '@nx/*'
+        versions: ['>= 24.1.0-0, < 24.1.0']
       # Types must match the Node major we run on (engines + CI: Node 24).
       - dependency-name: '@types/node'
         update-types: ['version-update:semver-major']
