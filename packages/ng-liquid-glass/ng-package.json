@@ -17,7 +17,7 @@
     },
     {
       "input": "bin",
-      "glob": "**/*.mjs",
+      "glob": "lg-contrast.mjs",
       "output": "bin"
     }
   ]
