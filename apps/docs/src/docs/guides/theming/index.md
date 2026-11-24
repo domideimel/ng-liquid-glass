@@ -44,6 +44,16 @@ Override any token after importing the theme; the accent is the usual place for 
 - **`prefers-contrast: more`:** muted text becomes full-strength text, borders use the control border colour, and the glass material turns opaque. Nothing to configure.
 - **Forced colors (Windows High Contrast):** the system palette replaces the theme. Selected states (tab, page, combobox option) switch to the system `Highlight` colours, progress bars and meters render natively, and buttons keep a visible border.
 
+## Safe areas
+
+For installed PWAs and notched screens, `lg-safe-top`, `lg-safe-bottom` and `lg-safe-inline` pad an element by the matching `env(safe-area-inset-*)`, e.g. an app bar or a bottom navigation. They need `viewport-fit=cover`:
+
+```html
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+```
+
+Bottom sheets (`lg-dialog placement="bottom"` or `"sheet"`) pad the bottom inset themselves.
+
 ## Right-to-left
 
 The components use logical properties (`ps-*`, `border-s-*`, `start-*`), so they mirror under `dir="rtl"` on `<html>` or any ancestor. Arrow keys in tabs follow the reading direction.

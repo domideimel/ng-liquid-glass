@@ -117,6 +117,20 @@
   }
 }
 
+/*
+ * Safe areas of installed PWAs and notched screens (needs <meta name="viewport" content="…, viewport-fit=cover">):
+ * padding that keeps content clear of the status bar, the home indicator and rounded corners.
+ */
+@utility lg-safe-top {
+  padding-top: env(safe-area-inset-top);
+}
+@utility lg-safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+@utility lg-safe-inline {
+  padding-inline: env(safe-area-inset-left) env(safe-area-inset-right);
+}
+
 /* Frosted "liquid glass" material for floating surfaces; opaque enough to keep AAA contrast. */
 @utility lg-glass {
   background-color: var(--lg-glass);
