@@ -1,3 +1,17 @@
+## 0.3.0 (2026-11-24)
+
+### 🚀 Features
+
+- add compact density and let <label for> reach custom controls ([#48](https://github.com/domideimel/ng-liquid-glass/pull/48))
+- **button:** add sizes, round icon buttons and a badge pattern ([#46](https://github.com/domideimel/ng-liquid-glass/pull/46))
+- **dialog:** add alert dialogs, responsive sheets, a closed output and safe areas ([#44](https://github.com/domideimel/ng-liquid-glass/pull/44))
+- **number-field:** add a number field with stepper buttons ([#47](https://github.com/domideimel/ng-liquid-glass/pull/47))
+- **theme:** add display type, accent tint, accent presets, a contrast checker and theme-color sync ([#45](https://github.com/domideimel/ng-liquid-glass/pull/45))
+
+### ❤️ Thank You
+
+- Dominik Deimel @domideimel
+
 ## 0.2.0 (2026-11-23)
 
 ### 🩹 Fixes
