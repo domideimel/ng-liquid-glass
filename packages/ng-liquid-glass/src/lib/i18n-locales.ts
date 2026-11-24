@@ -30,6 +30,8 @@ export const LG_I18N_DE: LgI18n = {
   dropFiles: 'oder hier ablegen',
   filesSelected: (count) => (count === 1 ? '1 Datei ausgewählt' : `${String(count)} Dateien ausgewählt`),
   filesRejected: (names) => `Kein erlaubter Dateityp: ${names}`,
+  increase: 'Erhöhen',
+  decrease: 'Verringern',
 };
 
 export const LG_I18N_FR: LgI18n = {
@@ -57,6 +59,8 @@ export const LG_I18N_FR: LgI18n = {
   dropFiles: 'ou déposez-les ici',
   filesSelected: (count) => (count === 1 ? '1 fichier sélectionné' : `${String(count)} fichiers sélectionnés`),
   filesRejected: (names) => `Type de fichier non accepté : ${names}`,
+  increase: 'Augmenter',
+  decrease: 'Diminuer',
 };
 
 export const LG_I18N_ES: LgI18n = {
@@ -84,4 +88,6 @@ export const LG_I18N_ES: LgI18n = {
   dropFiles: 'o suéltalos aquí',
   filesSelected: (count) => (count === 1 ? '1 archivo seleccionado' : `${String(count)} archivos seleccionados`),
   filesRejected: (names) => `Tipo de archivo no admitido: ${names}`,
+  increase: 'Aumentar',
+  decrease: 'Disminuir',
 };
