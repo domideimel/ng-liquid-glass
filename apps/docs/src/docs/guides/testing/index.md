@@ -42,6 +42,7 @@ it('saves the selected language', async () => {
 | `LgFormFieldHarness`     | `lg-form-field`            | label                   | `getLabel`, `getHints`, `getErrors`, `isRequired`, `isInvalid`                                              |
 | `LgMenuHarness`          | the menu's trigger         | trigger text            | `getTriggerText`, `isOpen`, `open`, `close`, `getItems`, `clickItem`                                        |
 | `LgMenuItemHarness`      | `[role=menuitem]`          | text                    | `getText`, `isDisabled`, `click`                                                                            |
+| `LgNumberFieldHarness`   | `lg-number-field`          | –                       | `getValue`, `getValueText`, `setValue`, `increment`, `decrement`                                            |
 | `LgPaginationHarness`    | `lg-pagination`            | –                       | `getCurrentPage`, `getVisiblePages`, `goToPage`, `next`, `previous`, `isNextDisabled`, `isPreviousDisabled` |
 | `LgPopoverHarness`       | the popover's trigger      | trigger text            | `getTriggerText`, `isOpen`, `toggle`, `getText`                                                             |
 | `LgSelectHarness`        | `lg-select`                | –                       | `getValueText`, `isOpen`, `isDisabled`, `open`, `getOptions`, `selectOption`                                |

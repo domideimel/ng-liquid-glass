@@ -46,7 +46,7 @@
       "executor": "nx:run-commands",
       "dependsOn": ["build-schematics"],
       "options": {
-        "command": "node --test packages/ng-liquid-glass/schematics/ng-add/ng-add.test.mjs"
+        "command": "node --test packages/ng-liquid-glass/schematics/ng-add/ng-add.test.mjs packages/ng-liquid-glass/bin/lg-contrast.test.mjs"
       }
     },
     "build-test": {

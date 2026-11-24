@@ -32,7 +32,7 @@ export class LgNav {}
   selector: 'a[lgNavLink]',
   host: {
     class:
-      'lg-focus-ring flex min-h-11 items-center gap-2 rounded-lg-control px-3 font-medium text-lg-fg-muted no-underline hover:bg-lg-surface-muted hover:text-lg-fg aria-[current=page]:bg-lg-surface-muted aria-[current=page]:font-semibold aria-[current=page]:text-lg-fg aria-[current=page]:lg-forced-selected',
+      'lg-focus-ring flex min-h-lg-control items-center gap-2 rounded-lg-control px-3 font-medium text-lg-fg-muted no-underline hover:bg-lg-surface-muted hover:text-lg-fg aria-[current=page]:bg-lg-surface-muted aria-[current=page]:font-semibold aria-[current=page]:text-lg-fg aria-[current=page]:lg-forced-selected',
   },
 })
 export class LgNavLink {}
@@ -42,7 +42,7 @@ export class LgNavLink {}
   selector: 'details[lgNavGroup]',
   host: {
     class:
-      "group [&>summary]:lg-focus-ring [&>summary]:flex [&>summary]:min-h-11 [&>summary]:cursor-pointer [&>summary]:list-none [&>summary]:items-center [&>summary]:justify-between [&>summary]:gap-2 [&>summary]:rounded-lg-control [&>summary]:px-3 [&>summary]:font-semibold [&>summary:hover]:bg-lg-surface-muted [&>summary::-webkit-details-marker]:hidden [&>summary]:after:size-2 [&>summary]:after:shrink-0 [&>summary]:after:rotate-45 [&>summary]:after:border-r-2 [&>summary]:after:border-b-2 [&>summary]:after:border-current [&>summary]:after:transition-transform [&>summary]:after:content-[''] open:[&>summary]:after:-rotate-135",
+      "group [&>summary]:lg-focus-ring [&>summary]:flex [&>summary]:min-h-lg-control [&>summary]:cursor-pointer [&>summary]:list-none [&>summary]:items-center [&>summary]:justify-between [&>summary]:gap-2 [&>summary]:rounded-lg-control [&>summary]:px-3 [&>summary]:font-semibold [&>summary:hover]:bg-lg-surface-muted [&>summary::-webkit-details-marker]:hidden [&>summary]:after:size-2 [&>summary]:after:shrink-0 [&>summary]:after:rotate-45 [&>summary]:after:border-r-2 [&>summary]:after:border-b-2 [&>summary]:after:border-current [&>summary]:after:transition-transform [&>summary]:after:content-[''] open:[&>summary]:after:-rotate-135",
   },
 })
 export class LgNavGroup {}

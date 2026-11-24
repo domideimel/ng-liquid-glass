@@ -2,6 +2,12 @@
 
 {{ NgDocActions.demo("ThemeDemo") }}
 
+For installed PWAs, let `LgTheme` keep `<meta name="theme-color">` equal to the page background, so the status bar follows the theme (and the operating system in `system` mode):
+
+```typescript
+bootstrapApplication(App, { providers: [provideLgTheme({ syncThemeColor: true })] });
+```
+
 To avoid a flash of the wrong theme on load, apply the stored choice before Angular starts, in `index.html`:
 
 ```html

@@ -27,6 +27,7 @@ export class DrawerDemo {
     start: 'Navigation',
     end: 'Order details',
     bottom: 'Share',
+    sheet: 'Setlists',
   };
 
   protected show(placement: LgDialogPlacement): void {

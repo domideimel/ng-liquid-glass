@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/angular';
 import userEvent from '@testing-library/user-event';
 import { userEvent as nativeEvent } from 'vitest/browser';
 import { expectNoA11yViolations } from '../../test/a11y';
-import { LgDialog, LgDialogClose, LgDialogTitle } from './dialog';
+import { LgDialog, LgDialogClose, LgDialogDescription, LgDialogTitle } from './dialog';
 
 @Component({
   imports: [LgDialog, LgDialogTitle, LgDialogClose],
@@ -83,11 +83,61 @@ describe('LgDialog', () => {
     ['start', 'me-auto'],
     ['end', 'ms-auto'],
     ['bottom', 'mt-auto'],
+    ['sheet', 'sm:m-auto'],
   ] as const)('places a %s dialog', async (placement, cls) => {
     await render(`<lg-dialog [placement]="placement" [open]="true"><h2 lgDialogTitle>Filters</h2></lg-dialog>`, {
       imports: [LgDialog, LgDialogTitle],
       componentProperties: { placement },
     });
     expect(screen.getByRole('dialog', { name: 'Filters' })).toHaveClass(cls, 'lg-glass');
+  });
+
+  it('is an alert dialog with a description that ignores backdrop clicks', async () => {
+    const { fixture } = await render(
+      `
+        <lg-dialog alert dismissible [(open)]="open">
+          <h2 lgDialogTitle>Delete setlist?</h2>
+          <p lgDialogDescription>Its 12 songs stay in your library.</p>
+          <button type="button" lgDialogClose>Cancel</button>
+        </lg-dialog>
+      `,
+      { imports: [LgDialog, LgDialogTitle, LgDialogDescription, LgDialogClose], componentProperties: { open: signal(true) } },
+    );
+    await fixture.whenStable();
+    const dialog = screen.getByRole('alertdialog', { name: 'Delete setlist?' });
+    expect(dialog).toHaveAccessibleDescription('Its 12 songs stay in your library.');
+    expect(dialog).toHaveAttribute('closedby', 'closerequest');
+    expect(document.querySelector('lg-dialog')).not.toHaveAttribute('role');
+    const box = dialog.getBoundingClientRect();
+    dialog.dispatchEvent(new MouseEvent('click', { bubbles: true, clientX: box.left - 10, clientY: box.top - 10 }));
+    expect(dialog).toHaveAttribute('open');
+    await expectNoA11yViolations();
+  });
+
+  it('has no description reference without lgDialogDescription', async () => {
+    const { fixture } = await render(Host);
+    fixture.componentInstance.open.set(true);
+    await fixture.whenStable();
+    expect(screen.getByRole('dialog')).not.toHaveAttribute('aria-describedby');
+  });
+
+  it('emits closed however it closes, so @if can remove it', async () => {
+    const shown = signal(true);
+    const closed = vi.fn(() => {
+      shown.set(false);
+    });
+    const { fixture } = await render(
+      `@if (shown()) {
+        <lg-dialog [open]="true" (closed)="closed()"><h2 lgDialogTitle>Tempo</h2><button type="button" lgDialogClose>Done</button></lg-dialog>
+      }`,
+      { imports: [LgDialog, LgDialogTitle, LgDialogClose], componentProperties: { shown, closed } },
+    );
+    await fixture.whenStable();
+    expect(screen.getByRole('dialog', { name: 'Tempo' })).toHaveAttribute('open');
+    await userEvent.click(screen.getByRole('button', { name: 'Done' }));
+    // The native close event is dispatched as a separate task.
+    await expect.poll(() => closed.mock.calls.length).toBe(1);
+    await fixture.whenStable();
+    expect(screen.queryByRole('dialog')).toBeNull();
   });
 });

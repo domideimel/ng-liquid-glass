@@ -1,5 +1,5 @@
 import { afterRenderEffect, Component, computed, type ElementRef, input, model, signal, viewChild } from '@angular/core';
-import { LgAnchoredPopup, LgTypeahead, lgUniqueId } from '@domideimel/ng-liquid-glass';
+import { LgAnchoredPopup, LgTypeahead } from '@domideimel/ng-liquid-glass';
 import { LgCustomControl } from '@domideimel/ng-liquid-glass/forms';
 
 /**
@@ -20,7 +20,7 @@ import { LgCustomControl } from '@domideimel/ng-liquid-glass/forms';
       #button
       type="button"
       role="combobox"
-      class="lg-focus-ring flex min-h-11 w-full cursor-pointer items-center justify-between gap-2 rounded-lg-control border border-lg-control-border bg-lg-surface px-3 py-2 text-start font-[inherit] text-base text-lg-fg disabled:cursor-not-allowed disabled:opacity-60 aria-invalid:border-2 aria-invalid:border-lg-danger"
+      class="lg-focus-ring flex min-h-lg-control w-full cursor-pointer items-center justify-between gap-2 rounded-lg-control border border-lg-control-border bg-lg-surface px-3 py-2 text-start font-[inherit] text-base text-lg-fg disabled:cursor-not-allowed disabled:opacity-60 aria-invalid:border-2 aria-invalid:border-lg-danger"
       [id]="id"
       [style.anchor-name]="anchorName"
       [disabled]="disabled()"
@@ -55,7 +55,7 @@ import { LgCustomControl } from '@domideimel/ng-liquid-glass/forms';
           <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- keyboard is handled on the button via aria-activedescendant -->
           <li
             role="option"
-            class="flex min-h-11 cursor-pointer flex-col justify-center rounded-lg-control px-3 py-1.5 text-lg-fg"
+            class="flex min-h-lg-control cursor-pointer flex-col justify-center rounded-lg-control px-3 py-1.5 text-lg-fg"
             [class]="i === active() ? 'bg-lg-primary text-lg-on-primary lg-forced-selected' : 'hover:bg-lg-surface-muted'"
             [id]="optionId(i)"
             [attr.aria-selected]="i === selectedIndex()"
@@ -105,7 +105,7 @@ export class LgSelect<T> extends LgCustomControl<T | null> {
   readonly compareWith = input<(a: T, b: T) => boolean>(Object.is);
   readonly placeholder = input('');
 
-  readonly id = lgUniqueId('lg-select');
+  readonly id = this.controlId('lg-select');
   protected readonly listboxId = `${this.id}-listbox`;
   protected readonly anchorName = `--${this.id}`;
   protected readonly open = signal(false);

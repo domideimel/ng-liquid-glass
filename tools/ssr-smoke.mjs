@@ -55,6 +55,7 @@ const { LgSelect } = await lib('select');
 const { LgNav, LgNavGroup, LgNavLink } = await lib('navigation');
 const { LgFileInput } = await lib('file-input');
 const { LgTree } = await lib('tree');
+const { LgNumberField } = await lib('number-field');
 
 class App {
   open = signal(false);
@@ -131,6 +132,7 @@ Component({
     LgNavLink,
     LgFileInput,
     LgTree,
+    LgNumberField,
   ],
   template: `
     <a lgSkipLink href="#main">Skip to content</a>
@@ -197,6 +199,7 @@ Component({
         <nav lgNav aria-label="Side"><ul><li><a lgNavLink href="/" aria-current="page">Home</a></li><li><details lgNavGroup><summary>More</summary></details></li></ul></nav>
         <lg-file-input multiple />
         <lg-tree label="Files" [nodes]="files" [(expanded)]="expanded" />
+        <lg-number-field min="1" max="10" [value]="4" />
       </div>
     </main>
   `,
@@ -249,6 +252,7 @@ const expected = [
   ['file input', /type="file"/],
   ['tree', /role="tree"/],
   ['tree item', /role="treeitem"[^>]*aria-expanded="true"/],
+  ['number field', /role="spinbutton"[^>]*aria-valuenow="4"|aria-valuenow="4"[^>]*role="spinbutton"/],
 ];
 const missing = expected.filter(([, pattern]) => !pattern.test(html)).map(([name]) => name);
 if (missing.length > 0) {

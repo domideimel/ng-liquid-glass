@@ -12,7 +12,7 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
-import { LG_I18N, LgAnchoredPopup, lgUniqueId } from '@domideimel/ng-liquid-glass';
+import { LG_I18N, LgAnchoredPopup } from '@domideimel/ng-liquid-glass';
 import { LgCustomControl } from '@domideimel/ng-liquid-glass/forms';
 
 /** Default filter: case-insensitive "contains" on the displayed text. */
@@ -39,7 +39,7 @@ export function lgContains(text: string, query: string): boolean {
       role="combobox"
       autocomplete="off"
       aria-autocomplete="list"
-      class="lg-focus-ring block min-h-11 w-full font-[inherit] rounded-lg-control border border-lg-control-border bg-lg-surface px-3 py-2 text-base text-lg-fg placeholder:text-lg-fg-muted disabled:cursor-not-allowed disabled:opacity-60 aria-invalid:border-2 aria-invalid:border-lg-danger"
+      class="lg-focus-ring block min-h-lg-control w-full font-[inherit] rounded-lg-control border border-lg-control-border bg-lg-surface px-3 py-2 text-base text-lg-fg placeholder:text-lg-fg-muted disabled:cursor-not-allowed disabled:opacity-60 aria-invalid:border-2 aria-invalid:border-lg-danger"
       [id]="id"
       [style.anchor-name]="anchorName"
       [value]="text()"
@@ -63,7 +63,7 @@ export function lgContains(text: string, query: string): boolean {
           <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- keyboard is handled on the input via aria-activedescendant (ARIA combobox pattern) -->
           <li
             role="option"
-            class="flex min-h-11 cursor-pointer items-center rounded-lg-control px-3 text-lg-fg"
+            class="flex min-h-lg-control cursor-pointer items-center rounded-lg-control px-3 text-lg-fg"
             [class]="i === active() ? 'bg-lg-primary text-lg-on-primary lg-forced-selected' : 'hover:bg-lg-surface-muted'"
             [id]="optionId(i)"
             [attr.aria-selected]="i === active()"
@@ -106,7 +106,7 @@ export class LgCombobox<T> extends LgCustomControl<T | null> {
   /** Emits the typed text, for loading suggestions. */
   readonly query = output<string>();
 
-  readonly id = lgUniqueId('lg-combobox');
+  readonly id = this.controlId('lg-combobox');
   protected readonly listboxId = `${this.id}-listbox`;
   protected readonly anchorName = `--${this.id}`;
   protected readonly text = linkedSignal(() => {

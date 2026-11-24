@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { render, screen } from '@testing-library/angular';
 import userEvent from '@testing-library/user-event';
 import { expectNoA11yViolations } from '../../test/a11y';
-import { LgTheme, LgThemeSwitcher } from './theme';
+import { LgTheme, LgThemeSwitcher, provideLgTheme } from './theme';
 
 describe('LgThemeSwitcher', () => {
   afterEach(() => {
@@ -55,5 +55,23 @@ describe('LgThemeSwitcher', () => {
     expect(theme.mode()).toBe('dark');
     getItem.mockRestore();
     setItem.mockRestore();
+  });
+
+  it('keeps <meta name="theme-color"> in sync with the background when enabled', () => {
+    document.querySelector('meta[name="theme-color"]')?.remove();
+    TestBed.configureTestingModule({ providers: [provideLgTheme({ syncThemeColor: true })] });
+    const theme = TestBed.inject(LgTheme);
+    const meta = () => document.querySelector<HTMLMetaElement>('meta[name="theme-color"]')?.content;
+    theme.set('light');
+    expect(meta()).toBe('rgb(255, 255, 255)');
+    theme.set('dark');
+    expect(meta()).toBe('rgb(9, 9, 11)');
+    document.querySelector('meta[name="theme-color"]')?.remove();
+  });
+
+  it('leaves the theme-color meta tag alone by default', () => {
+    document.querySelector('meta[name="theme-color"]')?.remove();
+    TestBed.inject(LgTheme).set('dark');
+    expect(document.querySelector('meta[name="theme-color"]')).toBeNull();
   });
 });

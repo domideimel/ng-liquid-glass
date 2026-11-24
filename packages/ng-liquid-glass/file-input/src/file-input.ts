@@ -1,5 +1,5 @@
 import { booleanAttribute, Component, type ElementRef, inject, input, model, signal, viewChild } from '@angular/core';
-import { LG_I18N, lgAnnouncement, lgUniqueId } from '@domideimel/ng-liquid-glass';
+import { LG_I18N, lgAnnouncement } from '@domideimel/ng-liquid-glass';
 import { LgCustomControl } from '@domideimel/ng-liquid-glass/forms';
 import { LgTag } from '@domideimel/ng-liquid-glass/tag';
 
@@ -27,7 +27,7 @@ import { LgTag } from '@domideimel/ng-liquid-glass/tag';
       (drop)="onDrop($event)"
     >
       <label
-        class="inline-flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-lg-control border border-lg-control-border bg-lg-surface px-4 font-medium text-lg-fg hover:bg-lg-surface-muted has-focus-visible:outline-3 has-focus-visible:outline-offset-2 has-focus-visible:outline-lg-focus has-disabled:cursor-not-allowed has-disabled:opacity-60"
+        class="inline-flex min-h-lg-control cursor-pointer items-center justify-center gap-2 rounded-lg-control border border-lg-control-border bg-lg-surface px-4 font-medium text-lg-fg hover:bg-lg-surface-muted has-focus-visible:outline-3 has-focus-visible:outline-offset-2 has-focus-visible:outline-lg-focus has-disabled:cursor-not-allowed has-disabled:opacity-60"
       >
         <input
           #input
@@ -86,7 +86,7 @@ export class LgFileInput extends LgCustomControl<readonly File[]> {
   /** Accepted types, as in the native `accept` attribute (`.pdf,image/*`). Also applied to dropped files. */
   readonly accept = input('');
 
-  readonly id = lgUniqueId('lg-file-input');
+  readonly id = this.controlId('lg-file-input');
   protected readonly dragging = signal(false);
   protected readonly announcement = signal('');
   /** Message about the last files that didn't match `accept`; announced through the live region too. */

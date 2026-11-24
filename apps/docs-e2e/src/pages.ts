@@ -1,6 +1,7 @@
 /** Every documentation page with demos. */
 export const DEMO_PAGES = [
   'guides/forms',
+  'guides/theming',
   'components/accordion',
   'components/alert',
   'components/avatar',
@@ -17,6 +18,7 @@ export const DEMO_PAGES = [
   'components/link',
   'components/menu',
   'components/navigation',
+  'components/number-field',
   'components/pagination',
   'components/popover',
   'components/progress',

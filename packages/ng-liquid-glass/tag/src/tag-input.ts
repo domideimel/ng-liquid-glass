@@ -1,5 +1,5 @@
 import { booleanAttribute, Component, type ElementRef, inject, input, model, signal, viewChild } from '@angular/core';
-import { LG_I18N, lgAnnouncement, lgUniqueId } from '@domideimel/ng-liquid-glass';
+import { LG_I18N, lgAnnouncement } from '@domideimel/ng-liquid-glass';
 import { LgCustomControl } from '@domideimel/ng-liquid-glass/forms';
 import { LgTag } from './tag';
 
@@ -21,7 +21,7 @@ import { LgTag } from './tag';
   template: `
     <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- a click on the frame focuses the input, which is keyboard reachable -->
     <div
-      class="flex min-h-11 w-full flex-wrap items-center gap-1.5 rounded-lg-control border border-lg-control-border bg-lg-surface px-1.5 text-base text-lg-fg has-[input:focus-visible]:outline-3 has-[input:focus-visible]:outline-offset-2 has-[input:focus-visible]:outline-lg-focus has-[input:disabled]:cursor-not-allowed has-[input:disabled]:opacity-60"
+      class="flex min-h-lg-control w-full flex-wrap items-center gap-1.5 rounded-lg-control border border-lg-control-border bg-lg-surface px-1.5 text-base text-lg-fg has-[input:focus-visible]:outline-3 has-[input:focus-visible]:outline-offset-2 has-[input:focus-visible]:outline-lg-focus has-[input:disabled]:cursor-not-allowed has-[input:disabled]:opacity-60"
       [class.border-2]="showInvalid()"
       [class.border-lg-danger]="showInvalid()"
       (click)="focus()"
@@ -39,7 +39,7 @@ import { LgTag } from './tag';
         #input
         type="text"
         enterkeyhint="enter"
-        class="min-h-11 min-w-32 flex-1 border-0 bg-transparent px-1.5 font-[inherit] text-base text-lg-fg outline-none placeholder:text-lg-fg-muted"
+        class="min-h-lg-control min-w-32 flex-1 border-0 bg-transparent px-1.5 font-[inherit] text-base text-lg-fg outline-none placeholder:text-lg-fg-muted"
         [id]="id"
         [value]="text()"
         [disabled]="disabled()"
@@ -65,7 +65,7 @@ export class LgTagInput extends LgCustomControl<readonly string[]> {
   /** Allow the same text twice. */
   readonly allowDuplicates = input(false, { transform: booleanAttribute });
 
-  readonly id = lgUniqueId('lg-tag-input');
+  readonly id = this.controlId('lg-tag-input');
   protected readonly text = signal('');
   protected readonly announcement = signal('');
 

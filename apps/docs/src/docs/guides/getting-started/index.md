@@ -82,6 +82,7 @@ export class App {}
 | `…/link`                      | `LgLink`                                                                                                                            |
 | `…/menu`                      | `LgMenu`, `LgMenuItem`, `LgMenuTrigger`                                                                                             |
 | `…/navigation`                | `LgNav`, `LgNavLink`, `LgNavGroup`                                                                                                  |
+| `…/number-field`              | `LgNumberField`                                                                                                                     |
 | `…/pagination`                | `LgPagination`                                                                                                                      |
 | `…/popover`                   | `LgPopover`, `LgPopoverTrigger`                                                                                                     |
 | `…/progress`                  | `LgProgress`, `LgMeter`, `LgSpinner`                                                                                                |

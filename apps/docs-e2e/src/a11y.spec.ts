@@ -1,6 +1,7 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
 import { DEMO_PAGES } from './pages';
+import { smallTargets } from './targets';
 
 /** WCAG 2.0–2.2 A, AA and AAA, including enhanced contrast (7:1) and target size, against the real theme. */
 const TAGS = ['wcag2a', 'wcag2aa', 'wcag2aaa', 'wcag21a', 'wcag21aa', 'wcag22aa', 'best-practice'];
@@ -25,24 +26,7 @@ for (const theme of ['light', 'dark'] as const) {
 
       test(`${path} targets are at least 44 × 44 px (2.5.5 AAA)`, async ({ page }) => {
         await openDemoPage(page, path, theme);
-        const tooSmall = await page.locator('.ng-doc-demo-frame').evaluateAll((demos) => {
-          const selector =
-            'button, a[href], input:not([type=hidden]), select, textarea, summary, [role=option], [role=tab], [role=menuitem]';
-          return (
-            demos
-              .flatMap((demo) => [...demo.querySelectorAll<HTMLElement>(selector)])
-              .filter((el) => el.checkVisibility())
-              // 2.5.5 exception: links inside a sentence are inline targets.
-              .filter((el) => !el.matches('p a[href]'))
-              .map((el) => {
-                // Checkboxes, radios and visually hidden file inputs are activated through their wrapping label.
-                const target = el.matches('input[type=checkbox], input[type=radio], input[type=file]') ? (el.closest('label') ?? el) : el;
-                const { width, height } = target.getBoundingClientRect();
-                return { name: el.outerHTML.slice(0, 80), width: Math.round(width), height: Math.round(height) };
-              })
-              .filter(({ width, height }) => width < 44 || height < 44)
-          );
-        });
+        const tooSmall = await smallTargets(page, 44);
         expect(tooSmall).toEqual([]);
       });
     }

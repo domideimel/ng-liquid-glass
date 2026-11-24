@@ -1,6 +1,7 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
 import { DEMO_PAGES } from './pages';
+import { smallTargets } from './targets';
 
 const TAGS = ['wcag2a', 'wcag2aa', 'wcag2aaa', 'wcag21a', 'wcag21aa', 'wcag22aa', 'best-practice'];
 
@@ -37,6 +38,20 @@ test.describe('right-to-left', () => {
           frames.filter((frame) => frame.scrollWidth > frame.clientWidth + 1).map((frame) => frame.innerHTML.slice(0, 80)),
         );
       expect(overflowing).toEqual([]);
+    });
+  }
+});
+
+test.describe('compact density', () => {
+  for (const path of DEMO_PAGES) {
+    test(`${path} demos meet WCAG 2.5.8 (24 px targets) and the other WCAG rules`, async ({ page }) => {
+      await openDemoPage(page, path);
+      await page.locator('.ng-doc-demo-frame').evaluateAll((frames) => {
+        for (const frame of frames) frame.setAttribute('data-density', 'compact');
+      });
+      const results = await new AxeBuilder({ page }).include('.ng-doc-demo-frame').withTags(TAGS).analyze();
+      expect(results.violations.map((v) => `${v.id}: ${v.help}`)).toEqual([]);
+      expect(await smallTargets(page, 24)).toEqual([]);
     });
   }
 });
@@ -101,9 +116,11 @@ test.describe('visual regression', () => {
         await openDemoPage(page, path, variant);
         await page.evaluate(() => document.fonts.ready);
         const demos = page.locator('.ng-doc-demo-frame');
-        const count = await demos.count();
-        for (let index = 0; index < count; index++) {
-          await expect(demos.nth(index)).toHaveScreenshot(`${path.replaceAll('/', '-')}-${String(index)}-${variant.name}.png`, {
+        // Named after the demo component (e.g. docs-sheet-demo), not its position, so adding a demo to a
+        // page doesn't rename the screenshots of the others.
+        const names = await demos.evaluateAll((frames) => frames.map((frame) => frame.firstElementChild?.localName ?? 'demo'));
+        for (const [index, name] of names.entries()) {
+          await expect(demos.nth(index)).toHaveScreenshot(`${name}-${variant.name}.png`, {
             animations: 'disabled',
             caret: 'hide',
             maxDiffPixelRatio: 0.01,

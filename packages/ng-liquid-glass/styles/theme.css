@@ -27,6 +27,7 @@
   --lg-accent: light-dark(#1e40af, #93c5fd);
   --lg-on-accent: light-dark(#ffffff, #172554);
   --lg-accent-hover: light-dark(#1e3a8a, #bfdbfe);
+  --lg-accent-surface: light-dark(#eef2ff, #172554);
   --lg-focus: light-dark(#09090b, #fafafa);
   --lg-danger: light-dark(#991b1b, #fca5a5);
   --lg-danger-surface: light-dark(#fef2f2, #450a0a);
@@ -40,6 +41,21 @@
   --lg-glass: light-dark(rgb(255 255 255 / 0.92), rgb(24 24 27 / 0.92));
   --lg-glass-border: light-dark(rgb(9 9 11 / 0.1), rgb(250 250 250 / 0.12));
   --lg-overlay: light-dark(rgb(9 9 11 / 0.6), rgb(0 0 0 / 0.7));
+  /* Minimum pointer target (WCAG 2.5.5 AAA) and control heights; see the density block below. */
+  --lg-target-size: 2.75rem;
+  --lg-control-height: 2.75rem;
+  --lg-control-height-sm: 2rem;
+}
+
+/*
+ * Compact density for dense, single-screen apps: data-density="compact" on <html> or any container.
+ * Controls shrink to 32 px (small ones to 24 px) and pointer targets to at least 24 px, which meets
+ * WCAG 2.5.8 Target Size (Minimum, AA) instead of 2.5.5 (AAA). Everything else stays AAA.
+ */
+[data-density='compact'] {
+  --lg-target-size: 1.5rem;
+  --lg-control-height: 2rem;
+  --lg-control-height-sm: 1.5rem;
 }
 
 /* prefers-contrast: more: stronger borders and muted text, opaque glass. */
@@ -75,6 +91,7 @@
   --color-lg-accent: var(--lg-accent);
   --color-lg-on-accent: var(--lg-on-accent);
   --color-lg-accent-hover: var(--lg-accent-hover);
+  --color-lg-accent-surface: var(--lg-accent-surface);
   --color-lg-focus: var(--lg-focus);
   --color-lg-danger: var(--lg-danger);
   --color-lg-danger-surface: var(--lg-danger-surface);
@@ -87,6 +104,20 @@
   --color-lg-info-surface: var(--lg-info-surface);
   --color-lg-glass-border: var(--lg-glass-border);
   --color-lg-overlay: var(--lg-overlay);
+  /* Display type scale for large numbers and headlines: text-lg-display-sm … -xl. Pair numbers with tabular-nums. */
+  --text-lg-display-sm: 2.25rem;
+  --text-lg-display-sm--line-height: 1.1;
+  --text-lg-display-md: 3.5rem;
+  --text-lg-display-md--line-height: 1.05;
+  --text-lg-display-lg: 5rem;
+  --text-lg-display-lg--line-height: 1;
+  --text-lg-display-lg--letter-spacing: -0.02em;
+  --text-lg-display-xl: 7rem;
+  --text-lg-display-xl--line-height: 1;
+  --text-lg-display-xl--letter-spacing: -0.03em;
+  /* Control sizes that follow the density: h-lg-control, min-h-lg-control, size-lg-control-sm, … */
+  --spacing-lg-control: var(--lg-control-height);
+  --spacing-lg-control-sm: var(--lg-control-height-sm);
   --radius-lg-control: 0.75rem;
   --radius-lg-surface: 1rem;
   /* Container-query breakpoints of lgGrid: @lg-sm, @lg-md, @lg-lg, @lg-xl */
@@ -105,6 +136,23 @@
 }
 
 /*
+ * Keeps the pointer target at least --lg-target-size (44 px, WCAG 2.5.5 AAA) around a control drawn smaller,
+ * e.g. a small button: an invisible ::before centred on it. Compact density lowers the size (see Density).
+ */
+@utility lg-hit-area {
+  position: relative;
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: max(100%, var(--lg-target-size));
+    height: max(100%, var(--lg-target-size));
+    translate: -50% -50%;
+  }
+}
+
+/*
  * Selected state for Windows High Contrast / forced colors, where backgrounds are replaced by the system palette:
  * use the system highlight colours so the selected tab, page or option stays visible.
  */
@@ -115,6 +163,20 @@
     background-color: Highlight !important;
     color: HighlightText !important;
   }
+}
+
+/*
+ * Safe areas of installed PWAs and notched screens (needs <meta name="viewport" content="…, viewport-fit=cover">):
+ * padding that keeps content clear of the status bar, the home indicator and rounded corners.
+ */
+@utility lg-safe-top {
+  padding-top: env(safe-area-inset-top);
+}
+@utility lg-safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+@utility lg-safe-inline {
+  padding-inline: env(safe-area-inset-left) env(safe-area-inset-right);
 }
 
 /* Frosted "liquid glass" material for floating surfaces; opaque enough to keep AAA contrast. */

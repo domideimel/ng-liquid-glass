@@ -82,8 +82,8 @@ describe('lg-form-field', () => {
        <lg-form-field><label lgLabel>Size</label><select lgInput><option>S</option></select></lg-form-field>`,
       { imports: [LgFormField, LgLabel, LgInput] },
     );
-    expect(screen.getByRole('textbox', { name: 'Bio' })).toHaveClass('min-h-11');
-    expect(screen.getByRole('combobox', { name: 'Size' })).toHaveClass('min-h-11');
+    expect(screen.getByRole('textbox', { name: 'Bio' })).toHaveClass('min-h-lg-control');
+    expect(screen.getByRole('combobox', { name: 'Size' })).toHaveClass('min-h-lg-control');
     await expectNoA11yViolations();
   });
 });
