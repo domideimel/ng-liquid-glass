@@ -1,10 +1,26 @@
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
-import { Component, inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
+import { Component, inject, Injectable, InjectionToken, PLATFORM_ID, signal, type Provider } from '@angular/core';
 import { LG_I18N, lgUniqueId } from '@domideimel/ng-liquid-glass';
 
 export type LgThemeMode = 'light' | 'dark' | 'system';
 
 const STORAGE_KEY = 'lg-theme';
+
+export interface LgThemeOptions {
+  /**
+   * Keep `<meta name="theme-color">` equal to the page background (`--lg-bg`), so an installed PWA's
+   * status bar follows the theme, including system changes while in `system` mode. Creates the meta tag
+   * when it's missing.
+   */
+  readonly syncThemeColor?: boolean;
+}
+
+export const LG_THEME_OPTIONS = new InjectionToken<LgThemeOptions>('LG_THEME_OPTIONS', { factory: () => ({}) });
+
+/** Configures `LgTheme`, e.g. `provideLgTheme({ syncThemeColor: true })` in the app config. */
+export function provideLgTheme(options: LgThemeOptions): Provider {
+  return { provide: LG_THEME_OPTIONS, useValue: options };
+}
 
 /**
  * The colour scheme: `light`, `dark`, or `system` (follows the operating system). Setting it updates
@@ -14,11 +30,18 @@ const STORAGE_KEY = 'lg-theme';
 export class LgTheme {
   private readonly document = inject(DOCUMENT);
   private readonly browser = isPlatformBrowser(inject(PLATFORM_ID));
+  private readonly options = inject(LG_THEME_OPTIONS);
   private readonly current = signal<LgThemeMode>(this.stored());
   readonly mode = this.current.asReadonly();
 
   constructor() {
     this.apply(this.current());
+    if (this.browser && this.options.syncThemeColor) {
+      // In system mode the background changes with the operating system's setting.
+      this.document.defaultView?.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+        this.syncThemeColor();
+      });
+    }
   }
 
   set(mode: LgThemeMode): void {
@@ -48,6 +71,21 @@ export class LgTheme {
     const root = this.document.documentElement;
     if (mode === 'system') root.removeAttribute('data-theme');
     else root.setAttribute('data-theme', mode);
+    this.syncThemeColor();
+  }
+
+  private syncThemeColor(): void {
+    if (!this.browser || !this.options.syncThemeColor) return;
+    const doc = this.document;
+    const background = doc.defaultView?.getComputedStyle(doc.documentElement).backgroundColor;
+    if (!background) return;
+    let meta = doc.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
+    if (!meta) {
+      meta = doc.createElement('meta');
+      meta.name = 'theme-color';
+      doc.head.append(meta);
+    }
+    meta.content = background;
   }
 }
 

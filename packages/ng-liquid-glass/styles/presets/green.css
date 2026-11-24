@@ -1,0 +1,12 @@
+/*
+ * ng-liquid-glass accent preset: Green. Import it after the theme:
+ *   @import '@domideimel/ng-liquid-glass/theme.css';
+ *   @import '@domideimel/ng-liquid-glass/presets/green.css';
+ * Every pair meets WCAG AAA (7:1) in light and dark mode; checked in CI with lg-contrast.
+ */
+:root {
+  --lg-accent: light-dark(#14532d, #86efac);
+  --lg-on-accent: light-dark(#ffffff, #052e16);
+  --lg-accent-hover: light-dark(#052e16, #bbf7d0);
+  --lg-accent-surface: light-dark(#f0fdf4, #052e16);
+}

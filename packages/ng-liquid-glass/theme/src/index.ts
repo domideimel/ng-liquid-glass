@@ -1,1 +1,1 @@
-export { LgTheme, LgThemeSwitcher, type LgThemeMode } from './theme';
+export { LG_THEME_OPTIONS, LgTheme, LgThemeSwitcher, provideLgTheme, type LgThemeMode, type LgThemeOptions } from './theme';
