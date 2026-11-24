@@ -1,6 +1,7 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
 import { DEMO_PAGES } from './pages';
+import { smallTargets } from './targets';
 
 const TAGS = ['wcag2a', 'wcag2aa', 'wcag2aaa', 'wcag21a', 'wcag21aa', 'wcag22aa', 'best-practice'];
 
@@ -37,6 +38,20 @@ test.describe('right-to-left', () => {
           frames.filter((frame) => frame.scrollWidth > frame.clientWidth + 1).map((frame) => frame.innerHTML.slice(0, 80)),
         );
       expect(overflowing).toEqual([]);
+    });
+  }
+});
+
+test.describe('compact density', () => {
+  for (const path of DEMO_PAGES) {
+    test(`${path} demos meet WCAG 2.5.8 (24 px targets) and the other WCAG rules`, async ({ page }) => {
+      await openDemoPage(page, path);
+      await page.locator('.ng-doc-demo-frame').evaluateAll((frames) => {
+        for (const frame of frames) frame.setAttribute('data-density', 'compact');
+      });
+      const results = await new AxeBuilder({ page }).include('.ng-doc-demo-frame').withTags(TAGS).analyze();
+      expect(results.violations.map((v) => `${v.id}: ${v.help}`)).toEqual([]);
+      expect(await smallTargets(page, 24)).toEqual([]);
     });
   }
 });

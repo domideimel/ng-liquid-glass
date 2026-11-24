@@ -80,6 +80,18 @@ For very large numbers and headlines: `text-lg-display-sm` (2.25rem), `-md` (3.5
 - **`prefers-contrast: more`:** muted text becomes full-strength text, borders use the control border colour, and the glass material turns opaque. Nothing to configure.
 - **Forced colors (Windows High Contrast):** the system palette replaces the theme. Selected states (tab, page, combobox option) switch to the system `Highlight` colours, progress bars and meters render natively, and buttons keep a visible border.
 
+## Density
+
+Dense, single-screen apps (a metronome on a music stand, a toolbar-heavy editor) can opt into compact controls with `data-density="compact"` on `<html>` or on any container:
+
+```html
+<html data-density="compact"></html>
+```
+
+Controls shrink from 44 px to 32 px (small buttons from 32 px to 24 px), and pointer targets keep at least 24 px. That meets WCAG 2.5.8 Target Size (Minimum, **AA**) instead of 2.5.5 (Enhanced, AAA); everything else (contrast, keyboard, focus) stays AAA. Use it where the layout needs it, not by default. The tokens behind it are `--lg-control-height`, `--lg-control-height-sm` and `--lg-target-size`; your own controls follow the density with `h-lg-control`, `size-lg-control-sm` and the `lg-hit-area` utility.
+
+{{ NgDocActions.demo("DensityDemo") }}
+
 ## Safe areas
 
 For installed PWAs and notched screens, `lg-safe-top`, `lg-safe-bottom` and `lg-safe-inline` pad an element by the matching `env(safe-area-inset-*)`, e.g. an app bar or a bottom navigation. They need `viewport-fit=cover`:

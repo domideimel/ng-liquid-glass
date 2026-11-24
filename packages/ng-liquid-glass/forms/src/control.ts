@@ -45,7 +45,7 @@ export abstract class LgNativeControl implements LgFieldControl {
   selector: 'input[lgInput], textarea[lgInput], select[lgInput]',
   host: {
     class:
-      'lg-focus-ring block min-h-11 w-full font-[inherit] rounded-lg-control border border-lg-control-border bg-lg-surface px-3 py-2 text-base text-lg-fg placeholder:text-lg-fg-muted disabled:cursor-not-allowed disabled:opacity-60 aria-invalid:border-2 aria-invalid:border-lg-danger',
+      'lg-focus-ring block min-h-lg-control w-full font-[inherit] rounded-lg-control border border-lg-control-border bg-lg-surface px-3 py-2 text-base text-lg-fg placeholder:text-lg-fg-muted disabled:cursor-not-allowed disabled:opacity-60 aria-invalid:border-2 aria-invalid:border-lg-danger',
   },
 })
 export class LgInput extends LgNativeControl {}
@@ -78,6 +78,6 @@ export class LgSwitch extends LgNativeControl {}
 /** A native range slider with a 44 px tall hit area. */
 @Directive({
   selector: 'input[type=range][lgSlider]',
-  host: { class: 'lg-focus-ring block h-11 w-full cursor-pointer accent-lg-primary disabled:cursor-not-allowed' },
+  host: { class: 'lg-focus-ring block h-lg-control w-full cursor-pointer accent-lg-primary disabled:cursor-not-allowed' },
 })
 export class LgSlider extends LgNativeControl {}

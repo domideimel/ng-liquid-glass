@@ -20,7 +20,7 @@ The Angular skill assumes a plain Angular CLI project. Here, Nx wins:
 ## Library rules
 
 - Native elements first; otherwise follow the matching WAI-ARIA APG pattern.
-- Only `lg-*` theme tokens from `packages/ng-liquid-glass/styles`; text contrast ≥ 7:1, targets ≥ 44 × 44 px, `lg-focus-ring` on everything focusable.
+- Only `lg-*` theme tokens from `packages/ng-liquid-glass/styles`; text contrast ≥ 7:1, targets ≥ 44 × 44 px (sizes from the `lg-control` spacing tokens, so `data-density="compact"` can lower them to 24 px, AA), `lg-focus-ring` on everything focusable.
 - Tailwind class names as complete string literals, never built from pieces.
 - Signal inputs/outputs/queries, no `zone.js`, no NgModules. Never set `changeDetection`: OnPush is the default since Angular 22 and lint rejects both explicit `OnPush` and `Eager`.
 - Specs use Testing Library and cover ARIA states, keyboard behaviour and `expectNoA11yViolations()`. Coverage gates: ≥ 95 % statements/functions/lines, ≥ 90 % branches.

@@ -7,7 +7,7 @@ describe('LgButton', () => {
   it('renders a native button with the secondary variant by default', async () => {
     await render(`<button lgButton type="button">Save</button>`, { imports: [LgButton] });
     const button = screen.getByRole('button', { name: 'Save' });
-    expect(button).toHaveClass('min-h-11', 'min-w-11', 'border-lg-control-border');
+    expect(button).toHaveClass('min-h-lg-control', 'min-w-lg-control', 'border-lg-control-border');
     expect(button).not.toHaveAttribute('aria-busy');
     await expectNoA11yViolations();
   });
@@ -75,5 +75,17 @@ describe('LgButton', () => {
     expect(warn).toHaveBeenCalledTimes(1);
     expect(String(warn.mock.calls[0]?.[0])).toContain('needs an accessible name');
     warn.mockRestore();
+  });
+
+  it('shrinks in compact density but keeps 24 px targets (WCAG 2.5.8)', async () => {
+    await render(
+      `<div data-density="compact"><button lgButton type="button">Medium</button><button lgButton type="button" size="sm">Small</button></div>`,
+      { imports: [LgButton] },
+    );
+    const medium = screen.getByRole('button', { name: 'Medium' });
+    const small = screen.getByRole('button', { name: 'Small' });
+    expect(Math.round(medium.getBoundingClientRect().height)).toBe(32);
+    expect(Math.round(small.getBoundingClientRect().height)).toBe(24);
+    expect(Math.round(parseFloat(getComputedStyle(small, '::before').height))).toBeGreaterThanOrEqual(24);
   });
 });

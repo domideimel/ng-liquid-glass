@@ -111,7 +111,7 @@ export class LgToaster {
       <button
         type="button"
         data-lg-part="action"
-        class="lg-focus-ring min-h-11 cursor-pointer rounded-lg-control border border-transparent bg-transparent font-[inherit] text-base text-lg-fg px-3 font-medium underline underline-offset-4"
+        class="lg-focus-ring min-h-lg-control cursor-pointer rounded-lg-control border border-transparent bg-transparent font-[inherit] text-base text-lg-fg px-3 font-medium underline underline-offset-4"
         (click)="runAction(action)"
       >
         {{ action.label }}
@@ -120,7 +120,7 @@ export class LgToaster {
     <button
       type="button"
       data-lg-part="dismiss"
-      class="lg-focus-ring inline-flex size-11 cursor-pointer border border-transparent bg-transparent text-lg-fg items-center justify-center rounded-lg-control hover:bg-lg-surface-muted"
+      class="lg-focus-ring inline-flex size-lg-control cursor-pointer border border-transparent bg-transparent text-lg-fg items-center justify-center rounded-lg-control hover:bg-lg-surface-muted"
       [attr.aria-label]="i18n.dismiss"
       (click)="dismiss()"
     >

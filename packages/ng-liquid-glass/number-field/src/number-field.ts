@@ -10,7 +10,7 @@ import {
   numberAttribute,
   viewChild,
 } from '@angular/core';
-import { LG_I18N, lgUniqueId } from '@domideimel/ng-liquid-glass';
+import { LG_I18N } from '@domideimel/ng-liquid-glass';
 import { LgCustomControl } from '@domideimel/ng-liquid-glass/forms';
 
 const REPEAT_DELAY_MS = 400;
@@ -41,7 +41,7 @@ const REPEAT_INTERVAL_MS = 75;
         type="button"
         tabindex="-1"
         data-lg-part="decrease"
-        class="inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-s-lg-control border-0 bg-transparent text-lg-fg hover:bg-lg-surface-muted disabled:cursor-not-allowed"
+        class="inline-flex min-h-lg-control min-w-lg-control cursor-pointer items-center justify-center rounded-s-lg-control border-0 bg-transparent text-lg-fg hover:bg-lg-surface-muted disabled:cursor-not-allowed"
         [attr.aria-label]="i18n.decrease"
         [disabled]="disabled() || atMin()"
         (pointerdown)="startRepeat($event, -1)"
@@ -84,7 +84,7 @@ const REPEAT_INTERVAL_MS = 75;
         type="button"
         tabindex="-1"
         data-lg-part="increase"
-        class="inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-e-lg-control border-0 bg-transparent text-lg-fg hover:bg-lg-surface-muted disabled:cursor-not-allowed"
+        class="inline-flex min-h-lg-control min-w-lg-control cursor-pointer items-center justify-center rounded-e-lg-control border-0 bg-transparent text-lg-fg hover:bg-lg-surface-muted disabled:cursor-not-allowed"
         [attr.aria-label]="i18n.increase"
         [disabled]="disabled() || atMax()"
         (pointerdown)="startRepeat($event, 1)"
@@ -121,7 +121,7 @@ export class LgNumberField extends LgCustomControl<number | null> {
   /** What screen readers announce for a value, e.g. `(n) => \`${n} BPM\``. */
   readonly valueText = input<((value: number) => string) | null>(null);
 
-  readonly id = lgUniqueId('lg-number-field');
+  readonly id = this.controlId('lg-number-field');
   /** The input's text; follows the value and holds what the user types until it is applied. */
   protected readonly text = linkedSignal(() => {
     const value = this.value();

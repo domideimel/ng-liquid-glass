@@ -4,17 +4,17 @@ export type LgButtonVariant = 'primary' | 'accent' | 'secondary' | 'ghost' | 'da
 export type LgButtonSize = 'sm' | 'md' | 'lg' | 'xl';
 export type LgButtonShape = 'default' | 'circle';
 
-// sm is drawn at 32 px; lg-hit-area keeps its pointer target at 44 px.
+// sm is drawn at 32 px (24 px compact); lg-hit-area keeps its pointer target at --lg-target-size.
 const SIZES: Record<LgButtonSize, string> = {
-  sm: 'min-h-8 min-w-8 px-3 text-sm lg-hit-area',
-  md: 'min-h-11 min-w-11 px-4 text-base',
+  sm: 'min-h-lg-control-sm min-w-lg-control-sm px-3 text-sm lg-hit-area',
+  md: 'min-h-lg-control min-w-lg-control px-4 text-base',
   lg: 'min-h-14 min-w-14 px-6 text-lg',
   xl: 'min-h-20 min-w-20 px-8 text-xl',
 };
 // Round, icon-only buttons: square, no padding; xl (96 px) suits a main action like a play button.
 const CIRCLES: Record<LgButtonSize, string> = {
-  sm: 'size-8 rounded-full px-0 text-sm lg-hit-area',
-  md: 'size-11 rounded-full px-0 text-base',
+  sm: 'size-lg-control-sm rounded-full px-0 text-sm lg-hit-area',
+  md: 'size-lg-control rounded-full px-0 text-base',
   lg: 'size-14 rounded-full px-0 text-lg',
   xl: 'size-24 rounded-full px-0 text-xl',
 };
