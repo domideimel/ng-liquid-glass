@@ -1,3 +1,13 @@
+## 0.3.1 (2026-11-24)
+
+### 🩹 Fixes
+
+- don't ship the lg-contrast test in the package ([#53](https://github.com/domideimel/ng-liquid-glass/pull/53))
+
+### ❤️ Thank You
+
+- Dominik Deimel @domideimel
+
 ## 0.3.0 (2026-11-24)
 
 ### 🚀 Features
