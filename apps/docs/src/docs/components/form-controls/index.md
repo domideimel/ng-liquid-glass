@@ -10,6 +10,12 @@ Wrap checkboxes, radios and switches with their text in `<label lgChoice>`, so t
 
 {{ NgDocActions.demo("ChoicesDemo") }}
 
+## Slider with end labels
+
+Labels at both ends ("Straight" … "Swing") go in a row below the slider, with the end the value is closer to highlighted. They are only visual (`aria-hidden`): set `aria-valuetext` to a phrase like "30 % swing" so screen readers announce the same meaning.
+
+{{ NgDocActions.demo("SliderLabelsDemo") }}
+
 ## Accessibility
 
 - Labels are real `<label for>` elements; hints and errors are linked with `aria-describedby`.

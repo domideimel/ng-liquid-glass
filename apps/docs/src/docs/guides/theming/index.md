@@ -92,6 +92,18 @@ Controls shrink from 44 px to 32 px (small buttons from 32 px to 24 px), and poi
 
 {{ NgDocActions.demo("DensityDemo") }}
 
+## Your own controls
+
+Controls the library doesn't have (a tempo dial, a tuner gauge) can use the same tokens, so they follow the theme, dark mode and presets:
+
+- **Colours:** every token is a Tailwind colour, so SVG works with `stroke-lg-accent`, `fill-lg-surface-muted`, `text-lg-fg` (with `currentColor`) and so on.
+- **Focus:** add `lg-focus-ring` to anything focusable.
+- **Size:** use `size-lg-control` (follows the density) or `lg-hit-area` for a pointer target of at least `--lg-target-size`.
+- **Forced colors:** system colours replace the tokens; draw state with shape or position too, not colour alone.
+- **Semantics:** a native `<input type="range">` (styled or hidden behind the drawing) gives keyboard and screen-reader support for free; a drawing that only shows a value is `role="img"` with an `aria-label` that states it.
+
+{{ NgDocActions.demo("CustomControlDemo") }}
+
 ## Safe areas
 
 For installed PWAs and notched screens, `lg-safe-top`, `lg-safe-bottom` and `lg-safe-inline` pad an element by the matching `env(safe-area-inset-*)`, e.g. an app bar or a bottom navigation. They need `viewport-fit=cover`:
