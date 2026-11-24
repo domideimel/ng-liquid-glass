@@ -2,6 +2,8 @@ version: 2
 updates:
   - package-ecosystem: npm
     directory: /
+    # PRs go to develop like all work; main only takes release merges.
+    target-branch: develop
     schedule:
       interval: weekly
     open-pull-requests-limit: 10
@@ -37,8 +39,13 @@ updates:
         update-types: ['version-update:semver-major']
   - package-ecosystem: github-actions
     directories: ['/', '/.github/actions/*']
+    target-branch: develop
     schedule:
       interval: weekly
     groups:
       actions:
         patterns: ['*']
+    ignore:
+      # The v2.6.0 image can't be pulled (ossf/scorecard-action#1752); take the next release.
+      - dependency-name: 'ossf/scorecard-action'
+        versions: ['2.6.0']
