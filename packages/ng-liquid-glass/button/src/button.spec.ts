@@ -44,4 +44,36 @@ describe('LgButton', () => {
     button.focus();
     expect(button).toHaveFocus();
   });
+
+  it.each([
+    ['sm', 32],
+    ['md', 44],
+    ['lg', 56],
+    ['xl', 80],
+  ] as const)('draws size %s %i px tall with a pointer target of at least 44 px', async (size, height) => {
+    await render(`<button lgButton type="button" [size]="size">Go</button>`, { imports: [LgButton], componentProperties: { size } });
+    const button = screen.getByRole('button', { name: 'Go' });
+    expect(Math.round(button.getBoundingClientRect().height)).toBe(height);
+    const hit = getComputedStyle(button, '::before');
+    const target = hit.content === 'none' ? button.getBoundingClientRect().height : parseFloat(hit.height);
+    expect(Math.round(target)).toBeGreaterThanOrEqual(44);
+  });
+
+  it('draws a round, square icon button and warns without an accessible name', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+    await render(
+      `
+        <button lgButton type="button" shape="circle" size="xl" aria-label="Play"><svg aria-hidden="true"></svg></button>
+        <button lgButton type="button" shape="circle"><svg aria-hidden="true"></svg></button>
+      `,
+      { imports: [LgButton] },
+    );
+    const play = screen.getByRole('button', { name: 'Play' });
+    const { width, height } = play.getBoundingClientRect();
+    expect([Math.round(width), Math.round(height)]).toEqual([96, 96]);
+    expect(getComputedStyle(play).borderRadius).not.toBe('0px');
+    expect(warn).toHaveBeenCalledTimes(1);
+    expect(String(warn.mock.calls[0]?.[0])).toContain('needs an accessible name');
+    warn.mockRestore();
+  });
 });
