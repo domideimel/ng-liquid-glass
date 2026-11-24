@@ -46,7 +46,7 @@ export function lgPageWindow(page: number, pageCount: number, siblings = 1): (nu
         @for (p of pages(); track $index) {
           <li>
             @if (p === null) {
-              <span aria-hidden="true" class="inline-flex size-11 items-center justify-center text-lg-fg-muted">…</span>
+              <span aria-hidden="true" class="inline-flex size-lg-control items-center justify-center text-lg-fg-muted">…</span>
             } @else {
               <button
                 type="button"
@@ -97,9 +97,9 @@ export class LgPagination {
 
   protected readonly pages = computed(() => lgPageWindow(this.page(), this.pageCount()));
   protected readonly buttonClass =
-    'lg-focus-ring inline-flex min-h-11 min-w-11 cursor-pointer border border-transparent bg-transparent font-[inherit] text-base items-center justify-center rounded-lg-control px-3 font-medium text-lg-fg hover:bg-lg-surface-muted aria-disabled:cursor-not-allowed aria-disabled:opacity-60 aria-disabled:hover:bg-transparent';
+    'lg-focus-ring inline-flex min-h-lg-control min-w-lg-control cursor-pointer border border-transparent bg-transparent font-[inherit] text-base items-center justify-center rounded-lg-control px-3 font-medium text-lg-fg hover:bg-lg-surface-muted aria-disabled:cursor-not-allowed aria-disabled:opacity-60 aria-disabled:hover:bg-transparent';
   protected readonly activeClass =
-    'lg-focus-ring inline-flex min-h-11 min-w-11 cursor-pointer border border-transparent bg-lg-primary lg-forced-selected font-[inherit] text-base items-center justify-center rounded-lg-control px-3 font-medium text-lg-on-primary';
+    'lg-focus-ring inline-flex min-h-lg-control min-w-lg-control cursor-pointer border border-transparent bg-lg-primary lg-forced-selected font-[inherit] text-base items-center justify-center rounded-lg-control px-3 font-medium text-lg-on-primary';
 
   /** Clamped to the valid range, so the aria-disabled previous/next buttons do nothing at the ends. */
   protected go(page: number): void {

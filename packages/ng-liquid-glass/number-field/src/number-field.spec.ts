@@ -131,7 +131,8 @@ describe('LgNumberField', () => {
 
   it('can be disabled', async () => {
     await render(`<label for="d">Bars</label><lg-number-field id="d" disabled [value]="4" />`, { imports: [LgNumberField] });
-    expect(screen.getByRole('spinbutton')).toBeDisabled();
+    expect(screen.getByRole('spinbutton', { name: 'Bars' })).toBeDisabled();
+    expect(document.querySelectorAll('#d')).toHaveLength(1);
     expect(screen.getByRole('button', { name: 'Increase' })).toBeDisabled();
   });
 });

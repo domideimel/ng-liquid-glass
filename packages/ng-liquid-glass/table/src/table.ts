@@ -42,7 +42,7 @@ export class LgTable {
   template: `
     <button
       type="button"
-      class="lg-focus-ring flex min-h-11 w-full cursor-pointer items-center gap-2 rounded-lg-control border border-transparent bg-transparent px-3 py-2 text-start font-[inherit] text-base font-semibold text-lg-fg hover:bg-lg-surface-muted"
+      class="lg-focus-ring flex min-h-lg-control w-full cursor-pointer items-center gap-2 rounded-lg-control border border-transparent bg-transparent px-3 py-2 text-start font-[inherit] text-base font-semibold text-lg-fg hover:bg-lg-surface-muted"
       (click)="toggle()"
     >
       <ng-content />

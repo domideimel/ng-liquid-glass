@@ -48,7 +48,7 @@ interface VisibleNode<T> {
           <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- the treeitem handles the keyboard -->
           <span
             data-lg-part="row"
-            class="flex min-h-11 cursor-pointer items-center gap-1.5 rounded-lg-control pe-3 hover:bg-lg-surface-muted [li:focus-visible>&]:outline-3 [li:focus-visible>&]:outline-offset-[-3px] [li:focus-visible>&]:outline-lg-focus [li[aria-selected=true]>&]:bg-lg-primary [li[aria-selected=true]>&]:text-lg-on-primary [li[aria-selected=true]>&]:lg-forced-selected"
+            class="flex min-h-lg-control cursor-pointer items-center gap-1.5 rounded-lg-control pe-3 hover:bg-lg-surface-muted [li:focus-visible>&]:outline-3 [li:focus-visible>&]:outline-offset-[-3px] [li:focus-visible>&]:outline-lg-focus [li[aria-selected=true]>&]:bg-lg-primary [li[aria-selected=true]>&]:text-lg-on-primary [li[aria-selected=true]>&]:lg-forced-selected"
             [style.padding-inline-start.rem]="0.25 + (depth - 1) * 1.25"
             (click)="onClick(node)"
             (dblclick)="onToggle(node, $event)"

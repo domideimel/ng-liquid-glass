@@ -8,7 +8,7 @@ import { lgUniqueId } from '@domideimel/ng-liquid-glass';
     type: 'button',
     role: 'tab',
     class:
-      'lg-focus-ring min-h-11 cursor-pointer rounded-lg-control border border-transparent bg-transparent font-[inherit] text-base px-4 font-medium text-lg-fg-muted hover:text-lg-fg aria-selected:bg-lg-surface aria-selected:text-lg-fg aria-selected:shadow-sm aria-selected:lg-forced-selected',
+      'lg-focus-ring min-h-lg-control cursor-pointer rounded-lg-control border border-transparent bg-transparent font-[inherit] text-base px-4 font-medium text-lg-fg-muted hover:text-lg-fg aria-selected:bg-lg-surface aria-selected:text-lg-fg aria-selected:shadow-sm aria-selected:lg-forced-selected',
     '[id]': 'tabs.tabId(value())',
     '[attr.aria-selected]': 'selected()',
     '[attr.aria-controls]': 'tabs.panelId(value())',

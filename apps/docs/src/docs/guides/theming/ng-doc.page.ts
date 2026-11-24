@@ -1,11 +1,13 @@
 import type { NgDocPage } from '@ng-doc/core';
 import Category from '../ng-doc.category';
+import { DensityDemo } from './demos/density';
 
 const ThemingPage: NgDocPage = {
   title: 'Theming',
   mdFile: './index.md',
   category: Category,
   order: 2,
+  demos: { DensityDemo },
 };
 
 export default ThemingPage;

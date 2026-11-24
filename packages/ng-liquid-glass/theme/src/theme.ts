@@ -106,7 +106,7 @@ export class LgTheme {
       <legend class="sr-only">{{ i18n.theme }}</legend>
       @for (option of options; track option.mode) {
         <label
-          class="relative inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center gap-2 rounded-lg-control border border-transparent px-3 font-medium text-lg-fg-muted hover:text-lg-fg has-checked:bg-lg-surface has-checked:text-lg-fg has-checked:shadow-sm has-checked:lg-forced-selected has-focus-visible:outline-3 has-focus-visible:outline-offset-2 has-focus-visible:outline-lg-focus [&>input]:sr-only"
+          class="relative inline-flex min-h-lg-control min-w-lg-control cursor-pointer items-center justify-center gap-2 rounded-lg-control border border-transparent px-3 font-medium text-lg-fg-muted hover:text-lg-fg has-checked:bg-lg-surface has-checked:text-lg-fg has-checked:shadow-sm has-checked:lg-forced-selected has-focus-visible:outline-3 has-focus-visible:outline-offset-2 has-focus-visible:outline-lg-focus [&>input]:sr-only"
         >
           <input
             type="radio"
