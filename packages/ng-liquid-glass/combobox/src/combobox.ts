@@ -15,9 +15,16 @@ import {
 import { LG_I18N, LgAnchoredPopup } from '@domideimel/ng-liquid-glass';
 import { LgCustomControl } from '@domideimel/ng-liquid-glass/forms';
 
-/** Default filter: case-insensitive "contains" on the displayed text. */
+/**
+ * Case folding for comparisons: lower-casing alone misses pairs that don't map one to one, such as
+ * "ß"/"SS"/"ẞ" or "ᾀ"/"ἈΙ", and Greek final sigma ("ς") depends on its position in the word.
+ * Lower, upper, lower: "ẞ" → "ß" → "SS" → "ss", like "ß" and "SS".
+ */
+const fold = (text: string): string => text.toLocaleLowerCase().toLocaleUpperCase().toLocaleLowerCase().replaceAll('ς', 'σ');
+
+/** Default filter: case-insensitive "contains" on the displayed text, in any script. */
 export function lgContains(text: string, query: string): boolean {
-  return text.toLocaleLowerCase().includes(query.trim().toLocaleLowerCase());
+  return fold(text).includes(fold(query.trim()));
 }
 
 /**

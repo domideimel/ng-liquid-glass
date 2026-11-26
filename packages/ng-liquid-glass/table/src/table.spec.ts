@@ -2,6 +2,7 @@ import { Component, computed, signal } from '@angular/core';
 import { render, screen, within } from '@testing-library/angular';
 import userEvent from '@testing-library/user-event';
 import { expectNoA11yViolations } from '../../test/a11y';
+import fc from 'fast-check';
 import { lgSortRows, LgSortHeader, LgTable, LgTableScroll, type LgSort } from './table';
 
 interface Invoice {
@@ -86,5 +87,41 @@ describe('LgTable', () => {
       lgSortRows(INVOICES, { active: 'amount', direction: 'descending' }, (row, column) => row[column as keyof Invoice])[0]?.amount,
     ).toBe(300);
     expect(lgSortRows([{ v: null }, { v: 'a' }], { active: 'v', direction: 'ascending' })[0]?.v).toBeNull();
+  });
+});
+
+// Property-based tests: sorting any rows keeps them, orders them and leaves the input alone.
+describe('lgSortRows properties', () => {
+  const value = fc.oneof(fc.integer(), fc.double({ noNaN: true }), fc.string(), fc.boolean(), fc.constant(null));
+  const rows = fc.array(fc.record({ id: fc.nat(), value }), { maxLength: 40 });
+  const sort = fc.record({ active: fc.constant('value'), direction: fc.constantFrom<LgSort['direction']>('ascending', 'descending') });
+
+  it('returns a sorted copy with the same rows and leaves the input unchanged', () => {
+    fc.assert(
+      fc.property(rows, fc.option(sort), (input, by) => {
+        const before = structuredClone(input);
+        const sorted = lgSortRows(input, by);
+        expect(input).toEqual(before);
+        expect(sorted).not.toBe(input);
+        expect([...sorted].sort((a, b) => a.id - b.id || String(a.value).localeCompare(String(b.value)))).toEqual(
+          [...input].sort((a, b) => a.id - b.id || String(a.value).localeCompare(String(b.value))),
+        );
+        if (!by) expect(sorted).toEqual(input);
+      }),
+    );
+  });
+
+  it('orders numbers by value in the chosen direction', () => {
+    fc.assert(
+      fc.property(fc.array(fc.double({ noNaN: true }), { maxLength: 40 }), fc.boolean(), (values, ascending) => {
+        const sorted = lgSortRows(
+          values.map((v) => ({ v })),
+          { active: 'v', direction: ascending ? 'ascending' : 'descending' },
+        ).map((row) => row.v);
+        sorted.forEach((v, i) => {
+          if (i > 0) expect(ascending ? sorted[i - 1]! <= v : sorted[i - 1]! >= v).toBe(true);
+        });
+      }),
+    );
   });
 });

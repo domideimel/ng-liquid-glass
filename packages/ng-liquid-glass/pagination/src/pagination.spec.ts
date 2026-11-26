@@ -2,6 +2,7 @@ import { signal } from '@angular/core';
 import { render, screen } from '@testing-library/angular';
 import userEvent from '@testing-library/user-event';
 import { expectNoA11yViolations } from '../../test/a11y';
+import fc from 'fast-check';
 import { lgPageWindow, LgPagination } from './pagination';
 
 describe('lgPageWindow', () => {
@@ -46,5 +47,45 @@ describe('LgPagination', () => {
     await userEvent.keyboard('{Enter}');
     expect(page()).toBe(3);
     expect(next).toHaveFocus();
+  });
+});
+
+// Property-based tests: the invariants hold for any page count, current page and window size.
+describe('lgPageWindow properties', () => {
+  const input = fc
+    .integer({ min: 1, max: 300 })
+    .chain((pageCount) => fc.tuple(fc.constant(pageCount), fc.integer({ min: 1, max: pageCount }), fc.integer({ min: 0, max: 6 })));
+
+  it('lists pages in order, within range, with first, last, current and its neighbours', () => {
+    fc.assert(
+      fc.property(input, ([pageCount, page, siblings]) => {
+        const shown = lgPageWindow(page, pageCount, siblings);
+        const pages = shown.filter((p): p is number => p !== null);
+        expect(pages.every((p, i) => i === 0 || p > pages[i - 1]!)).toBe(true);
+        expect(pages[0]).toBe(1);
+        expect(pages.at(-1)).toBe(pageCount);
+        for (let p = Math.max(1, page - siblings); p <= Math.min(pageCount, page + siblings); p++) expect(pages).toContain(p);
+      }),
+    );
+  });
+
+  it('marks each gap of two or more pages with exactly one null, and never a single hidden page', () => {
+    fc.assert(
+      fc.property(input, ([pageCount, page, siblings]) => {
+        const shown = lgPageWindow(page, pageCount, siblings);
+        expect(shown[0]).not.toBeNull();
+        expect(shown.at(-1)).not.toBeNull();
+        shown.forEach((p, i) => {
+          if (p !== null) return;
+          const before = shown[i - 1]!;
+          const after = shown[i + 1]!;
+          expect(after - before).toBeGreaterThanOrEqual(3);
+        });
+        shown.forEach((p, i) => {
+          const next = shown[i + 1];
+          if (p !== null && typeof next === 'number') expect(next).toBe(p + 1);
+        });
+      }),
+    );
   });
 });
