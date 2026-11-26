@@ -1,3 +1,13 @@
+## 0.3.3 (2026-11-26)
+
+### 🩹 Fixes
+
+- **combobox:** match text case-insensitively in every script ([#64](https://github.com/domideimel/ng-liquid-glass/pull/64))
+
+### ❤️ Thank You
+
+- Dominik Deimel @domideimel
+
 ## 0.3.2 (2026-11-26)
 
 ### 🩹 Fixes
