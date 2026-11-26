@@ -1,4 +1,6 @@
+import { DOCUMENT } from '@angular/common';
 import {
+  afterNextRender,
   afterRenderEffect,
   booleanAttribute,
   Component,
@@ -17,7 +19,8 @@ import { lgUniqueId } from '@domideimel/ng-liquid-glass';
 
 /**
  * A modal dialog built on the native `<dialog>` element: the browser traps focus, makes the page
- * inert, closes on Escape and restores focus to the opener.
+ * inert, closes on Escape and restores focus to the opener: the focused element when it opened or, where a
+ * click doesn't focus (Safari), the element that was clicked to open it, or `returnFocus`.
  *
  * @example
  * <lg-dialog [(open)]="open">
@@ -29,6 +32,11 @@ export type LgDialogPlacement = 'center' | 'start' | 'end' | 'bottom' | 'sheet';
 
 /** Bottom padding that clears the home indicator of installed PWAs (needs `viewport-fit=cover`). */
 const SAFE_BOTTOM = 'pb-[max(1.5rem,calc(env(safe-area-inset-bottom)+1rem))]';
+
+/** What a click can open the dialog from: the nearest focusable ancestor of its target. */
+const FOCUSABLE = 'button, a[href], input, select, textarea, summary, [tabindex]';
+/** A click this recent (ms) counts as the one that opened the dialog. */
+const OPENER_CLICK_WINDOW = 1000;
 
 const PLACEMENTS: Record<LgDialogPlacement, string> = {
   center: 'm-auto max-h-[calc(100dvh-2rem)] w-[min(32rem,calc(100vw-2rem))] rounded-lg-surface',
@@ -83,6 +91,11 @@ export class LgDialog {
    * and removes itself when dismissed, without a two-way binding.
    */
   readonly closed = output();
+  /**
+   * The element that gets focus back when the dialog closes, e.g. when it was opened from a menu item that
+   * is gone by then. By default it's the opener (see above).
+   */
+  readonly returnFocus = input<HTMLElement | null>(null);
 
   readonly titleId = lgUniqueId('lg-dialog-title');
   readonly descriptionId = lgUniqueId('lg-dialog-description');
@@ -90,6 +103,12 @@ export class LgDialog {
   readonly descriptions = signal(0);
   protected readonly placementClass = computed(() => PLACEMENTS[this.placement()]);
   protected readonly lightDismiss = computed(() => this.dismissible() && !this.alert());
+
+  private readonly document = inject(DOCUMENT);
+  private opener: HTMLElement | null = null;
+  /** What the browser will restore focus to: the element focused at showModal(). */
+  private focusedAtOpen: Element | null = null;
+  private lastClick: { target: HTMLElement; time: number } | null = null;
 
   /**
    * Light dismiss for `dismissible`, also where `closedby="any"` isn't supported: a click on the
@@ -105,15 +124,62 @@ export class LgDialog {
 
   protected onClose(): void {
     this.open.set(false);
+    this.restoreFocus();
     this.closed.emit();
   }
 
   constructor() {
+    const destroyRef = inject(DestroyRef);
+    afterNextRender(() => {
+      // Safari doesn't focus a clicked button, so the browser would have nothing to restore: remember clicks.
+      const remember = (event: MouseEvent): void => {
+        const target = (event.target as Element).closest<HTMLElement>(FOCUSABLE);
+        this.lastClick = target ? { target, time: event.timeStamp } : null;
+      };
+      this.document.addEventListener('click', remember, { capture: true });
+      destroyRef.onDestroy(() => {
+        this.document.removeEventListener('click', remember, { capture: true });
+      });
+    });
     afterRenderEffect(() => {
       const dialog = this.dialog().nativeElement;
-      if (this.open() && !dialog.open) dialog.showModal();
+      if (this.open() && !dialog.open) {
+        this.focusedAtOpen = this.document.activeElement;
+        this.opener = this.findOpener();
+        dialog.showModal();
+      }
       if (!this.open() && dialog.open) dialog.close();
     });
+  }
+
+  /**
+   * The focused element, unless a click just now hit something inside it that didn't take focus: Safari
+   * doesn't focus a clicked button, so focus stays on <body> or moves to a focusable ancestor (e.g. a
+   * skip-link target with tabindex="-1").
+   */
+  private findOpener(): HTMLElement | null {
+    const active = this.document.activeElement;
+    const click = this.lastClick;
+    const clicked = click !== null && performance.now() - click.time < OPENER_CLICK_WINDOW ? click.target : null;
+    if (clicked && clicked !== active && (active === null || active.contains(clicked))) return clicked;
+    return active instanceof HTMLElement && active !== this.document.body ? active : null;
+  }
+
+  /**
+   * The browser restores focus to the element focused at showModal(); when that wasn't the opener (a click
+   * in Safari) or `returnFocus` names another element, move focus there. No `focusVisible` option: the
+   * browser shows the ring after Escape and hides it after a click.
+   */
+  private restoreFocus(): void {
+    const target = this.returnFocus() ?? this.opener;
+    const focusedAtOpen = this.focusedAtOpen;
+    this.opener = this.focusedAtOpen = null;
+    const active = this.document.activeElement;
+    // Focus is where the browser put it (the element focused at showModal(), <body>), or WebKit left it in
+    // the closed dialog; anything else means the app moved it on purpose.
+    const lost =
+      active === null || active === this.document.body || active === focusedAtOpen || this.dialog().nativeElement.contains(active);
+    if (target?.isConnected && !target.matches(':disabled') && (lost || this.returnFocus() !== null)) target.focus();
   }
 }
 
