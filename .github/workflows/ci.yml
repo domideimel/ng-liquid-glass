@@ -4,7 +4,7 @@ on:
   push:
     branches: [main, develop]
   pull_request:
-    # labeled/unlabeled: the accept-visual-changes label changes how the screenshots are checked.
+    # labeled/unlabeled: the optional accept-visual-changes label records new screenshots instead of comparing.
     types: [opened, synchronize, reopened, labeled, unlabeled]
 
 permissions:
@@ -117,46 +117,84 @@ jobs:
         with:
           name: docs-preview
           path: dist/apps/docs/browser/
-      # Visual regression (Chromium only): a PR is compared with the screenshots of its base branch's last
-      # push run. Pushes and PRs labelled accept-visual-changes render new screenshots instead of comparing.
-      - name: Download the base branch's screenshots
-        if: matrix.browser == 'chromium' && github.event_name == 'pull_request' && !contains(github.event.pull_request.labels.*.name, 'accept-visual-changes')
-        env:
-          GH_TOKEN: ${{ github.token }}
-          BASE: ${{ github.base_ref }}
-        run: |
-          run_id=$(gh run list --workflow CI --branch "$BASE" --event push --status success --limit 1 --json databaseId --jq '.[0].databaseId')
-          if [ -n "$run_id" ] && gh run download "$run_id" --name visual-baselines --dir apps/docs-e2e/src/modes.spec.ts-snapshots; then
-            echo "Comparing with the screenshots of run $run_id on $BASE."
-          else
-            echo "::warning::No screenshots from $BASE yet; this run records them without comparing."
-          fi
+      # The screenshots run in the Visual regression job below, which isn't a required check.
       - name: Run e2e against the production docs build
-        run: pnpm nx e2e docs-e2e --excludeTaskDependencies -- --project=${{ matrix.browser }} --update-snapshots=$UPDATE
+        run: pnpm nx e2e docs-e2e --excludeTaskDependencies -- --project=${{ matrix.browser }} --grep-invert "visual regression"
         env:
           DOCS_STATIC: 'true'
-          UPDATE: ${{ (github.event_name == 'push' || contains(github.event.pull_request.labels.*.name, 'accept-visual-changes')) && 'all' || 'missing' }}
-      - name: Upload screenshots as the baseline
-        if: matrix.browser == 'chromium' && github.event_name == 'push'
-        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
-        with:
-          name: visual-baselines
-          path: apps/docs-e2e/src/modes.spec.ts-snapshots/
-          retention-days: 90
-      - name: Upload screenshots for review
-        if: always() && matrix.browser == 'chromium' && github.event_name == 'pull_request'
-        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
-        with:
-          name: screenshots
-          path: apps/docs-e2e/src/modes.spec.ts-snapshots/
-          retention-days: 14
-          if-no-files-found: ignore
       - name: Upload Playwright report
         if: failure()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: playwright-${{ matrix.browser }}
           path: dist/.playwright/
+
+  # Screenshots of every demo (Chromium), compared with a baseline. Not a required check: an intended visual
+  # change shows up as a failed check with the diffs in the visual-diffs artifact, but doesn't block the merge.
+  # Baseline: the screenshots of the last push run on the base branch; for a release PR (develop → main) those
+  # of develop, where each change was already compared on its way in. Pushes, and PRs labelled
+  # accept-visual-changes, record new screenshots instead of comparing.
+  visual:
+    name: Visual regression
+    needs: docs
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - uses: ./.github/actions/playwright-browser
+        with:
+          browser: chromium
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
+        with:
+          name: docs-preview
+          path: dist/apps/docs/browser/
+      - name: Download the baseline screenshots
+        if: github.event_name == 'pull_request' && !contains(github.event.pull_request.labels.*.name, 'accept-visual-changes')
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BASELINE: ${{ github.base_ref == 'main' && github.head_ref == 'develop' && 'develop' || github.base_ref }}
+        run: |
+          run_id=$(gh run list --workflow CI --branch "$BASELINE" --event push --status success --limit 1 --json databaseId --jq '.[0].databaseId')
+          if [ -n "$run_id" ] && gh run download "$run_id" --name visual-baselines --dir apps/docs-e2e/src/modes.spec.ts-snapshots; then
+            echo "Comparing with the screenshots of run $run_id on $BASELINE."
+          else
+            echo "::warning::No screenshots from $BASELINE yet; this run records them without comparing."
+          fi
+      - name: Compare the screenshots
+        run: pnpm nx e2e docs-e2e --excludeTaskDependencies -- --project=chromium --grep "visual regression" --update-snapshots="$UPDATE"
+        env:
+          DOCS_STATIC: 'true'
+          UPDATE: ${{ (github.event_name == 'push' || contains(github.event.pull_request.labels.*.name, 'accept-visual-changes')) && 'all' || 'missing' }}
+      - name: Summarise the differences
+        if: failure()
+        run: |
+          {
+            echo "### Screenshots that changed"
+            echo
+            echo "Intended? Merge anyway: this check isn't required. The expected, actual and diff images are in the \`visual-diffs\` artifact."
+            echo
+            find dist/.playwright -name '*-diff.png' -printf '- %f\n' | sed 's/-diff\.png$//' | sort -u
+          } >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload the differences
+        if: failure()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        with:
+          name: visual-diffs
+          path: dist/.playwright/
+          retention-days: 14
+      - name: Upload screenshots as the baseline
+        if: github.event_name == 'push'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        with:
+          name: visual-baselines
+          path: apps/docs-e2e/src/modes.spec.ts-snapshots/
+          retention-days: 90
 
   report:
     name: PR report

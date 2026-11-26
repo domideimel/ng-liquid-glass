@@ -34,11 +34,14 @@ pnpm lint && pnpm test && pnpm build && pnpm e2e
 
 ## Visual changes
 
-CI compares every demo's screenshots (light, right-to-left, forced colors; Chromium) with the latest screenshots of the PR's base branch. When a PR changes the look on purpose:
+The _Visual regression_ job compares every demo's screenshots (light, right-to-left, forced colors; Chromium) with the latest screenshots of the PR's base branch. A release PR (`develop` → `main`) is compared with `develop`, where each change was already compared on its way in.
 
-1. Check the differences in the failed run's `playwright-chromium` report artifact.
-2. Add the label `accept-visual-changes` to the PR. CI then records the new screenshots instead of comparing; they are in the `screenshots` artifact.
-3. After the merge, the push run on the base branch stores them as the new baseline (`visual-baselines`, kept 90 days; any push refreshes it).
+The job isn't a required check. When a PR changes the look:
+
+1. Check the differences: the job summary lists the changed screenshots, and the `visual-diffs` artifact has the expected, actual and diff images.
+2. If the change is intended, merge anyway. After the merge, the push run on the base branch stores the new screenshots as its baseline (`visual-baselines`, kept 90 days; any push refreshes it).
+
+To get a green check on the PR itself, add the label `accept-visual-changes`: the job then records the new screenshots instead of comparing.
 
 ## Releasing
 
