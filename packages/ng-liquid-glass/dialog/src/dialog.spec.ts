@@ -21,6 +21,29 @@ class Host {
   readonly dismissible = signal(false);
 }
 
+@Component({
+  imports: [LgDialog, LgDialogClose],
+  template: `
+    <main tabindex="-1" data-testid="main">
+      <button type="button" (click)="open.set(true)">Open</button>
+    </main>
+    <button #other type="button">Other</button>
+    <span>Plain text</span>
+    <lg-dialog [(open)]="open" [returnFocus]="useOther() ? other : null">
+      <button type="button" lgDialogClose>Close</button>
+    </lg-dialog>
+  `,
+})
+class FocusHost {
+  readonly open = signal(false);
+  readonly useOther = signal(false);
+}
+
+/** Clicks without moving focus, like a mouse click on a button in Safari. */
+const safariClick = (element: Element) => {
+  element.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+};
+
 describe('LgDialog', () => {
   it('opens as a modal named by its title and closes from the close button', async () => {
     const { fixture } = await render(Host);
@@ -139,5 +162,107 @@ describe('LgDialog', () => {
     await expect.poll(() => closed.mock.calls.length).toBe(1);
     await fixture.whenStable();
     expect(screen.queryByRole('dialog')).toBeNull();
+  });
+
+  describe('returning focus', () => {
+    async function openAndClose(open: () => void) {
+      const view = await render(FocusHost);
+      open();
+      await view.fixture.whenStable();
+      const dialog = screen.getByRole('dialog');
+      expect(dialog).toHaveAttribute('open');
+      safariClick(screen.getByRole('button', { name: 'Close' }));
+      await vi.waitFor(() => {
+        expect(dialog).not.toHaveAttribute('open');
+      });
+      await view.fixture.whenStable();
+      return view;
+    }
+
+    it('focuses the clicked opener when the click did not focus it (Safari)', async () => {
+      await openAndClose(() => {
+        safariClick(screen.getByRole('button', { name: 'Open' }));
+      });
+      await vi.waitFor(() => {
+        expect(screen.getByRole('button', { name: 'Open' })).toHaveFocus();
+      });
+    });
+
+    it('focuses the clicked opener when the click focused its container instead (Safari, skip-link targets)', async () => {
+      await openAndClose(() => {
+        screen.getByTestId('main').focus();
+        safariClick(screen.getByRole('button', { name: 'Open' }));
+      });
+      await vi.waitFor(() => {
+        expect(screen.getByRole('button', { name: 'Open' })).toHaveFocus();
+      });
+    });
+
+    it("keeps the browser's own restore when the opener was focused", async () => {
+      await openAndClose(() => {
+        screen.getByRole('button', { name: 'Open' }).focus();
+        screen.getByRole('button', { name: 'Open' }).click();
+      });
+      await vi.waitFor(() => {
+        expect(screen.getByRole('button', { name: 'Open' })).toHaveFocus();
+      });
+    });
+
+    it('uses returnFocus when given', async () => {
+      const view = await render(FocusHost);
+      view.fixture.componentInstance.useOther.set(true);
+      screen.getByRole('button', { name: 'Open' }).focus();
+      screen.getByRole('button', { name: 'Open' }).click();
+      await view.fixture.whenStable();
+      safariClick(screen.getByRole('button', { name: 'Close' }));
+      await vi.waitFor(() => {
+        expect(screen.getByRole('button', { name: 'Other' })).toHaveFocus();
+      });
+    });
+
+    async function closeWithoutOpener(view: Awaited<ReturnType<typeof render<FocusHost>>>) {
+      await view.fixture.whenStable();
+      expect(screen.getByRole('dialog')).toHaveAttribute('open');
+      safariClick(screen.getByRole('button', { name: 'Close' }));
+      await vi.waitFor(() => {
+        expect(screen.getByRole('dialog', { hidden: true })).not.toHaveAttribute('open');
+      });
+    }
+
+    it('leaves focus alone when the last click was on nothing focusable', async () => {
+      const view = await render(FocusHost);
+      safariClick(screen.getByText('Plain text'));
+      view.fixture.componentInstance.open.set(true);
+      await closeWithoutOpener(view);
+      expect(document.body).toHaveFocus();
+    });
+
+    it('ignores a click that is too old to have opened it', async () => {
+      const view = await render(FocusHost);
+      safariClick(screen.getByRole('button', { name: 'Other' }));
+      const spy = vi.spyOn(performance, 'now').mockReturnValue(performance.now() + 5000);
+      view.fixture.componentInstance.open.set(true);
+      await view.fixture.whenStable();
+      spy.mockRestore();
+      expect(screen.getByRole('dialog')).toHaveAttribute('open');
+      safariClick(screen.getByRole('button', { name: 'Close' }));
+      await vi.waitFor(() => {
+        expect(screen.getByRole('dialog', { hidden: true })).not.toHaveAttribute('open');
+      });
+      expect(screen.getByRole('button', { name: 'Other' })).not.toHaveFocus();
+    });
+
+    it('skips a disabled opener', async () => {
+      const view = await render(FocusHost);
+      const opener = screen.getByRole('button', { name: 'Open' });
+      safariClick(opener);
+      await view.fixture.whenStable();
+      opener.toggleAttribute('disabled', true);
+      safariClick(screen.getByRole('button', { name: 'Close' }));
+      await vi.waitFor(() => {
+        expect(screen.getByRole('dialog', { hidden: true })).not.toHaveAttribute('open');
+      });
+      expect(opener).not.toHaveFocus();
+    });
   });
 });

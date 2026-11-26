@@ -45,17 +45,22 @@
   --lg-target-size: 2.75rem;
   --lg-control-height: 2.75rem;
   --lg-control-height-sm: 2rem;
+  /* Horizontal padding of buttons, toggles and segments; compact density halves it. */
+  --lg-control-padding-x: 1rem;
+  --lg-control-padding-x-sm: 0.75rem;
 }
 
 /*
  * Compact density for dense, single-screen apps: data-density="compact" on <html> or any container.
- * Controls shrink to 32 px (small ones to 24 px) and pointer targets to at least 24 px, which meets
+ * Controls shrink to 32 px (small ones to 24 px), their side padding by half, and pointer targets to at least 24 px, which meets
  * WCAG 2.5.8 Target Size (Minimum, AA) instead of 2.5.5 (AAA). Everything else stays AAA.
  */
 [data-density='compact'] {
   --lg-target-size: 1.5rem;
   --lg-control-height: 2rem;
   --lg-control-height-sm: 1.5rem;
+  --lg-control-padding-x: 0.5rem;
+  --lg-control-padding-x-sm: 0.375rem;
 }
 
 /* prefers-contrast: more: stronger borders and muted text, opaque glass. */
@@ -118,6 +123,9 @@
   /* Control sizes that follow the density: h-lg-control, min-h-lg-control, size-lg-control-sm, … */
   --spacing-lg-control: var(--lg-control-height);
   --spacing-lg-control-sm: var(--lg-control-height-sm);
+  /* Side padding that follows the density: px-lg-control-px, px-lg-control-px-sm */
+  --spacing-lg-control-px: var(--lg-control-padding-x);
+  --spacing-lg-control-px-sm: var(--lg-control-padding-x-sm);
   --radius-lg-control: 0.75rem;
   --radius-lg-surface: 1rem;
   /* Container-query breakpoints of lgGrid: @lg-sm, @lg-md, @lg-lg, @lg-xl */
@@ -149,6 +157,32 @@
     width: max(100%, var(--lg-target-size));
     height: max(100%, var(--lg-target-size));
     translate: -50% -50%;
+  }
+}
+
+/*
+ * Single-line <select>: Safari draws it with the system look, which ignores min-height (an 18 px target),
+ * so drop that look and draw the arrow with currentColor gradients. Forced colors removes gradient
+ * backgrounds, so the native look comes back there. List boxes (multiple, size > 1) keep the native look.
+ */
+@utility lg-select {
+  &:is(select):not([multiple], [size]:not([size='1'], [size='0'])) {
+    appearance: none;
+    padding-inline-end: 2.25rem;
+    background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%);
+    background-position:
+      calc(100% - 1.125rem) 50%,
+      calc(100% - 0.8125rem) 50%;
+    background-size: 0.3125rem 0.3125rem;
+    background-repeat: no-repeat;
+    &:dir(rtl) {
+      background-position:
+        0.8125rem 50%,
+        1.125rem 50%;
+    }
+    @media (forced-colors: active) {
+      appearance: auto;
+    }
   }
 }
 

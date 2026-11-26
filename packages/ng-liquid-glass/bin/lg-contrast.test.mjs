@@ -21,6 +21,7 @@ describe('lg-contrast', () => {
     assert.equal(result.status, 0, result.stderr);
     assert.match(result.stdout, /All \d+ pairs pass\./);
     assert.match(result.stdout, /✓ dark {2}--lg-fg on --lg-bg/);
+    assert.match(result.stdout, /✓ dark {2}--lg-control-border on --lg-surface-muted .*selected segment outline/);
   });
 
   it('fails a weak override and names the pairs', () => {

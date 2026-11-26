@@ -23,8 +23,24 @@ describe('LgSegmented', () => {
     list.focus();
     await userEvent.keyboard('{ArrowRight}');
     expect(screen.getByRole('radio', { name: 'Grid' })).toBeChecked();
-    expect(screen.getByText('Grid').closest('label')).toHaveClass('has-checked:bg-lg-surface');
+    const grid = screen.getByText('Grid').closest('label') as HTMLElement;
+    expect(grid).toHaveClass('has-checked:bg-lg-surface', 'has-checked:border-lg-control-border');
+    // The selected segment is outlined (≥ 3:1 against the track, WCAG 1.4.11); the others aren't.
+    const listLabel = screen.getByText('List').closest('label') as HTMLElement;
+    expect(getComputedStyle(grid).borderTopColor).not.toBe(getComputedStyle(listLabel).borderTopColor);
     await expectNoA11yViolations();
+  });
+
+  it('lets compact density lower the side padding', async () => {
+    await render(
+      `
+        <fieldset lgSegmented><legend>Roomy</legend><label lgSegment><input type="radio" name="a" /> Roomy</label></fieldset>
+        <fieldset lgSegmented data-density="compact"><legend>Dense</legend><label lgSegment><input type="radio" name="b" /> Dense</label></fieldset>
+      `,
+      { imports: [LgSegmented, LgSegment] },
+    );
+    expect(getComputedStyle(screen.getByText('Roomy', { selector: 'label' })).paddingInlineStart).toBe('16px');
+    expect(getComputedStyle(screen.getByText('Dense', { selector: 'label' })).paddingInlineStart).toBe('8px');
   });
 });
 
