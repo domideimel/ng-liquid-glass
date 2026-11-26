@@ -4,6 +4,7 @@ import { LgFormField, LgLabel } from '@domideimel/ng-liquid-glass/forms';
 import { render, screen } from '@testing-library/angular';
 import userEvent from '@testing-library/user-event';
 import { expectNoA11yViolations } from '../../test/a11y';
+import fc from 'fast-check';
 import { lgContains, LgCombobox } from './combobox';
 
 interface Country {
@@ -175,5 +176,40 @@ describe('LgCombobox', () => {
     input.dispatchEvent(new FocusEvent('blur', { relatedTarget: null }));
     await new Promise((resolve) => setTimeout(resolve));
     expect(input).toHaveAttribute('aria-expanded', 'false');
+  });
+});
+
+// Property-based tests over any Unicode text: case and surrounding whitespace never hide a match.
+describe('lgContains properties', () => {
+  // Counterexamples fast-check found against plain lower-casing.
+  it.each([
+    ['STRASSE', 'straße'],
+    ['Straße', 'STRASSE'],
+    ['ẞ', 'ß'],
+    ['ἈΙ', 'ᾀ'],
+    ['ΟΔΟΣ ΑΘΗΝΩΝ', 'οδος'],
+  ])('finds %s with %s', (text, query) => {
+    expect(lgContains(text, query)).toBe(true);
+  });
+
+  const text = fc.string({ unit: 'grapheme', maxLength: 20 });
+
+  it('finds a query wherever it occurs, in any case', () => {
+    fc.assert(
+      fc.property(text, text, text, (before, query, after) => {
+        const haystack = before + query + after;
+        expect(lgContains(haystack, query)).toBe(true);
+        expect(lgContains(haystack.toLocaleUpperCase(), query.toLocaleLowerCase())).toBe(true);
+        expect(lgContains(haystack, ` ${query}\t`)).toBe(true);
+      }),
+    );
+  });
+
+  it('matches everything with an empty or blank query', () => {
+    fc.assert(
+      fc.property(text, fc.stringMatching(/^\s*$/), (haystack, blank) => {
+        expect(lgContains(haystack, blank)).toBe(true);
+      }),
+    );
   });
 });
