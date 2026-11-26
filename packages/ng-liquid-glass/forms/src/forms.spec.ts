@@ -86,6 +86,21 @@ describe('lg-form-field', () => {
     expect(screen.getByRole('combobox', { name: 'Size' })).toHaveClass('min-h-lg-control');
     await expectNoA11yViolations();
   });
+
+  it('draws single selects itself so they keep their height, and leaves list boxes native', async () => {
+    await render(
+      `<label for="one">One</label><select lgInput id="one"><option>S</option></select>
+       <label for="many">Many</label><select lgInput id="many" multiple><option>S</option></select>`,
+      { imports: [LgInput] },
+    );
+    const single = screen.getByRole('combobox', { name: 'One' });
+    expect(getComputedStyle(single).appearance).toBe('none');
+    expect(getComputedStyle(single).backgroundImage).toContain('linear-gradient');
+    // The arrow's room beats lgInput's px-3, so long option text doesn't run under it.
+    expect(getComputedStyle(single).paddingInlineEnd).toBe('36px');
+    expect(Math.round(single.getBoundingClientRect().height)).toBeGreaterThanOrEqual(44);
+    expect(getComputedStyle(screen.getByRole('listbox', { name: 'Many' })).appearance).not.toBe('none');
+  });
 });
 
 @Component({

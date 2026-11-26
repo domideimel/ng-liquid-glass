@@ -40,12 +40,12 @@ export abstract class LgNativeControl implements LgFieldControl {
   }
 }
 
-/** A text input, textarea or native select. */
+/** A text input, textarea or native select (single selects get a drawn arrow, so Safari keeps their height). */
 @Directive({
   selector: 'input[lgInput], textarea[lgInput], select[lgInput]',
   host: {
     class:
-      'lg-focus-ring block min-h-lg-control w-full font-[inherit] rounded-lg-control border border-lg-control-border bg-lg-surface px-3 py-2 text-base text-lg-fg placeholder:text-lg-fg-muted disabled:cursor-not-allowed disabled:opacity-60 aria-invalid:border-2 aria-invalid:border-lg-danger',
+      'lg-focus-ring lg-select block min-h-lg-control w-full font-[inherit] rounded-lg-control border border-lg-control-border bg-lg-surface px-3 py-2 text-base text-lg-fg placeholder:text-lg-fg-muted disabled:cursor-not-allowed disabled:opacity-60 aria-invalid:border-2 aria-invalid:border-lg-danger',
   },
 })
 export class LgInput extends LgNativeControl {}
