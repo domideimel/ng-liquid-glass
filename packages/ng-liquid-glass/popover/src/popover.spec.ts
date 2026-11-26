@@ -99,4 +99,62 @@ describe('LgPopover', () => {
       expect(open()).toBe(true);
     });
   });
+
+  it('returns focus to a trigger that the click did not focus (Safari)', async () => {
+    const { trigger } = await setup();
+    // A synthetic click doesn't move focus, like a mouse click in Safari: <body> stays focused.
+    trigger.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    await waitFor(() => {
+      expect(screen.getByRole('combobox', { name: 'Status' })).toHaveFocus();
+    });
+    await nativeEvent.keyboard('{Escape}');
+    await waitFor(() => {
+      expect(trigger).toHaveFocus();
+    });
+  });
+
+  it('returns focus to the trigger when the click focused its container instead (Safari)', async () => {
+    await render(
+      `<main tabindex="-1" data-testid="main"><button [lgPopoverTrigger]="info">Info</button></main>
+       <lg-popover #info label="About"><button type="button">Details</button></lg-popover>`,
+      { imports: [LgPopover, LgPopoverTrigger] },
+    );
+    const trigger = screen.getByRole('button', { name: 'Info' });
+    screen.getByTestId('main').focus();
+    trigger.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: 'Details' })).toHaveFocus();
+    });
+    await nativeEvent.keyboard('{Escape}');
+    await waitFor(() => {
+      expect(trigger).toHaveFocus();
+    });
+  });
+
+  it('leaves focus alone when it had already left the popover, or the trigger is disabled', async () => {
+    const { trigger } = await setup();
+    const dialog = document.querySelector<HTMLElement>('lg-popover')!;
+    trigger.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    await waitFor(() => {
+      expect(dialog.matches(':popover-open')).toBe(true);
+    });
+    // Focus on the page, e.g. after a click on an empty area: closing doesn't pull it back.
+    (document.activeElement as HTMLElement).blur();
+    dialog.hidePopover();
+    await waitFor(() => {
+      expect(trigger).toHaveAttribute('aria-expanded', 'false');
+    });
+    expect(document.body).toHaveFocus();
+
+    trigger.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    await waitFor(() => {
+      expect(screen.getByRole('combobox', { name: 'Status' })).toHaveFocus();
+    });
+    trigger.toggleAttribute('disabled', true);
+    await nativeEvent.keyboard('{Escape}');
+    await waitFor(() => {
+      expect(trigger).toHaveAttribute('aria-expanded', 'false');
+    });
+    expect(trigger).not.toHaveFocus();
+  });
 });

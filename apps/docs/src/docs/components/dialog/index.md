@@ -1,4 +1,4 @@
-`lg-dialog` wraps the native `<dialog>` element in modal mode. The browser makes the rest of the page inert, keeps focus inside, closes on Escape and returns focus to the opener.
+`lg-dialog` wraps the native `<dialog>` element in modal mode. The browser makes the rest of the page inert, keeps focus inside, closes on Escape and returns focus to the opener, also in Safari, where clicking a button doesn't focus it. When the opener is gone by the time the dialog closes (a menu item, a row that was deleted), name another element with `[returnFocus]`.
 
 {{ NgDocActions.demo("DialogDemo") }}
 
