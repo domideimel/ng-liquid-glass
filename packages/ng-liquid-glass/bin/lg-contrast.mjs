@@ -31,6 +31,7 @@ const PAIRS = [
   ['on-danger', 'danger', 7, 'danger button text'],
   ['control-border', 'bg', 3, 'control borders'],
   ['control-border', 'surface', 3, 'control borders on surfaces'],
+  ['control-border', 'surface-muted', 3, 'selected segment outline on its track'],
   ['focus', 'bg', 3, 'focus ring'],
   ['focus', 'surface', 3, 'focus ring on surfaces'],
 ];

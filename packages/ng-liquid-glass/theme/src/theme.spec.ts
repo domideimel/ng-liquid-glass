@@ -15,6 +15,7 @@ describe('LgThemeSwitcher', () => {
     await render(LgThemeSwitcher);
     expect(screen.getByRole('group', { name: 'Theme' })).toBeInTheDocument();
     expect(screen.getByRole('radio', { name: 'System' })).toBeChecked();
+    expect(screen.getByRole('radio', { name: 'System' }).closest('label')).toHaveClass('has-checked:border-lg-control-border');
     await userEvent.click(screen.getByRole('radio', { name: 'Dark' }));
     expect(document.documentElement).toHaveAttribute('data-theme', 'dark');
     expect(localStorage.getItem('lg-theme')).toBe('dark');
