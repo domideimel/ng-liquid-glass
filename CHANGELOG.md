@@ -1,3 +1,15 @@
+## 0.3.2 (2026-11-26)
+
+### 🩹 Fixes
+
+- return focus to dialog and popover openers in Safari ([#61](https://github.com/domideimel/ng-liquid-glass/pull/61), [#60](https://github.com/domideimel/ng-liquid-glass/issues/60))
+- round circle buttons, outline selected segments, density-aware padding ([#58](https://github.com/domideimel/ng-liquid-glass/pull/58), [#57](https://github.com/domideimel/ng-liquid-glass/issues/57))
+- **forms:** keep native selects 44 px tall in Safari ([#59](https://github.com/domideimel/ng-liquid-glass/pull/59))
+
+### ❤️ Thank You
+
+- Dominik Deimel @domideimel
+
 ## 0.3.1 (2026-11-24)
 
 ### 🩹 Fixes
