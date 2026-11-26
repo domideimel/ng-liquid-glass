@@ -174,3 +174,22 @@ test('tag input: Enter adds a tag, Backspace removes the last one', async ({ pag
   await input.press('Backspace');
   await expect(page.getByRole('button', { name: 'Remove Testing' })).toHaveCount(0);
 });
+
+test('dialog and popover: a mouse click opener gets focus back, also where a click does not focus it (Safari)', async ({ page }) => {
+  await page.goto('components/dialog');
+  const opener = page.getByRole('button', { name: 'Delete project' });
+  await opener.click();
+  const dialog = page.getByRole('dialog', { name: 'Delete “Website relaunch”?' });
+  await dialog.getByRole('button', { name: 'Cancel' }).click();
+  await expect(dialog).toBeHidden();
+  await expect(opener).toBeFocused();
+
+  await page.goto('components/popover');
+  const trigger = page.getByRole('button', { name: /Filters/ });
+  await trigger.click();
+  const popover = page.getByRole('dialog', { name: 'Status' });
+  await expect(popover.getByRole('checkbox', { name: 'Open' })).toBeFocused();
+  await page.keyboard.press('Escape');
+  await expect(popover).toBeHidden();
+  await expect(trigger).toBeFocused();
+});
