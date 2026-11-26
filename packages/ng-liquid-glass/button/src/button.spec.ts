@@ -25,6 +25,29 @@ describe('LgButton', () => {
     expect(screen.getByRole('button')).toHaveClass(cls);
   });
 
+  it.each(['sm', 'md', 'lg', 'xl'] as const)('applies exactly one radius class at size %s', async (size) => {
+    await render(
+      `<button lgButton type="button" [size]="size">Go</button><button lgButton type="button" shape="circle" [size]="size" aria-label="Play">▶</button>`,
+      { imports: [LgButton], componentProperties: { size } },
+    );
+    const plain = screen.getByRole('button', { name: 'Go' });
+    const circle = screen.getByRole('button', { name: 'Play' });
+    const radii = (el: HTMLElement) => [...el.classList].filter((c) => c.startsWith('rounded-'));
+    expect(radii(plain)).toEqual(['rounded-lg-control']);
+    expect(radii(circle)).toEqual(['rounded-full']);
+    const { width } = circle.getBoundingClientRect();
+    expect(parseFloat(getComputedStyle(circle).borderTopLeftRadius)).toBeGreaterThanOrEqual(width / 2);
+  });
+
+  it('lets compact density lower the side padding', async () => {
+    await render(
+      `<button lgButton type="button">Roomy</button><div data-density="compact"><button lgButton type="button">Dense</button></div>`,
+      { imports: [LgButton] },
+    );
+    expect(getComputedStyle(screen.getByRole('button', { name: 'Roomy' })).paddingInlineStart).toBe('16px');
+    expect(getComputedStyle(screen.getByRole('button', { name: 'Dense' })).paddingInlineStart).toBe('8px');
+  });
+
   it('works on links', async () => {
     await render(`<a lgButton href="/docs" variant="primary">Docs</a>`, { imports: [LgButton] });
     expect(screen.getByRole('link', { name: 'Docs' })).toHaveClass('bg-lg-primary');

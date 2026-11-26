@@ -26,7 +26,7 @@ export class LgSegmented {}
   selector: 'label[lgSegment]',
   host: {
     class:
-      'relative inline-flex min-h-lg-control min-w-lg-control cursor-pointer items-center justify-center gap-2 rounded-lg-control border border-transparent px-4 font-medium text-lg-fg-muted hover:text-lg-fg has-checked:bg-lg-surface has-checked:text-lg-fg has-checked:shadow-sm has-checked:lg-forced-selected has-focus-visible:outline-3 has-focus-visible:outline-offset-2 has-focus-visible:outline-lg-focus has-disabled:cursor-not-allowed has-disabled:opacity-60 [&>input]:sr-only',
+      'relative inline-flex min-h-lg-control min-w-lg-control cursor-pointer items-center justify-center gap-2 rounded-lg-control border border-transparent px-lg-control-px font-medium text-lg-fg-muted hover:text-lg-fg has-checked:border-lg-control-border has-checked:bg-lg-surface has-checked:text-lg-fg has-checked:shadow-sm has-checked:lg-forced-selected has-focus-visible:outline-3 has-focus-visible:outline-offset-2 has-focus-visible:outline-lg-focus has-disabled:cursor-not-allowed has-disabled:opacity-60 [&>input]:sr-only',
   },
 })
 export class LgSegment {}
@@ -43,7 +43,7 @@ export class LgSegment {}
   host: {
     type: 'button',
     class:
-      'lg-focus-ring inline-flex min-h-lg-control min-w-lg-control cursor-pointer items-center justify-center gap-2 rounded-lg-control border border-lg-control-border bg-lg-surface px-3 font-[inherit] text-base font-medium text-lg-fg hover:bg-lg-surface-muted aria-pressed:border-lg-primary aria-pressed:bg-lg-primary aria-pressed:text-lg-on-primary aria-pressed:lg-forced-selected disabled:cursor-not-allowed disabled:opacity-60',
+      'lg-focus-ring inline-flex min-h-lg-control min-w-lg-control cursor-pointer items-center justify-center gap-2 rounded-lg-control border border-lg-control-border bg-lg-surface px-lg-control-px-sm font-[inherit] text-base font-medium text-lg-fg hover:bg-lg-surface-muted aria-pressed:border-lg-primary aria-pressed:bg-lg-primary aria-pressed:text-lg-on-primary aria-pressed:lg-forced-selected disabled:cursor-not-allowed disabled:opacity-60',
     '[attr.aria-pressed]': 'pressed()',
     '(click)': 'pressed.set(!pressed())',
   },

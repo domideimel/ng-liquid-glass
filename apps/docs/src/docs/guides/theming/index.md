@@ -88,7 +88,7 @@ Dense, single-screen apps (a metronome on a music stand, a toolbar-heavy editor)
 <html data-density="compact"></html>
 ```
 
-Controls shrink from 44 px to 32 px (small buttons from 32 px to 24 px), and pointer targets keep at least 24 px. That meets WCAG 2.5.8 Target Size (Minimum, **AA**) instead of 2.5.5 (Enhanced, AAA); everything else (contrast, keyboard, focus) stays AAA. Use it where the layout needs it, not by default. The tokens behind it are `--lg-control-height`, `--lg-control-height-sm` and `--lg-target-size`; your own controls follow the density with `h-lg-control`, `size-lg-control-sm` and the `lg-hit-area` utility.
+Controls shrink from 44 px to 32 px (small buttons from 32 px to 24 px), buttons, toggles and segments halve their side padding so dense rows fit, and pointer targets keep at least 24 px. That meets WCAG 2.5.8 Target Size (Minimum, **AA**) instead of 2.5.5 (Enhanced, AAA); everything else (contrast, keyboard, focus) stays AAA. Use it where the layout needs it, not by default. The tokens behind it are `--lg-control-height`, `--lg-control-height-sm`, `--lg-control-padding-x`, `--lg-control-padding-x-sm` and `--lg-target-size`; your own controls follow the density with `h-lg-control`, `size-lg-control-sm`, `px-lg-control-px`, `px-lg-control-px-sm` and the `lg-hit-area` utility.
 
 {{ NgDocActions.demo("DensityDemo") }}
 

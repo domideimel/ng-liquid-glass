@@ -4,12 +4,14 @@ export type LgButtonVariant = 'primary' | 'accent' | 'secondary' | 'ghost' | 'da
 export type LgButtonSize = 'sm' | 'md' | 'lg' | 'xl';
 export type LgButtonShape = 'default' | 'circle';
 
-// sm is drawn at 32 px (24 px compact); lg-hit-area keeps its pointer target at --lg-target-size.
+// Each map sets the button's only radius class, so rounded-lg-control can't override a circle's rounded-full.
+// sm and md padding follow the density (px-lg-control-px*). sm is drawn at 32 px (24 px compact);
+// lg-hit-area keeps its pointer target at --lg-target-size.
 const SIZES: Record<LgButtonSize, string> = {
-  sm: 'min-h-lg-control-sm min-w-lg-control-sm px-3 text-sm lg-hit-area',
-  md: 'min-h-lg-control min-w-lg-control px-4 text-base',
-  lg: 'min-h-14 min-w-14 px-6 text-lg',
-  xl: 'min-h-20 min-w-20 px-8 text-xl',
+  sm: 'min-h-lg-control-sm min-w-lg-control-sm rounded-lg-control px-lg-control-px-sm text-sm lg-hit-area',
+  md: 'min-h-lg-control min-w-lg-control rounded-lg-control px-lg-control-px text-base',
+  lg: 'min-h-14 min-w-14 rounded-lg-control px-6 text-lg',
+  xl: 'min-h-20 min-w-20 rounded-lg-control px-8 text-xl',
 };
 // Round, icon-only buttons: square, no padding; xl (96 px) suits a main action like a play button.
 const CIRCLES: Record<LgButtonSize, string> = {
@@ -39,7 +41,7 @@ const VARIANTS: Record<LgButtonVariant, string> = {
   selector: 'button[lgButton], a[lgButton]',
   host: {
     class:
-      'lg-focus-ring inline-flex font-[inherit] no-underline cursor-pointer items-center justify-center gap-2 rounded-lg-control font-medium transition-colors aria-disabled:cursor-not-allowed aria-disabled:opacity-60 disabled:cursor-not-allowed disabled:opacity-60',
+      'lg-focus-ring inline-flex font-[inherit] no-underline cursor-pointer items-center justify-center gap-2 font-medium transition-colors aria-disabled:cursor-not-allowed aria-disabled:opacity-60 disabled:cursor-not-allowed disabled:opacity-60',
     '[class]': 'variantClass() + " " + sizeClass()',
     '[attr.aria-busy]': 'loading() || null',
     '[attr.aria-disabled]': 'loading() || null',
