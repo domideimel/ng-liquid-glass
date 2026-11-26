@@ -1,5 +1,11 @@
 import { expect, test, type Locator } from '@playwright/test';
 
+/**
+ * Safari and WebKit on macOS skip links and buttons on Tab unless "Press Tab to highlight each item" is on;
+ * Option-Tab always reaches them, so press that there, as a Safari keyboard user would.
+ */
+const tabKey = (browserName: string) => (browserName === 'webkit' && process.platform === 'darwin' ? 'Alt+Tab' : 'Tab');
+
 test.beforeEach(async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
 });
@@ -25,15 +31,17 @@ test('combobox: the list is not clipped by its container', async ({ page }) => {
   await expect(last).toBeInViewport();
 });
 
-test('dialog: keeps focus out of the page, closes with Escape and restores focus', async ({ page }) => {
+test('dialog: keeps focus out of the page, closes with Escape and restores focus', async ({ page, browserName }) => {
   await page.goto('components/dialog');
   const opener = page.getByRole('button', { name: 'Delete project' });
-  await opener.click();
+  // Open with the keyboard: macOS WebKit doesn't focus a clicked button, so there would be nothing to restore.
+  await opener.focus();
+  await page.keyboard.press('Enter');
   const dialog = page.getByRole('dialog', { name: 'Delete “Website relaunch”?' });
   await expect(dialog).toBeVisible();
   await expect(dialog.getByRole('button', { name: 'Cancel' })).toBeFocused();
   for (let i = 0; i < 4; i++) {
-    await page.keyboard.press('Tab');
+    await page.keyboard.press(tabKey(browserName));
     // The page behind a modal is inert; the browser may move focus to its own UI (body) between cycles.
     expect(await dialog.evaluate((el) => el.contains(document.activeElement) || document.activeElement === document.body)).toBe(true);
   }
@@ -73,9 +81,9 @@ test('tooltip: appears on focus and hides on Escape', async ({ page }) => {
   await expect(tooltip).toBeHidden();
 });
 
-test('skip link: is the first focusable element and becomes visible', async ({ page }) => {
+test('skip link: is the first focusable element and becomes visible', async ({ page, browserName }) => {
   await page.goto('guides/getting-started');
-  await page.keyboard.press('Tab');
+  await page.keyboard.press(tabKey(browserName));
   const skip = page.getByRole('link', { name: 'Skip to content' });
   await expect(skip).toBeFocused();
   await expect(skip).toBeVisible();
