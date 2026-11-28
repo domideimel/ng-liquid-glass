@@ -1,3 +1,13 @@
+## 0.4.0 (2026-11-28)
+
+### 🚀 Features
+
+- output, list, copy button, file drop and form-field errors ([#67](https://github.com/domideimel/ng-liquid-glass/pull/67), [#66](https://github.com/domideimel/ng-liquid-glass/issues/66))
+
+### ❤️ Thank You
+
+- Dominik Deimel @domideimel
+
 ## 0.3.3 (2026-11-26)
 
 ### 🩹 Fixes
