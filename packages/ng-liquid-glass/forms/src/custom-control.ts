@@ -39,8 +39,8 @@ export abstract class LgCustomControl<T> implements FormValueControl<T>, LgField
   /** Signal Forms marks the field as touched on this event. */
   readonly touch = output();
 
-  /** Errors are shown once the user has left the control. */
-  readonly showInvalid = computed(() => this.invalid() && this.touched());
+  /** Errors are shown once the user has left the control, or at once for the form field's custom `error`. */
+  readonly showInvalid = computed(() => !!this.field?.error() || (this.invalid() && this.touched()));
   readonly isRequired = computed(() => this.required());
   readonly errorMessages = computed(() =>
     this.errors()

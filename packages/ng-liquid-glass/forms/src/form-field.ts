@@ -1,4 +1,4 @@
-import { Component, computed, DestroyRef, forwardRef, inject, InjectionToken, signal, type Signal } from '@angular/core';
+import { Component, computed, DestroyRef, forwardRef, inject, InjectionToken, input, signal, type Signal } from '@angular/core';
 import { lgUniqueId, LgStatusIcon } from '@domideimel/ng-liquid-glass';
 
 /** What a control exposes to its surrounding `lg-form-field`. */
@@ -16,12 +16,19 @@ export const LG_FORM_FIELD = new InjectionToken<LgFormField>('LG_FORM_FIELD');
  * Lays out a label, an optional hint, a control and its errors, and wires them together with
  * `for`, `aria-describedby` and `aria-invalid`. Error messages from Signal Forms validators
  * (`required(path, { message })`) are rendered automatically; add `<lg-error>` for custom content.
+ * For errors that don't come from validators (a parse error, a failed lookup), set `error`: the message
+ * shows at once, in place of the validator messages, and the control is marked invalid.
  *
  * @example
  * <lg-form-field>
  *   <label lgLabel>Email</label>
  *   <lg-hint>We never share it.</lg-hint>
  *   <input lgInput type="email" [formField]="form.email" />
+ * </lg-form-field>
+ *
+ * <lg-form-field [error]="parseError()">
+ *   <label lgLabel>JSON</label>
+ *   <textarea lgInput [formField]="form.json"></textarea>
  * </lg-form-field>
  */
 @Component({
@@ -35,8 +42,12 @@ export const LG_FORM_FIELD = new InjectionToken<LgFormField>('LG_FORM_FIELD');
     <ng-content />
     <div [id]="errorId" aria-live="polite" class="flex flex-col gap-1 text-sm font-medium text-lg-danger">
       @if (showErrors()) {
-        @for (message of control()?.errorMessages(); track message) {
-          <p class="m-0 flex items-start gap-1.5"><lg-status-icon status="danger" />{{ message }}</p>
+        @if (error()) {
+          <p class="m-0 flex items-start gap-1.5"><lg-status-icon status="danger" />{{ error() }}</p>
+        } @else {
+          @for (message of control()?.errorMessages(); track message) {
+            <p class="m-0 flex items-start gap-1.5"><lg-status-icon status="danger" />{{ message }}</p>
+          }
         }
         <ng-content select="lg-error" />
       }
@@ -50,8 +61,13 @@ export class LgFormField {
   readonly control = signal<LgFieldControl | undefined>(undefined);
   /** Number of registered hints. Set by `lg-hint`. */
   readonly hints = signal(0);
+  /**
+   * An error that doesn't come from a validator, e.g. "Line 3, column 7: unexpected comma". While set,
+   * it is shown at once in place of the validator messages, and the control gets `aria-invalid`.
+   */
+  readonly error = input<string | null | undefined>('');
 
-  readonly showErrors = computed(() => this.control()?.showInvalid() ?? false);
+  readonly showErrors = computed(() => !!this.error() || (this.control()?.showInvalid() ?? false));
   readonly describedBy = computed(() => {
     const ids = [this.hints() > 0 ? this.hintId : '', this.showErrors() ? this.errorId : ''].filter(Boolean);
     return ids.length > 0 ? ids.join(' ') : null;

@@ -21,12 +21,15 @@ import { Directive, model } from '@angular/core';
 })
 export class LgSegmented {}
 
-/** One option of `fieldset[lgSegmented]`: a `<label>` wrapping a radio input. */
+/**
+ * One option of `fieldset[lgSegmented]`: a `<label>` wrapping a radio input. The radio is transparent and
+ * covers the whole segment, so it is the real pointer target and end-to-end tests can `check()` it.
+ */
 @Directive({
   selector: 'label[lgSegment]',
   host: {
     class:
-      'relative inline-flex min-h-lg-control min-w-lg-control cursor-pointer items-center justify-center gap-2 rounded-lg-control border border-transparent px-lg-control-px font-medium text-lg-fg-muted hover:text-lg-fg has-checked:border-lg-control-border has-checked:bg-lg-surface has-checked:text-lg-fg has-checked:shadow-sm has-checked:lg-forced-selected has-focus-visible:outline-3 has-focus-visible:outline-offset-2 has-focus-visible:outline-lg-focus has-disabled:cursor-not-allowed has-disabled:opacity-60 [&>input]:sr-only',
+      'relative inline-flex min-h-lg-control min-w-lg-control cursor-pointer items-center justify-center gap-2 rounded-lg-control border border-transparent px-lg-control-px font-medium text-lg-fg-muted hover:text-lg-fg has-checked:border-lg-control-border has-checked:bg-lg-surface has-checked:text-lg-fg has-checked:shadow-sm has-checked:lg-forced-selected has-focus-visible:outline-3 has-focus-visible:outline-offset-2 has-focus-visible:outline-lg-focus has-disabled:cursor-not-allowed has-disabled:opacity-60 [&>input]:absolute [&>input]:inset-0 [&>input]:m-0 [&>input]:size-full [&>input]:cursor-pointer [&>input]:appearance-none [&>input]:rounded-lg-control [&>input]:opacity-0 [&>input]:disabled:cursor-not-allowed',
   },
 })
 export class LgSegment {}

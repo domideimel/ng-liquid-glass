@@ -1,4 +1,4 @@
-A choice between a few options, built from native radio buttons: arrow keys, forms and `[formField]` work as with any radio group. Give the `fieldset` a `<legend>`.
+A choice between a few options, built from native radio buttons: arrow keys, forms and `[formField]` work as with any radio group. Give the `fieldset` a `<legend>`. Each radio is transparent and covers its segment, so it is the pointer target, and end-to-end tests can use `getByRole('radio', { name }).check()`.
 
 {{ NgDocActions.demo("SegmentedDemo") }}
 

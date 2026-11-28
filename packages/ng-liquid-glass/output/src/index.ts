@@ -1,0 +1,1 @@
+export { LgOutput } from './output';
