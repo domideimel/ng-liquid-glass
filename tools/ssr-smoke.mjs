@@ -29,7 +29,7 @@ const { LgAvatar } = await lib('avatar');
 const { LgBadge } = await lib('badge');
 const { LgBreadcrumbs } = await lib('breadcrumbs');
 const { LgButton } = await lib('button');
-const { LgCard } = await lib('card');
+const { LgCard, LgCardActions, LgCardHeader } = await lib('card');
 const { LgCombobox } = await lib('combobox');
 const { LgDialog, LgDialogClose, LgDialogTitle } = await lib('dialog');
 const forms = await lib('forms');
@@ -42,7 +42,7 @@ const { LgTab, LgTabPanel, LgTabs } = await lib('tabs');
 const { LgToasterRegion } = await lib('toast');
 const { LgTooltip } = await lib('tooltip');
 const { LgSeparator } = await lib('separator');
-const { LgLink } = await lib('link');
+const { LgLink, LgUrlText } = await lib('link');
 const { LgKbd } = await lib('kbd');
 const { LgTag, LgTagInput } = await lib('tag');
 const { LgSegment, LgSegmented, LgToggle } = await lib('segmented');
@@ -53,9 +53,12 @@ const { LgThemeSwitcher } = await lib('theme');
 const { LgStepper } = await lib('stepper');
 const { LgSelect } = await lib('select');
 const { LgNav, LgNavGroup, LgNavLink } = await lib('navigation');
-const { LgFileInput } = await lib('file-input');
+const { LgFileDrop, LgFileInput } = await lib('file-input');
 const { LgTree } = await lib('tree');
 const { LgNumberField } = await lib('number-field');
+const { LgOutput } = await lib('output');
+const { LgInlineUndo, LgList, LgListActions, LgListItem } = await lib('list');
+const { LgCopyButton } = await lib('copy-button');
 
 class App {
   open = signal(false);
@@ -78,6 +81,8 @@ Component({
     LgBreadcrumbs,
     LgButton,
     LgCard,
+    LgCardActions,
+    LgCardHeader,
     LgCombobox,
     LgDialog,
     LgDialogClose,
@@ -133,6 +138,14 @@ Component({
     LgFileInput,
     LgTree,
     LgNumberField,
+    LgUrlText,
+    LgFileDrop,
+    LgOutput,
+    LgList,
+    LgListItem,
+    LgListActions,
+    LgInlineUndo,
+    LgCopyButton,
   ],
   template: `
     <a lgSkipLink href="#main">Skip to content</a>
@@ -151,6 +164,15 @@ Component({
         </div>
         <lg-menu #menu><button lgMenuItem>Edit</button></lg-menu>
         <article lgCard>Card</article>
+        <section lgCard aria-labelledby="result" (lgFileDrop)="open.set(true)">
+          <header lgCardHeader><h2 id="result">Result</h2><div lgCardActions><lg-copy-button value="abc" /></div></header>
+          <output lgOutput mono>e3b0c442</output>
+          <p><lg-url-text url="https://example.com/a?b=c" /></p>
+          <ul lgList aria-label="Saved">
+            <li lgListItem><span>One</span><div lgListActions><button lgButton type="button">Edit</button></div></li>
+            <li lgListItem><lg-inline-undo message="Two removed" /></li>
+          </ul>
+        </section>
         <lg-form-field>
           <label lgLabel>Language</label>
           <lg-combobox [options]="languages" />
@@ -252,6 +274,12 @@ const expected = [
   ['file input', /type="file"/],
   ['tree', /role="tree"/],
   ['tree item', /role="treeitem"[^>]*aria-expanded="true"/],
+  ['card header', /lgcardheader/i],
+  ['copy button', /aria-label="Copy"/],
+  ['output', /<output[^>]*lgoutput/i],
+  ['url text', /example\.com\/(<!--[^>]*-->)*<wbr>/],
+  ['list', /<ul[^>]*role="list"/],
+  ['inline undo', />Undo</],
   ['number field', /role="spinbutton"[^>]*aria-valuenow="4"|aria-valuenow="4"[^>]*role="spinbutton"/],
 ];
 const missing = expected.filter(([, pattern]) => !pattern.test(html)).map(([name]) => name);

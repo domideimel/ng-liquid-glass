@@ -2,6 +2,7 @@ import { booleanAttribute, Component, type ElementRef, inject, input, model, sig
 import { LG_I18N, lgAnnouncement } from '@domideimel/ng-liquid-glass';
 import { LgCustomControl } from '@domideimel/ng-liquid-glass/forms';
 import { LgTag } from '@domideimel/ng-liquid-glass/tag';
+import { lgAcceptsFile } from './accept';
 
 /**
  * File selection built on the native `<input type="file">`, so keyboard and screen readers get the
@@ -134,8 +135,8 @@ export class LgFileInput extends LgCustomControl<readonly File[]> {
   /** Adds the accepted files; rejected ones (dropped, or picked with "All files") are reported instead. */
   private add(candidates: File[]): void {
     if (candidates.length === 0) return;
-    const files = candidates.filter((file) => this.accepts(file));
-    const rejected = candidates.filter((file) => !this.accepts(file)).map((file) => file.name);
+    const files = candidates.filter((file) => lgAcceptsFile(file, this.accept()));
+    const rejected = candidates.filter((file) => !lgAcceptsFile(file, this.accept())).map((file) => file.name);
     this.rejected.set(rejected.length > 0 ? this.i18n.filesRejected(rejected.join(', ')) : '');
     if (files.length === 0) {
       this.announcement.update((previous) => lgAnnouncement(previous, this.rejected()));
@@ -150,19 +151,5 @@ export class LgFileInput extends LgCustomControl<readonly File[]> {
     }
     const message = [this.i18n.filesSelected(this.value().length), this.rejected()].filter(Boolean).join('. ');
     this.announcement.update((previous) => lgAnnouncement(previous, message));
-  }
-
-  /** Same rules as the native `accept` attribute: extensions, exact MIME types and `type/*`. */
-  private accepts(file: File): boolean {
-    const rules = this.accept()
-      .split(',')
-      .map((rule) => rule.trim().toLowerCase())
-      .filter(Boolean);
-    if (rules.length === 0) return true;
-    const name = file.name.toLowerCase();
-    const type = file.type.toLowerCase();
-    return rules.some((rule) =>
-      rule.startsWith('.') ? name.endsWith(rule) : rule.endsWith('/*') ? type.startsWith(rule.slice(0, -1)) : type === rule,
-    );
   }
 }

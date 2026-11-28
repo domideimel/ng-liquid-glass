@@ -1,1 +1,1 @@
-export { LgCard } from './card';
+export { LgCard, LgCardActions, LgCardHeader } from './card';

@@ -31,6 +31,23 @@ describe('LgSegmented', () => {
     await expectNoA11yViolations();
   });
 
+  it('makes the transparent radio cover its segment, so it is the visible pointer target', async () => {
+    await render(`<fieldset lgSegmented><legend>Mode</legend><label lgSegment><input type="radio" name="m" /> Encode</label></fieldset>`, {
+      imports: [LgSegmented, LgSegment],
+    });
+    const radio = screen.getByRole('radio', { name: 'Encode' });
+    const label = radio.closest('label') as HTMLElement;
+    const r = radio.getBoundingClientRect();
+    const l = label.getBoundingClientRect();
+    expect(getComputedStyle(radio).opacity).toBe('0');
+    // It fills the segment inside its 1 px border.
+    expect(l.width - r.width).toBeLessThanOrEqual(2);
+    expect(l.height - r.height).toBeLessThanOrEqual(2);
+    expect(document.elementFromPoint(l.left + l.width / 2, l.top + l.height / 2)).toBe(radio);
+    await userEvent.click(radio);
+    expect(radio).toBeChecked();
+  });
+
   it('lets compact density lower the side padding', async () => {
     await render(
       `

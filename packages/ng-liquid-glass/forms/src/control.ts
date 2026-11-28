@@ -20,7 +20,9 @@ export abstract class LgNativeControl implements LgFieldControl {
 
   readonly id = inject(new HostAttributeToken('id'), { optional: true }) ?? lgUniqueId('lg-control');
 
+  /** Invalid and touched, or the form field has a custom `error`. */
   readonly showInvalid = computed(() => {
+    if (this.field?.error()) return true;
     const state = this.formField?.state();
     return state !== undefined && state.invalid() && state.touched();
   });

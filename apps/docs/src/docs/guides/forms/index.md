@@ -7,3 +7,9 @@ The form controls support **Signal Forms** (`@angular/forms/signals`), Angular's
 Signal Forms owns attributes such as `required`, `min`, `max` and `name`. Declare them in the schema rather than in the template.
 
 {{ NgDocActions.demo("SignUpFormDemo", { expanded: false }) }}
+
+## Errors that don't come from validators
+
+A parse error ("Line 3, column 7: unexpected comma") or a failed lookup isn't a validator result. Pass it to `lg-form-field`'s `error` input: the message shows at once, in place of the validator messages, and the control gets `aria-invalid` and is described by it. Set it to `null` or `''` to clear it.
+
+{{ NgDocActions.demo("CustomErrorDemo") }}
