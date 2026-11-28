@@ -32,6 +32,10 @@ export const LG_I18N_DE: LgI18n = {
   filesRejected: (names) => `Kein erlaubter Dateityp: ${names}`,
   increase: 'Erhöhen',
   decrease: 'Verringern',
+  copy: 'Kopieren',
+  copied: 'Kopiert',
+  copyFailed: 'Kopieren nicht möglich. Markieren Sie den Text und kopieren Sie ihn selbst.',
+  undo: 'Rückgängig',
 };
 
 export const LG_I18N_FR: LgI18n = {
@@ -61,6 +65,10 @@ export const LG_I18N_FR: LgI18n = {
   filesRejected: (names) => `Type de fichier non accepté : ${names}`,
   increase: 'Augmenter',
   decrease: 'Diminuer',
+  copy: 'Copier',
+  copied: 'Copié',
+  copyFailed: 'Copie impossible. Sélectionnez le texte et copiez-le vous-même.',
+  undo: 'Annuler',
 };
 
 export const LG_I18N_ES: LgI18n = {
@@ -90,4 +98,8 @@ export const LG_I18N_ES: LgI18n = {
   filesRejected: (names) => `Tipo de archivo no admitido: ${names}`,
   increase: 'Aumentar',
   decrease: 'Disminuir',
+  copy: 'Copiar',
+  copied: 'Copiado',
+  copyFailed: 'No se pudo copiar. Selecciona el texto y cópialo.',
+  undo: 'Deshacer',
 };

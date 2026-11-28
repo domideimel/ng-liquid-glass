@@ -62,6 +62,38 @@ describe('lg-form-field', () => {
     await expectNoA11yViolations();
   });
 
+  it('shows a custom error at once, in place of validator messages', async () => {
+    const error = signal<string | null>('Line 3, column 7: unexpected comma');
+    @Component({
+      imports: [FormField, LgFormField, LgLabel, LgInput],
+      template: `
+        <lg-form-field [error]="error()">
+          <label lgLabel>JSON</label>
+          <textarea lgInput [formField]="doc.json"></textarea>
+        </lg-form-field>
+      `,
+    })
+    class JsonField {
+      readonly error = error;
+      readonly doc = form(signal({ json: '' }), (path) => {
+        required(path.json, { message: 'Paste a document' });
+      });
+    }
+    const { fixture } = await render(JsonField);
+    const textarea = screen.getByRole('textbox', { name: /JSON/ });
+    expect(textarea).toHaveAttribute('aria-invalid', 'true');
+    expect(textarea).toHaveAccessibleDescription('Line 3, column 7: unexpected comma');
+    expect(screen.queryByText('Paste a document')).toBeNull();
+    await expectNoA11yViolations();
+
+    error.set(null);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    expect(textarea).not.toHaveAttribute('aria-invalid');
+    expect(textarea).not.toHaveAttribute('aria-describedby');
+    expect(screen.queryByText(/unexpected comma/)).toBeNull();
+  });
+
   it('unregisters a removed hint', async () => {
     const { fixture } = await render(EmailField);
     fixture.componentInstance.showHint.set(false);

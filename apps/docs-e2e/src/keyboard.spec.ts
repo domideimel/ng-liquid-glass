@@ -201,3 +201,23 @@ test('dialog and popover: a mouse click opener gets focus back, also where a cli
   await expect(popover).toBeHidden();
   await expect(trigger).toBeFocused();
 });
+
+test('segmented: the radio is the pointer target, so check() works', async ({ page }) => {
+  await page.goto('components/segmented');
+  const radios = page.getByRole('radio');
+  const second = radios.nth(1);
+  await second.check();
+  await expect(second).toBeChecked();
+  await radios.nth(0).click();
+  await expect(radios.nth(0)).toBeChecked();
+});
+
+test('list: removing a row shows an inline undo with focus, Undo restores the row', async ({ page }) => {
+  await page.goto('components/list');
+  await page.getByRole('button', { name: 'Remove password 2' }).click();
+  const undo = page.getByRole('button', { name: 'Undo' });
+  await expect(undo).toBeFocused();
+  await expect(undo).toHaveAccessibleDescription('Password 2 removed');
+  await page.keyboard.press('Enter');
+  await expect(page.getByRole('button', { name: 'Remove password 2' })).toBeVisible();
+});

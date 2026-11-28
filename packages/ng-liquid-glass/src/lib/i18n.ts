@@ -36,6 +36,12 @@ export interface LgI18n {
   /** Names of `lg-number-field`'s buttons. */
   increase: string;
   decrease: string;
+  /** `lg-copy-button` texts: its default name, the confirmation and the message where copying fails. */
+  copy: string;
+  copied: string;
+  copyFailed: string;
+  /** The button of `lg-inline-undo`. */
+  undo: string;
 }
 
 export const LG_I18N_DEFAULTS: LgI18n = {
@@ -65,6 +71,10 @@ export const LG_I18N_DEFAULTS: LgI18n = {
   filesRejected: (names) => `Not an accepted file type: ${names}`,
   increase: 'Increase',
   decrease: 'Decrease',
+  copy: 'Copy',
+  copied: 'Copied',
+  copyFailed: "Couldn't copy. Select the text and copy it yourself.",
+  undo: 'Undo',
 };
 
 export const LG_I18N = new InjectionToken<LgI18n>('LG_I18N', {
