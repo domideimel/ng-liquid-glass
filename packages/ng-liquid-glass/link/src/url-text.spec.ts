@@ -16,7 +16,12 @@ describe('LgUrlText', () => {
     expect(host.textContent).toBe('https://example.com/a/b?x=1&y=2#top');
     // https:/ / example.com/ a/ b? x= 1& y= 2# top
     expect(host.querySelectorAll('wbr')).toHaveLength(9);
-    expect(host.innerHTML.replaceAll(/<!--[^>]*-->/g, '')).toContain('example.com/<wbr>a/<wbr>b?<wbr>x=<wbr>');
+    // The text and break opportunities in order, ignoring Angular's comment anchors.
+    const sequence = [...host.childNodes]
+      .filter((node) => node.nodeType !== Node.COMMENT_NODE)
+      .map((node) => (node.nodeType === Node.TEXT_NODE ? node.textContent : '|'))
+      .join('');
+    expect(sequence).toBe('https:/|/|example.com/|a/|b?|x=|1&|y=|2#|top');
     await expectNoA11yViolations();
 
     url.set('plain');
